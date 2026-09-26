@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kindle-meta"
+version = "0.2.0"
+description = "Liest, reichert an und schreibt E-Book-Metadaten für den Kindle."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Flo Gramsch" }]
+
+dependencies = [
+    "ebooklib>=0.18",
+    "pypdf>=4.0",
+    "requests>=2.28",
+    "Pillow>=10.0",
+]
+
+[project.optional-dependencies]
+gui = ["PySide6>=6.5"]
+llm = ["anthropic>=0.40"]
+keyring = ["keyring>=24"]
+build = ["pyinstaller>=6.0"]
+comics = ["rarfile>=4.0"]
+dev = ["pytest>=7.0", "pytest-cov>=4.0", "PySide6>=6.5", "ruff>=0.5"]
+
+[project.scripts]
+kindle-meta = "kindle_meta.cli:main"
+
+[project.gui-scripts]
+kindle-meta-gui = "kindle_meta.gui.app:main"
+
+[tool.setuptools.packages.find]
+include = ["kindle_meta*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["kindle_meta"]
+omit = ["kindle_meta/gui/*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B"]
+ignore = ["B008"]
