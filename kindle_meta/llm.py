@@ -195,3 +195,59 @@ def review_metadata(meta: BookMetadata) -> QualityReport | None:
         if isinstance(item, dict)
     ]
     return QualityReport(ok=bool(data.get("ok", not issues)), issues=issues)
+
+
+def suggest_series_index(
+    series_name: str, known_books: list[dict], sample_text: str = ""
+) -> float | None:
+    """Schlägt die Bandnummer (`series_index`) eines Buchs ohne eigene
+    Nummer vor, anhand bereits bekannter Bände derselben Serie und
+    optional einer Textprobe. `None`, wenn keine KI verfügbar ist oder
+    kein sicherer Vorschlag möglich ist.
+    """
+    if not series_name or not available():
+        return None
+    system = (
+        "Du schlägst die Bandnummer (series_index) eines Buchs innerhalb "
+        "einer Buchserie vor, anhand der bereits bekannten Bände und ggf. "
+        "eines Textauszugs. Bist du dir nicht sicher, antworte mit "
+        '{"series_index": null}. Antworte ausschließlich mit einem '
+        'JSON-Objekt {"series_index": Zahl oder null}.'
+    )
+    payload = {
+        "series": series_name,
+        "known_books": known_books,
+        "sample_text": (sample_text or "")[:1500],
+    }
+    raw = _call_claude(_model_research(), system, json.dumps(payload, ensure_ascii=False))
+    data = _extract_json(raw) if raw else None
+    if not data:
+        return None
+    value = data.get("series_index")
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def parse_library_query(query: str) -> dict | None:
+    """Übersetzt eine natürlichsprachige Suchanfrage in ein festes,
+    typisiertes Filter-Objekt (kein von der KI erzeugtes SQL). `None`, wenn
+    keine KI verfügbar ist oder kein sinnvoller Filter erkennbar ist.
+    """
+    if not query or not query.strip() or not available():
+        return None
+    system = (
+        "Du übersetzt eine natürlichsprachige Suchanfrage für eine E-Book-"
+        "Bibliothek in ein JSON-Filterobjekt mit ausschließlich diesen "
+        'optionalen Schlüsseln: "text" (Freitext für Titel/Autor/Serie), '
+        '"missing_cover" (bool), "status" (einer von "imported", '
+        '"enriched", "written", "sent"), "series" (str), "year_from" (int), '
+        '"year_to" (int), "language" (2-Buchstaben-Code). Lasse nicht '
+        "erkennbare Schlüssel weg, erfinde keine Werte. Antworte "
+        "ausschließlich mit dem JSON-Objekt."
+    )
+    raw = _call_claude(_model_fast(), system, query)
+    return _extract_json(raw) if raw else None

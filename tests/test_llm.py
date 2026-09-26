@@ -158,6 +158,52 @@ def test_review_metadata_returns_none_on_garbage_response(monkeypatch):
     assert llm.review_metadata(BookMetadata(title="X")) is None
 
 
+def test_suggest_series_index_returns_none_without_series_name(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
+    _install_fake_anthropic(monkeypatch, '{"series_index": 3}')
+    assert llm.suggest_series_index("", [], "") is None
+
+
+def test_suggest_series_index_returns_none_without_api_key(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    assert llm.suggest_series_index("Serie", [], "") is None
+
+
+def test_suggest_series_index_parses_number(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
+    calls = _install_fake_anthropic(monkeypatch, '{"series_index": 3}')
+    result = llm.suggest_series_index("Testserie", [{"title": "Band 1", "series_index": 1.0}])
+    assert result == 3.0
+    assert calls[0]["model"] == llm.MODEL_RESEARCH
+
+
+def test_suggest_series_index_returns_none_when_uncertain(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
+    _install_fake_anthropic(monkeypatch, '{"series_index": null}')
+    assert llm.suggest_series_index("Testserie", []) is None
+
+
+def test_parse_library_query_returns_none_for_empty_query(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
+    _install_fake_anthropic(monkeypatch, "{}")
+    assert llm.parse_library_query("") is None
+    assert llm.parse_library_query("   ") is None
+
+
+def test_parse_library_query_returns_none_without_api_key(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    assert llm.parse_library_query("Bücher ohne Cover") is None
+
+
+def test_parse_library_query_parses_filter_fields(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
+    response = '{"missing_cover": true, "language": "de"}'
+    calls = _install_fake_anthropic(monkeypatch, response)
+    result = llm.parse_library_query("Zeig mir deutsche Bücher ohne Cover")
+    assert result == {"missing_cover": True, "language": "de"}
+    assert calls[0]["model"] == llm.MODEL_FAST
+
+
 def test_call_claude_returns_none_on_api_exception(monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
 
