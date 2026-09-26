@@ -77,6 +77,15 @@ def sample_pdf(tmp_path):
     return str(path)
 
 
+@pytest.fixture(scope="session")
+def qapp():
+    """Stellt eine einzelne QApplication für die gesamte Testsession bereit."""
+    from PySide6.QtWidgets import QApplication
+
+    app = QApplication.instance() or QApplication([])
+    yield app
+
+
 @pytest.fixture
 def no_modal_dialogs(monkeypatch):
     """Verhindert blockierende QMessageBox-Dialoge in GUI-Tests."""
