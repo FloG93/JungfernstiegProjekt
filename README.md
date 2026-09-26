@@ -29,6 +29,22 @@ Kindle Cover, Autor, Verlag, Datum, ISBN und Serie korrekt an.
 - **Natürlichsprachige Bibliothekssuche** (`kindle-meta library --query "…"`
   bzw. Suchfeld in der GUI).
 
+### CLI-Kommandos
+
+| Kommando | Zweck |
+|---|---|
+| `info PATH` | Metadaten einer Datei anzeigen |
+| `enrich PATH` | Vorschläge suchen, ohne zu schreiben |
+| `apply PATH` | Anreichern und schreiben (`--out`, `--title`, `--author`, `--publisher`, `--date`, `--isbn`, `--series`, `--series-index`, `--optimize-cover`, `--no-backup`, `--ai-check`, `--strict-ai-check`) |
+| `batch PATHS…` | Mehrere Dateien anreichern (`--apply`, `--out-dir`, `--no-llm`, `--optimize-cover`, `--no-backup`, `--protect`) |
+| `convert PATH` | Mit Calibre konvertieren (`--to`) |
+| `send PATH --to ADRESSE` | Per E-Mail an den Kindle senden |
+| `undo PATH` | Letztes Backup wiederherstellen |
+| `library` | Bibliothek anzeigen/durchsuchen (`--query`, auch natürlichsprachig) |
+| `watch FOLDER` | Ordner überwachen (`--apply`, `--out-dir`, `--no-llm`, `--interval`, `--existing`) |
+| `duplicates` | Dubletten in der Bibliothek finden |
+| `series-check` | Serien-Konsistenz prüfen |
+
 ## Einsteiger-Schnellstart
 
 ```bash
@@ -55,11 +71,27 @@ ruff check kindle_meta tests
 QT_QPA_PLATFORM=offscreen pytest -q --cov=kindle_meta --cov-report=term-missing
 ```
 
+## Packaging
+
+```bash
+pip install -e ".[gui,build]"
+cd packaging && pyinstaller kindle-meta.spec
+```
+
+Erzeugt eine Ein-Datei-GUI-App (`kindle-meta.spec`, Launcher
+`kindle_meta_gui.py`).
+
 ## Update
 
 ```bash
 git pull && pip install -e ".[gui]"
 ```
+
+## Weiterführende Dokumente
+
+- [`PLAN.md`](PLAN.md) – Meilensteine und offene Ideen.
+- [`UMZUG.md`](UMZUG.md) – Übergabedokument des Repo-Umzugs, aus dem dieses
+  Projekt neu aufgebaut wurde.
 
 ## Lizenz
 
