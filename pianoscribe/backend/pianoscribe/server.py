@@ -9,6 +9,7 @@ import time
 from dataclasses import dataclass
 
 import uvicorn
+from fastapi import FastAPI
 
 from .api import AppConfig, create_app
 
@@ -37,6 +38,7 @@ class BackgroundServer:
     thread: threading.Thread
     port: int
     token: str | None
+    app: FastAPI
 
     @property
     def url(self) -> str:
@@ -53,8 +55,9 @@ def start_background(config: AppConfig | None = None, port: int | None = None,
     """Startet uvicorn in einem Thread auf einem freien Port und wartet, bis er bereit ist."""
     config = config or AppConfig()
     port = port or free_port()
-    uv_config = uvicorn.Config(create_app(config), host="127.0.0.1", port=port,
-                               log_level="warning", lifespan="on")
+    app = create_app(config)
+    uv_config = uvicorn.Config(app, host="127.0.0.1", port=port, log_level="warning",
+                               lifespan="on", log_config=None)
     server = uvicorn.Server(uv_config)
     thread = threading.Thread(target=server.run, name="pianoscribe-server", daemon=True)
     thread.start()
@@ -63,4 +66,4 @@ def start_background(config: AppConfig | None = None, port: int | None = None,
         if not thread.is_alive() or time.time() > deadline:
             raise RuntimeError("Der interne Server ist nicht gestartet.")
         time.sleep(0.05)
-    return BackgroundServer(server, thread, port, config.token)
+    return BackgroundServer(server, thread, port, config.token, app)

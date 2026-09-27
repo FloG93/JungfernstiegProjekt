@@ -1,5 +1,18 @@
 # Changelog
 
+## Phase 5 – Desktop-Hülle
+
+- `main.py`: freier Port, uvicorn im Hintergrund-Thread, pywebview-Fenster (Edge WebView2 unter
+  Windows) mit Sitzungs-Token in der URL, deutsche Dialogtexte, Nachfrage beim Schließen während
+  einer Berechnung, danach Jobs abbrechen und Server beenden.
+- `js_api`-Bridge: `open_audio_dialog`, `save_file_dialog`, `write_file`. Geschrieben wird nur
+  an vom Nutzer im Dialog gewählte Pfade mit erlaubten Endungen (PDF, MusicXML, MIDI).
+- Datei-Log unter `<Datenordner>/logs/pianoscribe.log` (rotierend); im Fenster-Modus werden
+  fehlende stdout/stderr abgefangen (sonst stürzen tqdm & Co. in der PyInstaller-App ab).
+- Tests mit Fake-`webview` (Start/Stopp mit echtem Server und Token, Bridge-Regeln) sowie ein
+  manueller Test mit echtem pywebview-Fenster (Qt-Backend unter Xvfb): Bridge-Funktionen
+  vorhanden, Oberfläche und Projektliste laden, sauberes Beenden.
+
 ## Phase 4 – Frontend
 
 - React 19 + Vite 8 + TypeScript 6 (strict), ESLint (typescript-eslint strict, React-Hooks v7),
