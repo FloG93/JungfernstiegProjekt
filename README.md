@@ -93,6 +93,12 @@ git pull && pip install -e ".[gui]"
 - [`UMZUG.md`](UMZUG.md) – Übergabedokument des Repo-Umzugs, aus dem dieses
   Projekt neu aufgebaut wurde.
 
+## Weiteres Projekt im Repo: PianoScribe
+
+Im Ordner [`pianoscribe/`](pianoscribe/) liegt eine eigenständige Desktop-App, die aus
+Audiodateien Klaviernoten erzeugt (Separation, Transkription, Notensatz, PDF-Export). Details in
+[`pianoscribe/README.md`](pianoscribe/README.md).
+
 ## Lizenz
 
 MIT
