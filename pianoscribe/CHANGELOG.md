@@ -1,5 +1,26 @@
 # Changelog
 
+## Phase 2 – Notationsqualität
+
+- Adaptives Raster: Viterbi über die Schläge wählt je Schlag Viertel/Achtel/Sechzehntel oder
+  Achteltriolen (Zeitfehler in Sekunden, Komplexitäts- und Wechselstrafe); feste Raster `1/8`,
+  `1/16`, `1/16+triplets`. Offsets auf dem feinen Raster.
+- Händetrennung **vor** der Quantisierung, Raster **pro Hand** (Triolen gegen Achtel).
+  Auto-Split mit Hysterese (Median + letzter Ton), Dezimen-Spanne, höchstens fünf Töne und
+  Registerregel gegen Geisternoten.
+- Beat-Raster: verpasste Beats auffüllen, Doppel-Beats entfernen, Frame-Jitter glätten (±25 ms).
+- Dauern: Lücken bis ein Sechzehntel zum nächsten Anschlag bzw. Schlag schließen; Überhang nach
+  dem letzten Takt kappen; Synkopen- und Pausenregeln in der Rhythmus-Schreibweise.
+- Pedal: Ereignisse auf Anschläge einrasten, zu kurze verwerfen, als Pedal-Klammern setzen.
+- Keine Instrumentenbezeichnung, explizite Triolenklammern.
+- Pegel-Normalisierung vor Beat-Erkennung (0,9) und Transkription (0,4) – gemessen.
+- Evaluation: MAESTRO-Ausschnitte (Test-Split) als Fixtures, `evaluation/evaluate.py` (F1 solo,
+  im Mix, mit Separation), Notationsvergleich gegen die Partitur des Demo-Stücks. Ergebnisse in
+  `backend/evaluation/README.md`.
+- 19 neue Qualitätstests auf synthetischem MIDI (u. a. „Achtel mit ±20 ms Jitter → saubere
+  Achtel“, Triolen, Polyrhythmus, Hände, Auftakt/Bindebögen, 3/4 und 6/8, Tonart, Transposition,
+  Pedal, manuelles Tempo) plus Regressionstest „Demo-Stück wird exakt notiert“.
+
 ## Phase 1 – Pipeline als CLI
 
 - `paths.py` (Dev/Bundle/`%LOCALAPPDATA%`, Overrides `PIANOSCRIBE_HOME`, `PIANOSCRIBE_MODELS`,

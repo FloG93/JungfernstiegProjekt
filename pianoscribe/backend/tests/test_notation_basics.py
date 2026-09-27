@@ -85,7 +85,7 @@ def test_grid_interpolates_tempo_changes():
     grid = build_grid(beats, [0.0, 2.2], meter.parse_time_signature("4/4"), (0.0, 2.8))
     assert grid.tempo_source == "auto"
     b = float(grid.to_beat(1.3)[0]) - grid.bar_beat
-    assert b == pytest.approx(2.5)
+    assert b == pytest.approx(2.5, abs=0.05)  # konstantes Raster ergäbe ≈ 2.17
     assert float(grid.to_time(grid.to_beat(2.0))[0]) == pytest.approx(2.0)
 
 

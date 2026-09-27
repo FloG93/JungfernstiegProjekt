@@ -28,6 +28,7 @@ from music21 import (
 )
 from music21 import key as m21key
 from music21 import meter as m21meter
+from music21.stream import makeNotation
 
 from .keys import Key, spell
 from .measures import Item, MeasureSpec
@@ -79,20 +80,27 @@ def _element(item: Item, key: Key) -> note.GeneralNote:
     return el
 
 
-def _pedal_spanners(pedals: Sequence[QPedal], placed: list[tuple[int, note.GeneralNote]]
-                    ) -> list[expressions.PedalMark]:
-    """Pedalzeichen (Ped. … *) über die Noten, die innerhalb des Pedals angeschlagen werden."""
+def _pedal_spanners(pedals: Sequence[QPedal],
+                    placed: dict[int, list[tuple[int, note.GeneralNote]]]
+                    ) -> list[tuple[int, expressions.PedalMark]]:
+    """Pedalzeichen (Ped. … *) über die Noten, die innerhalb des Pedals angeschlagen werden.
+
+    Bevorzugt an der linken Hand (unter dem Bass-System); spielt sie im Pedalbereich nichts,
+    an der rechten. Dargestellt als Pedal-Klammer (|___|): Bei häufigen Pedalwechseln bleibt das
+    lesbar, während sich „Ped.“ und „*“ am Wechsel überlagern würden.
+    """
     marks = []
     for ped in pedals:
-        members = [el for start, el in placed
-                   if ped.start <= start < ped.end and not isinstance(el, note.Rest)]
-        if not members:
-            continue
-        mark = expressions.PedalMark()
-        mark.pedalType = expressions.PedalType.Sustain
-        mark.pedalForm = expressions.PedalForm.Symbol
-        mark.addSpannedElements(*members)
-        marks.append(mark)
+        for hand in (LEFT, RIGHT):
+            members = [el for start, el in placed[hand]
+                       if ped.start <= start < ped.end and not isinstance(el, note.Rest)]
+            if members:
+                mark = expressions.PedalMark()
+                mark.pedalType = expressions.PedalType.Sustain
+                mark.pedalForm = expressions.PedalForm.Line
+                mark.addSpannedElements(*members)
+                marks.append((hand, mark))
+                break
     return marks
 
 
@@ -107,8 +115,12 @@ def build_score(data: ScoreInput) -> stream.Score:
 
     for hand in (RIGHT, LEFT):
         part = stream.PartStaff(id="RH" if hand == RIGHT else "LH")
-        part.partName = "Klavier"
         part.insert(0, instrument.Piano())
+        part.partName = "Klavier"
+        part.partAbbreviation = "Kl."
+        # Solo-Klavier: keine Instrumentenbezeichnung (StreamStyle, mypy kennt nur Style)
+        part.style.printPartName = False  # type: ignore[attr-defined]
+        part.style.printPartAbbreviation = False  # type: ignore[attr-defined]
         for index, spec in enumerate(data.measures):
             m = stream.Measure(number=spec.number)
             if index == 0:
@@ -125,20 +137,19 @@ def build_score(data: ScoreInput) -> stream.Score:
                 el = _element(item, data.key)
                 m.insert(float(_ql(item.offset)), el)
                 placed[hand].append((spec.start + item.offset, el))
+            makeNotation.makeTupletBrackets(m, inPlace=True)
             if index == len(data.measures) - 1:
                 m.rightBarline = bar.Barline("final")
             part.append(m)
         parts[hand] = part
 
     if data.show_pedal:
-        target = LEFT if any(not isinstance(el, note.Rest) for _, el in placed[LEFT]) else RIGHT
-        for pedal_mark in _pedal_spanners(data.pedals, placed[target]):
-            parts[target].insert(0, pedal_mark)
+        for hand, pedal_mark in _pedal_spanners(data.pedals, placed):
+            parts[hand].insert(0, pedal_mark)
 
     for hand in (RIGHT, LEFT):
         score.insert(0, parts[hand])
-    group = layout.StaffGroup([parts[RIGHT], parts[LEFT]], name="Klavier", abbreviation="Kl.",
-                              symbol="brace")
+    group = layout.StaffGroup([parts[RIGHT], parts[LEFT]], symbol="brace")
     group.barTogether = True
     score.insert(0, group)
     return score

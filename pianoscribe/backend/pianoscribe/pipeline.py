@@ -186,14 +186,17 @@ class Pipeline:
     def _stage_transcribe(self, project: Project, reporter: Reporter) -> None:
         manifest = project.load()
         transcriber = self.engines.transcriber(manifest.options.transcriber)
-        mono = audio.load_mono(project.transcription_input(), transcriber.sample_rate)
+        mono = audio.normalize_peak(audio.load_mono(project.transcription_input(),
+                                                    transcriber.sample_rate),
+                                    peak=audio.TRANSCRIBE_PEAK, max_gain_db=12.0)
         result = transcriber.transcribe(mono, reporter)
         result.save(project.raw_notes_json)
         write_raw_midi(project.raw_mid, result.notes, result.pedals)
 
     def _stage_rhythm(self, project: Project, reporter: Reporter) -> None:
         mix, sr = audio.read_audio(project.trimmed_wav)
-        result = self.engines.beat_tracker().track(mix, sr, reporter)
+        normalized = audio.normalize_peak(mix, peak=audio.BEATS_PEAK)
+        result = self.engines.beat_tracker().track(normalized, sr, reporter)
         result.save(project.beats_json)
 
     def _stage_notate(self, project: Project, reporter: Reporter) -> None:

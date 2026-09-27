@@ -13,6 +13,8 @@ import soxr
 from .paths import ffmpeg_exe
 
 WORK_SAMPLE_RATE = 44100
+TRANSCRIBE_PEAK = 0.4
+BEATS_PEAK = 0.9
 SUPPORTED_EXTENSIONS = {".mp3", ".m4a", ".aac", ".flac", ".wav", ".ogg", ".oga", ".opus", ".wma"}
 PEAKS_PER_SECOND = 100
 _FADE_S = 0.005
@@ -80,6 +82,20 @@ def trim(src: Path, dst: Path, start_s: float, end_s: float) -> float:
         audio[-fade:] *= ramp[::-1]
     write_audio(dst, audio, sr)
     return audio.shape[0] / sr
+
+
+def normalize_peak(audio: np.ndarray, peak: float = 0.9, max_gain_db: float = 20.0) -> np.ndarray:
+    """Pegel auf eine Spitze von ``peak`` bringen (höchstens ``max_gain_db`` Verstärkung).
+
+    beat_this und die Transkription reagieren auf den Eingangspegel; leise Ausschnitte (Intros)
+    werden so vergleichbar, ohne Rauschen hochzuziehen. Gemessen (spikes/RESULTS.md): beat_this
+    arbeitet bei Spitze 0,9 am besten, die Transkription bei 0,25–0,5 (lauter → Geisternoten).
+    """
+    top = float(np.abs(audio).max()) if audio.size else 0.0
+    if top <= 0.0:
+        return audio
+    gain = min(peak / top, 10 ** (max_gain_db / 20))
+    return (audio * gain).astype(np.float32, copy=False)
 
 
 def to_mono(audio: np.ndarray) -> np.ndarray:

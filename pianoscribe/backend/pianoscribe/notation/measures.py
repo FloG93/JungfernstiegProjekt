@@ -57,7 +57,13 @@ def compute_layout(notes: Sequence[QNote], ts: TimeSig) -> tuple[ScoreLayout, in
             pickup = measure1 - math.floor(first / beat) * beat
         if pickup >= bar:  # sollte nicht vorkommen
             measure1, pickup = bar_start, 0
-    n_bars = max(1, math.ceil((last - measure1) / bar))
+    # Klingt der letzte Ton nur kurz in einen weiteren Takt hinein (z. B. durch das Pedal),
+    # endet die Partitur am Taktstrich nach dem letzten Anschlag.
+    last_onset = max(n.start for n in notes)
+    bar_after_onset = measure1 + (math.floor((last_onset - measure1) / bar) + 1) * bar
+    end = bar_after_onset if last - bar_after_onset < bar else (
+        measure1 + math.ceil((last - measure1) / bar) * bar)
+    n_bars = max(1, (end - measure1) // bar)
     return ScoreLayout(bar, pickup, n_bars), measure1
 
 

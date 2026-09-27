@@ -17,10 +17,11 @@ from . import cleanup
 from .build_score import ScoreInput, build_score
 from .events import build_events
 from .grid import BeatGrid, build_grid
-from .hands import split_fixed
+from .hands import split_auto, split_fixed
 from .keys import Key, detect_key, parse_key, transpose_key
 from .measures import Metrics, compute_layout, fill_measure, measure_specs
 from .meter import TimeSig, parse_time_signature
+from .pedal import clean_pedals
 from .quantize import choose_divisions, quantize_notes, quantize_pedals
 from .types import (
     LEFT,
@@ -117,23 +118,39 @@ def notate(notes: Sequence[RawNote], pedals: Sequence[RawPedal], beats: Sequence
     if grid.tempo_source == "fallback":
         warnings.append("Kein Takt erkannt – Tempo bitte manuell setzen.")
 
-    onset_beats = grid.to_beat(np.array([n.onset for n in cleaned])) - grid.bar_beat
-    divisions = choose_divisions(onset_beats, ts, params.grid)
-    qnotes: list[QNote] = quantize_notes(cleaned, grid, ts, divisions)
-    qpedals = quantize_pedals(pedals, grid, ts, divisions) if params.pedal else []
+    # Händetrennung vor der Quantisierung, damit jede Hand ihr eigenes Raster bekommt.
+    pitches = [n.pitch for n in cleaned]
+    if params.hand_split.mode == "fixed":
+        hands = split_fixed(pitches, params.hand_split.pitch)
+    else:
+        hands = split_auto(pitches, [n.onset for n in cleaned])
+
+    qnotes: list[QNote] = []
+    divisions = {}
+    for hand in (RIGHT, LEFT):
+        hand_notes = [n for n, h in zip(cleaned, hands, strict=True) if h == hand]
+        onsets_s = np.array([n.onset for n in hand_notes])
+        onset_beats = grid.to_beat(onsets_s) - grid.bar_beat if hand_notes else np.zeros(0)
+        divisions[hand] = choose_divisions(onset_beats, onsets_s, grid, ts, params.grid)
+        for q in quantize_notes(hand_notes, grid, ts, divisions[hand]):
+            q.hand = hand
+            qnotes.append(q)
+    qnotes.sort(key=lambda q: (q.start, q.pitch))
+    straight = choose_divisions(np.zeros(0), np.zeros(0), grid, ts, params.grid)
+    qpedals = quantize_pedals(pedals, grid, ts, straight) if params.pedal else []
 
     layout, shift = compute_layout(qnotes, ts)
     for n in qnotes:
         n.start -= shift
-        n.end -= shift
+        n.end = min(n.end - shift, layout.end_tick)  # Überhang nach dem letzten Takt kappen
     for p in qpedals:
         p.start -= shift
-        p.end -= shift
+        p.end = min(p.end - shift, layout.end_tick)
+    qpedals = clean_pedals(qpedals, [n.start for n in qnotes], ts.beat_ticks)
     qpedals = [p for p in qpedals if p.end > layout.start_tick and p.start < layout.end_tick]
 
-    split_fixed(qnotes, params.hand_split.pitch)
     key, key_source = _choose_key(cleaned, params)
-    events = {hand: build_events(qnotes, hand) for hand in (RIGHT, LEFT)}
+    events = {hand: build_events(qnotes, hand, ts.beat_ticks) for hand in (RIGHT, LEFT)}
 
     metrics = Metrics.of(ts)
     specs = measure_specs(layout)

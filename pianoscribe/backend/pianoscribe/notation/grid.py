@@ -59,6 +59,47 @@ def _clean_beats(beats: Sequence[float]) -> np.ndarray:
     return np.array(keep)
 
 
+def regularize_beats(beats: np.ndarray, tolerance: float = 0.25) -> np.ndarray:
+    """Füllt verpasste Beats auf und entfernt Doppelerkennungen.
+
+    Ein Abstand von etwa n × Periode (n ≥ 2) bekommt n − 1 gleichmäßig verteilte Beats; ein
+    Beat, der näher als gut die halbe Periode am vorigen liegt, wird verworfen.
+    """
+    if beats.size < 4:
+        return beats
+    period = float(np.median(np.diff(beats)))
+    out = [float(beats[0])]
+    for b in beats[1:]:
+        gap = float(b) - out[-1]
+        n = round(gap / period)
+        if gap < 0.55 * period:
+            continue
+        if n >= 2 and abs(gap / n - period) <= tolerance * period:
+            out.extend(out[-1] + gap * k / n for k in range(1, n))
+        out.append(float(b))
+    return np.array(out)
+
+
+def smooth_beats(beats: np.ndarray, radius: int = 2, max_shift: float = 0.025) -> np.ndarray:
+    """Gleitende lineare Glättung gegen den Frame-Jitter von beat_this (20-ms-Raster).
+
+    Konstantes Tempo bleibt exakt erhalten. Die Korrektur ist auf ``max_shift`` begrenzt, damit
+    echte Tempowechsel (z. B. ein Ritardando) nicht verwischt werden.
+    """
+    n = beats.size
+    if n < 2 * radius + 1:
+        return beats
+    out = beats.copy()
+    idx = np.arange(n)
+    for i in range(n):
+        lo, hi = max(0, i - radius), min(n, i + radius + 1)
+        if hi - lo < 3:
+            continue
+        slope, intercept = np.polyfit(idx[lo:hi], beats[lo:hi], 1)
+        out[i] = beats[i] + np.clip(slope * i + intercept - beats[i], -max_shift, max_shift)
+    return out
+
+
 def _extend(times: np.ndarray, start: float, end: float, edge: int = 4) -> tuple[np.ndarray, int]:
     """Verlängert die Beat-Liste nach vorn und hinten. Gibt (Beats, Anzahl vorn ergänzt)."""
     head = float(np.median(np.diff(times[: edge + 1])))
@@ -106,7 +147,7 @@ def build_grid(beats: Sequence[float], downbeats: Sequence[float], ts: TimeSig,
     """
     bpb = ts.beats_per_bar
     start, end = span
-    detected = _clean_beats(beats)
+    detected = smooth_beats(regularize_beats(_clean_beats(beats)))
 
     if tempo_bpm is not None:
         period = 60.0 / tempo_bpm
