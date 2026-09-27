@@ -1,5 +1,20 @@
 # Changelog
 
+## Phase 3 – API & Jobs
+
+- FastAPI-App (`pianoscribe.api`) mit allen Routen aus Abschnitt 6: Health (GPU, Modelle,
+  ffmpeg), Modellstatus und -download als Job, Projekte (anlegen per Pfad oder Upload-Fallback,
+  PATCH, löschen), Audio mit Range-Requests, Wellenform-Peaks, Pipeline-Start, Jobs (Status,
+  Liste, Abbruch), Ergebnisdateien, Einstellungen (CPU-Modus).
+- Job-Queue mit genau einem GPU-Worker-Thread, Abbruch-Flag, gewichteter Gesamtfortschritt,
+  verständliche deutsche Fehlermeldungen mit Hinweis (z. B. CUDA-Speicher → Ausschnitt kürzen
+  oder CPU-Modus). Reine Notationsänderungen laufen sofort synchron.
+- WebSocket `/api/ws` für Push-Fortschritt (Polling bleibt möglich).
+- Schutz des lokalen Servers: Host-Prüfung (DNS-Rebinding), Sitzungs-Token (Header oder
+  `?token=`), Konflikte (409) bei Änderungen von Ausschnitt/Optionen während einer Berechnung.
+- `pianoscribe serve [--dev]`, Hintergrund-Server für die Desktop-Hülle (`server.py`).
+- 12 API-Tests (TestClient, gemockte GPU-Stufen) plus Rauchtest mit echtem uvicorn und Modellen.
+
 ## Phase 2 – Notationsqualität
 
 - Adaptives Raster: Viterbi über die Schläge wählt je Schlag Viertel/Achtel/Sechzehntel oder
