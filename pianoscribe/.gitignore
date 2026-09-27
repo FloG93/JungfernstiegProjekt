@@ -29,3 +29,7 @@ packaging/Output/
 backend/evaluation/out/
 *.wav
 !backend/tests/fixtures/*.wav
+
+# Ausgaben der Browser-Tests
+frontend/e2e/*.png
+frontend/e2e/*.pdf

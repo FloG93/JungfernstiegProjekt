@@ -43,7 +43,12 @@ npm run build      # nach frontend/dist (wird von FastAPI ausgeliefert)
 npm run lint
 npm run typecheck
 npm test           # vitest
+node e2e/smoke.mjs [url] [projektname]      # Browser-Rauchtest (Playwright, laufendes Backend)
+node e2e/new-project.mjs <audio> [url]      # neues Projekt komplett durchrechnen
 ```
+
+Playwright braucht einen Chromium; in der Cloud-Umgebung
+`PW_CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome` setzen.
 
 Windows-Build: `packaging\build.ps1` (Frontend bauen, Assets laden, PyInstaller, Inno Setup).
 

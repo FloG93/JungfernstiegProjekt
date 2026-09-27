@@ -1,5 +1,26 @@
 # Changelog
 
+## Phase 4 – Frontend
+
+- React 19 + Vite 8 + TypeScript 6 (strict), ESLint (typescript-eslint strict, React-Hooks v7),
+  Vitest. Typisierter API-Client mit Sitzungs-Token, WebSocket-Jobs mit Polling-Fallback.
+- Startseite mit Projektliste; „Neues Projekt“ über den nativen Dialog (pywebview) bzw.
+  Upload-Fallback im Browser.
+- Editor: Wellenform (wavesurfer.js 7, vorberechnete Peaks) mit Trim-Bereich, Zoom, Abspielen
+  des Ausschnitts, Marker „Ersten Taktschlag hier“ und Tap-Tempo; Berechnung mit Fortschritt je
+  Stufe, Abbruch und verständlichen Fehlern; Notenansicht mit Verovio (Endlos/Seiten, Größe,
+  mitlaufende Hervorhebung, Klick auf Note springt dorthin); Player mit A/B/C-Umschaltung
+  Original · Klavier · Noten (Tone.js, Salamander-Samples, synchron am Transport);
+  Parameter-Panel live (nur Notationsstufe, mit Debounce); Export PDF (Verovio → jsPDF +
+  svg2pdf.js), MusicXML, MIDI quantisiert und roh.
+- Einrichtungsdialog (GPU-Status, CPU-Modus, Modell-Download mit Fortschritt), About-Box mit
+  Lizenzhinweisen (Salamander CC BY 3.0), Tastenkürzel Leertaste und [ / ].
+- PDF-Details: verschachtelte Verovio-SVGs werden für svg2pdf abgeflacht, Tempo-Glyphen als
+  Text („Viertel = 96“), jsPDF wird erst bei Bedarf geladen.
+- Backend liefert die Salamander-Samples unter `/samples` aus.
+- Tests: 12 Vitest-Tests, Browser-Rauchtests mit Playwright (`e2e/smoke.mjs`,
+  `e2e/new-project.mjs`) gegen das echte Backend.
+
 ## Phase 3 – API & Jobs
 
 - FastAPI-App (`pianoscribe.api`) mit allen Routen aus Abschnitt 6: Health (GPU, Modelle,

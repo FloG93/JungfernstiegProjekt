@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from ..jobs import JobManager
-from ..paths import frontend_dist
+from ..paths import frontend_dist, samples_dir
 from ..pipeline import Engines
 from . import routes
 
@@ -101,6 +101,10 @@ def create_app(config: AppConfig | None = None) -> FastAPI:
             pass
         finally:
             jobs.unsubscribe(listener)
+
+    samples = samples_dir()
+    if samples.is_dir():  # Salamander-Samples für die Wiedergabe (nicht schützenswert)
+        app.mount("/samples", StaticFiles(directory=samples), name="samples")
 
     static_dir = config.static_dir or frontend_dist()
     if (static_dir / "index.html").exists():
