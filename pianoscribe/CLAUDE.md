@@ -23,7 +23,7 @@ Backend (im Ordner `backend/`):
 ```bash
 uv sync                                   # Umgebung (Linux: CPU-torch, Windows: CUDA 13.0)
 uv run pytest                             # Tests ohne Modelle (schnell)
-uv run pytest -m models                   # Tests mit echten Modellen (Gewichte nötig)
+PIANOSCRIBE_MODELS=<ordner> uv run pytest -m models   # mit echten Modellen (langsam)
 uv run ruff check .                       # Lint
 uv run mypy pianoscribe                   # Typprüfung
 uv run python ../scripts/fetch_assets.py  # Samples (+ ffmpeg unter Windows) laden
