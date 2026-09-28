@@ -1,5 +1,8 @@
 """Tests für die Kommandozeile (mit Fake-Modellen)."""
 
+import io
+import sys
+
 import pytest
 
 from pianoscribe import cli, pipeline
@@ -44,3 +47,14 @@ def test_errors_are_reported_without_traceback(capsys):
     assert cli.main(["run", "--project", "doesnotexist"]) == 1
     assert "nicht gefunden" in capsys.readouterr().err
     assert cli.main(["models"]) == 0
+
+
+def test_output_survives_windows_codepage(monkeypatch):
+    """Umgeleitete Ausgabe unter Windows (cp1252) darf an ✔/✘ nicht scheitern."""
+    raw = io.BytesIO()
+    stdout = io.TextIOWrapper(raw, encoding="cp1252")
+    monkeypatch.setattr(sys, "stdout", stdout)
+    assert cli.main(["models"]) == 0
+    stdout.flush()
+    text = raw.getvalue().decode("utf-8")
+    assert "✘" in text or "✔" in text

@@ -33,6 +33,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
+# Die Python-Programme geben UTF-8 aus (✔, Umlaute); so zeigt PowerShell das richtig an.
+try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
 
 $Packaging = $PSScriptRoot
 $Root = Split-Path -Parent $Packaging

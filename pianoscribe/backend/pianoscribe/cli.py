@@ -10,6 +10,7 @@ Beispiele::
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import sys
 from pathlib import Path
@@ -282,7 +283,22 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _utf8_output() -> None:
+    """Ausgabe immer als UTF-8 (wie Pythons UTF-8-Modus).
+
+    Unter Windows benutzt Python für umgeleitete Ausgaben (Pipe, Datei, CI) die ANSI-Codepage
+    cp1252, die Zeichen wie ✔ nicht kennt; ``print`` würde dann abbrechen.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        encoding = (getattr(stream, "encoding", None) or "").lower().replace("-", "")
+        reconfigure = getattr(stream, "reconfigure", None)
+        if encoding != "utf8" and reconfigure is not None:
+            with contextlib.suppress(OSError, ValueError):  # z. B. bereits geschlossener Stream
+                reconfigure(encoding="utf-8", errors="replace")
+
+
 def main(argv: list[str] | None = None) -> int:
+    _utf8_output()
     parser = build_parser()
     args = parser.parse_args(argv)
     if not getattr(args, "func", None):
