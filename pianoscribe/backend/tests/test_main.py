@@ -105,3 +105,20 @@ def test_bridge_rejects_disallowed_extension(fake_webview, tmp_path):
     bridge._approved.add(str(tmp_path / "x.exe"))
     with pytest.raises(PermissionError):
         bridge.write_file(str(tmp_path / "x.exe"), base64.b64encode(b"MZ").decode())
+
+
+def test_run_app_uses_own_webview_profile(fake_webview, isolated_home):
+    assert app_main.run_app() == 0
+    kwargs = fake_webview.started[0]
+    assert kwargs["private_mode"] is True
+    assert kwargs["storage_path"] == str(isolated_home / "webview")
+
+
+def test_run_app_stops_with_message_without_webview2(fake_webview, monkeypatch):
+    shown = []
+    monkeypatch.setattr(app_main, "webview_problem", lambda: ("WebView2 fehlt", "https://x"))
+    monkeypatch.setattr(app_main, "_show_error",
+                        lambda message, url=None: shown.append((message, url)))
+    assert app_main.run_app() == 1
+    assert shown == [("WebView2 fehlt", "https://x")]
+    assert fake_webview.created == []  # kein Fenster, kein Server

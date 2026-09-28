@@ -7,7 +7,7 @@ import RegionsPlugin, { type Region } from "wavesurfer.js/dist/plugins/regions.e
 import TimelinePlugin from "wavesurfer.js/dist/plugins/timeline.esm.js";
 
 import type { Trim, Waveform } from "../api/types";
-import { formatTime } from "../lib/timing";
+import { formatDecimal, formatTime } from "../lib/timing";
 
 export interface WaveformHandle {
   pause(): void;
@@ -192,7 +192,7 @@ export const WaveformEditor = forwardRef<WaveformHandle, Props>(function Wavefor
         <span className="spacer" />
         <span className="trim-display" title="Ausschnitt (mit [ und ] am Abspielkopf setzen)">
           Ausschnitt {formatTime(trim.start_s)} – {formatTime(trim.end_s)}
-          {" "}({(trim.end_s - trim.start_s).toFixed(1)} s)
+          {" "}({formatDecimal(trim.end_s - trim.start_s)} s)
         </span>
         <span className="spacer" />
         <button type="button" className="btn" disabled={disabled}

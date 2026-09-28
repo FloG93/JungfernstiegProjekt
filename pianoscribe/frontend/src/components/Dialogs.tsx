@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { api } from "../api/client";
 import { isFinal, watchJob } from "../api/jobs";
 import type { Health, Job, ModelStatus } from "../api/types";
+import { formatDecimal } from "../lib/timing";
 
 function Modal({ title, children, onClose }: { title: string; children: React.ReactNode; onClose?: () => void }) {
   return (
@@ -57,7 +58,7 @@ export function SetupDialog({ health, onDone }: { health: Health; onDone: () => 
         <h3>Grafikkarte</h3>
         {gpu.cuda_available ? (
           <p className="ok">
-            ✔ {gpu.name} erkannt{gpu.vram_total_mb ? ` (${(gpu.vram_total_mb / 1024).toFixed(1)} GB VRAM)` : ""}.
+            ✔ {gpu.name} erkannt{gpu.vram_total_mb ? ` (${formatDecimal(gpu.vram_total_mb / 1024)} GB VRAM)` : ""}.
             Die Berechnung läuft auf der GPU.
           </p>
         ) : (

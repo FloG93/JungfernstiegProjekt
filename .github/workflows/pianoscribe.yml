@@ -1,0 +1,76 @@
+# Tests und Lint für PianoScribe (Unterordner pianoscribe/); das kindle-meta-Projekt im
+# Repo-Stamm hat seinen eigenen Workflow (ci.yml).
+name: PianoScribe
+
+on:
+  push:
+    paths:
+      - "pianoscribe/**"
+      - ".github/workflows/pianoscribe.yml"
+  pull_request:
+    paths:
+      - "pianoscribe/**"
+      - ".github/workflows/pianoscribe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pianoscribe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (Python, CPU)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: pianoscribe/backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ffmpeg installieren
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pianoscribe/backend/uv.lock
+
+      - name: Abhängigkeiten (uv.lock, CPU-PyTorch)
+        run: uv sync --locked
+
+      - name: Ruff
+        run: >-
+          uv run ruff check --config pyproject.toml .
+          ../packaging/launcher.py ../packaging/make_icon.py ../scripts/fetch_assets.py
+
+      - name: Mypy
+        run: uv run mypy pianoscribe
+
+      - name: Pytest (ohne Modelle)
+        run: uv run pytest -q
+
+  frontend:
+    name: Frontend (TypeScript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: pianoscribe/frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: pianoscribe/frontend/package-lock.json
+
+      - run: npm ci --no-audit --no-fund
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build

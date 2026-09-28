@@ -49,6 +49,11 @@ export class TimeMap {
   }
 }
 
+/** Dezimalzahl im deutschen Format, z. B. 20,4 */
+export function formatDecimal(value: number, digits = 1): string {
+  return value.toLocaleString("de-DE", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+}
+
 /** Formatiert Sekunden als m:ss,z */
 export function formatTime(seconds: number): string {
   const safe = Math.max(0, seconds);

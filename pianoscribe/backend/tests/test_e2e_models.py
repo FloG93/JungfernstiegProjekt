@@ -53,3 +53,14 @@ def test_mix_with_separation_runs(demo_files):
     executed = Pipeline(ModelEngines("cpu")).run(project)
     assert executed == ["trim", "separate", "transcribe", "rhythm", "notate"]
     assert project.piano_wav.exists() and project.score_musicxml.exists()
+
+
+def test_selftest_runs_all_models():
+    from pianoscribe import selftest
+
+    results = selftest.run_checks(models=True, device="cpu")
+    model_checks = {r.name: r for r in results
+                    if r.name in ("Modelle", "Separation", "Transkription", "Beat-Erkennung")}
+    assert len(model_checks) == 4
+    failed = [f"{r.name}: {r.detail}" for r in model_checks.values() if not r.ok]
+    assert not failed

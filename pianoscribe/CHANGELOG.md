@@ -1,5 +1,35 @@
 # Changelog
 
+## Phase 6 – Packaging & CI
+
+- PyInstaller-Spec (`packaging/pianoscribe.spec`, onedir): ein Programmordner mit
+  `PianoScribe.exe` (Fenster, ohne Konsole) und `pianoscribe-cli.exe` (Kommandozeile) aus
+  demselben Launcher; eingebettet sind Oberfläche, Klavier-Samples, ffmpeg (Windows) und die
+  Modellbeschreibungen von demucs, Entwicklungswerkzeuge und fremde GUI-Toolkits sind
+  ausgeschlossen. Windows-Dateieigenschaften (Version) und App-Icon (`pianoscribe.svg/.ico`,
+  auch als Favicon).
+- Inno-Setup-Installer (`packaging/installer.iss`): Installation pro Benutzer ohne
+  Administratorrechte, Startmenü-Eintrag, optionale Desktop-Verknüpfung, Aufräumen alter
+  Bundle-Dateien bei Updates, Hinweis mit Download-Link, falls die WebView2-Runtime fehlt. Die
+  Deinstallation fragt, ob Projekte, Modelle, Einstellungen und Logs in
+  `%LOCALAPPDATA%\PianoScribe` mitgelöscht werden. Wegen der Größe (CUDA) in Setup-EXE plus
+  `.bin`-Dateien aufgeteilt.
+- `packaging/build.ps1`: Oberfläche bauen, eigene Build-Umgebung aus `uv.lock` (ohne
+  Dev-Pakete), Assets laden, PyInstaller, Rauchtest des fertigen Programms, Installer.
+- Neuer Befehl `pianoscribe selftest [--models]`: prüft Programmdateien, Datenordner, ffmpeg
+  (inkl. Dekodieren), PyTorch/GPU, Bibliotheken, WebView2 und die Notation; mit `--models`
+  rechnen alle drei Modelle kurz synthetisches Audio. Grundlage für den Rauchtest im Build, in
+  CI und beim Nutzer.
+- Desktop-Hülle: prüft vor dem Fensterstart, ob Edge WebView2 verfügbar ist (sonst fiele
+  pywebview still auf den IE-Renderer zurück) und zeigt sonst eine Meldung mit Download-Link;
+  WebView2-Profil unter `<Datenordner>/webview` statt eines neuen Temp-Ordners bei jedem Start.
+- GitHub Actions: `pianoscribe.yml` (Backend ruff/mypy/pytest, Frontend lint/typecheck/test/
+  build) und `pianoscribe-windows.yml` (Windows-Build mit Modell-Selbsttest, Installer als
+  Artefakt).
+- Linux-Probebuild der Spec (CPU-PyTorch, 0,85 GB): `selftest --models` grün, Browser-Tests
+  (`e2e/smoke.mjs`, `e2e/new-project.mjs`) gegen den Server aus dem Bundle grün.
+- Kleinigkeit: Zahlen in der Oberfläche mit Dezimalkomma (Ausschnittsdauer, VRAM).
+
 ## Phase 5 – Desktop-Hülle
 
 - `main.py`: freier Port, uvicorn im Hintergrund-Thread, pywebview-Fenster (Edge WebView2 unter

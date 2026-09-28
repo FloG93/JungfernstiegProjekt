@@ -20,6 +20,7 @@ log = logging.getLogger(__name__)
 
 AUDIO_FILTER = "Audiodateien (*.mp3;*.m4a;*.aac;*.flac;*.wav;*.ogg;*.oga;*.opus;*.wma)"
 ALLOWED_SAVE_EXTENSIONS = {".pdf", ".musicxml", ".xml", ".mxl", ".mid", ".midi"}
+WEBVIEW2_URL = "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
 
 LOCALIZATION = {
     "global.quitConfirmation": "PianoScribe wirklich beenden?",
@@ -96,19 +97,63 @@ def _first(result: Any) -> str | None:
     return str(result[0]) if len(result) else None
 
 
+def webview_problem(platform: str = sys.platform) -> tuple[str, str | None] | None:
+    """Prüft vor dem Fensterstart, ob die Anzeige funktionieren kann (nur Windows).
+
+    Ohne Edge-WebView2-Runtime fiele pywebview still auf den Internet-Explorer-Renderer
+    zurück, der die Oberfläche nicht darstellen kann. Gibt dann ``(Meldung, Hilfe-URL)`` zurück.
+    """
+    if platform != "win32":
+        return None
+    try:
+        from webview.platforms import winforms
+    except Exception as exc:
+        log.exception("WinForms/.NET konnte nicht geladen werden")
+        return ("Die Fensterkomponente (.NET/WinForms) konnte nicht geladen werden:\n"
+                f"{type(exc).__name__}: {exc}", None)
+    renderer = getattr(winforms, "renderer", None)
+    if renderer != "edgechromium":
+        log.error("Kein WebView2 (Renderer: %s)", renderer)
+        return ("PianoScribe braucht die „Microsoft Edge WebView2 Runtime“, die auf diesem "
+                "Rechner fehlt.\n\nSie ist kostenlos und in einer Minute installiert. "
+                "Mit OK öffnet sich die Download-Seite von Microsoft.", WEBVIEW2_URL)
+    return None
+
+
+def _show_error(message: str, url: str | None = None) -> None:
+    """Fehlermeldung ohne Fenster: unter Windows als MessageBox, sonst auf stderr."""
+    print(message, file=sys.stderr)
+    if sys.platform != "win32":
+        return
+    import ctypes
+
+    mb_okcancel, mb_iconerror, idok = 0x1, 0x10, 1
+    flags = mb_iconerror | (mb_okcancel if url else 0)
+    answer = ctypes.windll.user32.MessageBoxW(None, message, "PianoScribe", flags)
+    if url and answer == idok:
+        import webbrowser
+
+        webbrowser.open(url)
+
+
 def run_app() -> int:
     import webview
 
     from .api import AppConfig
     from .logs import setup_logging
+    from .paths import data_dir
     from .server import start_background
 
     log_path = setup_logging()
+    problem = webview_problem()
+    if problem:
+        _show_error(*problem)
+        return 1
     try:
         server = start_background(AppConfig())
     except Exception:
         log.exception("Server-Start fehlgeschlagen")
-        print(f"PianoScribe konnte nicht starten. Details: {log_path}", file=sys.stderr)
+        _show_error(f"PianoScribe konnte nicht starten. Details stehen im Log:\n{log_path}")
         return 1
     log.info("Interner Server auf Port %d", server.port)
 
@@ -130,9 +175,14 @@ def run_app() -> int:
             "PianoScribe", "Eine Berechnung läuft noch. Trotzdem beenden?"))
 
     window.events.closing += on_closing
+    # Eigener Profilordner für WebView2, statt bei jedem Start einen neuen Temp-Ordner anzulegen;
+    # private_mode bleibt an (keine dauerhaften Cookies oder Browser-Speicher).
+    storage = data_dir() / "webview"
+    storage.mkdir(parents=True, exist_ok=True)
     try:
         webview.start(gui="edgechromium" if sys.platform == "win32" else None,
-                      localization=LOCALIZATION, debug=bool(os.environ.get("PIANOSCRIBE_DEBUG")))
+                      localization=LOCALIZATION, debug=bool(os.environ.get("PIANOSCRIBE_DEBUG")),
+                      private_mode=True, storage_path=str(storage))
     finally:
         log.info("Fenster geschlossen – beende Jobs und Server")
         jobs.cancel_all()

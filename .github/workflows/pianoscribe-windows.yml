@@ -1,0 +1,95 @@
+# Windows-Build von PianoScribe: Programmordner (PyInstaller), Rauchtest mit echten Modellen
+# auf der CPU und Installer (Inno Setup). Der Installer wird als Artefakt hochgeladen.
+# Läuft, wenn sich Packaging oder Abhängigkeiten ändern, oder von Hand (workflow_dispatch).
+name: PianoScribe Windows-Build
+
+on:
+  push:
+    paths:
+      - "pianoscribe/packaging/**"
+      - "pianoscribe/backend/pyproject.toml"
+      - "pianoscribe/backend/uv.lock"
+      - "pianoscribe/scripts/fetch_assets.py"
+      - ".github/workflows/pianoscribe-windows.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pianoscribe-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Programmordner, Rauchtest und Installer
+    runs-on: windows-latest
+    timeout-minutes: 150
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+
+      # Bundle, Build-Umgebung und Installer brauchen zusammen gut 15 GB; das Arbeitslaufwerk
+      # der Runner ist knapp, C: hat Platz (dort liegt auch der uv-Cache, dann Hardlinks).
+      - name: Build-Ordner auf Laufwerk C legen
+        run: |
+          Get-PSDrive -PSProvider FileSystem | Format-Table Name, Root, @{ n = "Frei (GB)"; e = { [math]::Round($_.Free / 1GB, 1) } }
+          if ((Get-Location).Drive.Name -ne "C") {
+            foreach ($name in ".venv-build", "build", "dist", "Output") {
+              $target = "C:\pianoscribe-build\$name"
+              New-Item -ItemType Directory -Force $target | Out-Null
+              New-Item -ItemType Junction -Path "pianoscribe\packaging\$name" -Target $target | Out-Null
+            }
+          }
+
+      - uses: astral-sh/setup-uv@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Modellgewichte aus dem Cache
+        uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\PianoScribe\models
+          key: pianoscribe-models-${{ hashFiles('pianoscribe/backend/pianoscribe/models.py') }}
+
+      - name: Inno Setup bereitstellen
+        run: |
+          $known = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe", "$env:ProgramFiles\Inno Setup 6\ISCC.exe"
+          if (-not (Get-Command iscc.exe -ErrorAction SilentlyContinue) -and -not ($known | Where-Object { Test-Path $_ })) {
+            choco install innosetup -y --no-progress
+          }
+
+      # Der Selbsttest prüft, ob pywebview die Edge-WebView2-Runtime findet; auf Windows Server
+      # ist sie nicht immer vorinstalliert.
+      - name: WebView2-Runtime bereitstellen
+        run: |
+          $client = "Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+          $keys = "HKLM:\SOFTWARE\WOW6432Node\$client", "HKLM:\SOFTWARE\$client", "HKCU:\Software\$client"
+          $found = $keys | Where-Object { (Get-ItemProperty $_ -ErrorAction SilentlyContinue).pv -notin @($null, "", "0.0.0.0") }
+          if ($found) { "WebView2 vorhanden: $((Get-ItemProperty ($found | Select-Object -First 1)).pv)"; exit 0 }
+          $setup = Join-Path $env:RUNNER_TEMP "MicrosoftEdgeWebview2Setup.exe"
+          Invoke-WebRequest "https://go.microsoft.com/fwlink/p/?LinkId=2124703" -OutFile $setup
+          Start-Process $setup -ArgumentList "/silent", "/install" -Wait
+          "WebView2 installiert"
+
+      - name: Build (build.ps1 mit Modell-Rauchtest)
+        run: pianoscribe\packaging\build.ps1 -ModelTest
+
+      - name: Größe des Programmordners
+        run: |
+          $dir = "pianoscribe\packaging\dist\PianoScribe"
+          "{0:N2} GB in {1} Dateien" -f ((Get-ChildItem $dir -Recurse -File | Measure-Object Length -Sum).Sum / 1GB), (Get-ChildItem $dir -Recurse -File).Count
+          Get-ChildItem pianoscribe\packaging\Output | Format-Table Name, @{ n = "MB"; e = { [math]::Round($_.Length / 1MB) } }
+
+      - name: Installer hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: PianoScribe-Setup-Windows
+          path: pianoscribe/packaging/Output/
+          retention-days: 14
+          compression-level: 0
+          if-no-files-found: error

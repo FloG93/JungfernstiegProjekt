@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { api, audioUrl, setTokenForTests } from "../api/client";
 import { KEY_OPTIONS, noteNameDe, noteNameTone, SALAMANDER_URLS } from "./music";
 import { flattenNestedSvg, replaceTextGlyphs } from "./svgfix";
-import { formatTime, TimeMap } from "./timing";
+import { formatDecimal, formatTime, TimeMap } from "./timing";
 
 describe("TimeMap", () => {
   const map = new TimeMap([
@@ -32,6 +32,8 @@ describe("Formatierung und Musik", () => {
   it("formatiert Zeiten", () => {
     expect(formatTime(0)).toBe("0:00,0");
     expect(formatTime(83.46)).toBe("1:23,4");
+    expect(formatDecimal(20.35)).toBe("20,4");
+    expect(formatDecimal(1234.5, 0)).toBe("1.235");
   });
 
   it("benennt Noten", () => {

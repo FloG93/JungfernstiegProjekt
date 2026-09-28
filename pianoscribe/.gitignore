@@ -21,6 +21,7 @@ assets/samples/salamander/*
 !assets/samples/salamander/.gitkeep
 
 # Packaging-Ausgaben
+packaging/.venv-build/
 packaging/build/
 packaging/dist/
 packaging/Output/

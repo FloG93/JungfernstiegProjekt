@@ -199,6 +199,24 @@ def cmd_info(_args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_selftest(args: argparse.Namespace) -> int:
+    from .selftest import CheckResult, run_checks
+
+    print(f"PianoScribe {__version__} – Selbsttest", flush=True)
+
+    def show(result: CheckResult) -> None:
+        mark = "✔" if result.ok else "✘"
+        print(f"{mark} {result.name:<20} {result.detail}", flush=True)
+
+    results = run_checks(models=args.models, device=args.device, on_result=show)
+    failed = [r for r in results if not r.ok]
+    if failed:
+        print(f"\n{len(failed)} Prüfung(en) fehlgeschlagen.", flush=True)
+        return 1
+    print("\nAlles in Ordnung.", flush=True)
+    return 0
+
+
 def cmd_serve(args: argparse.Namespace) -> int:
     from .server import serve
 
@@ -248,6 +266,12 @@ def build_parser() -> argparse.ArgumentParser:
     mdl.add_argument("action", choices=["status", "download"], nargs="?", default="status")
     mdl.set_defaults(func=cmd_models)
     sub.add_parser("info", help="GPU- und Modellstatus").set_defaults(func=cmd_info)
+    selftest = sub.add_parser("selftest", help="Installation prüfen (Dateien, ffmpeg, GPU, "
+                              "Notation; mit --models auch die Modelle)")
+    selftest.add_argument("--models", action="store_true",
+                          help="zusätzlich alle Modelle kurz rechnen lassen")
+    selftest.add_argument("--device", choices=["auto", "cuda", "cpu"], default="auto")
+    selftest.set_defaults(func=cmd_selftest)
 
     srv = sub.add_parser("serve", help="API-Server starten (für Entwicklung im Browser)")
     srv.add_argument("--host", default="127.0.0.1")
