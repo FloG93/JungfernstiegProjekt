@@ -7,6 +7,7 @@ strukturiert und verständlich im Job-Status. Zustandsänderungen gehen an regis
 
 from __future__ import annotations
 
+import errno
 import logging
 import queue
 import threading
@@ -86,6 +87,10 @@ def describe_error(exc: BaseException) -> dict[str, str]:
                 "hint": "Eine andere Datei oder ein anderes Format versuchen."}
     if isinstance(exc, PipelineError):
         return {"code": "pipeline", "message": str(exc), "hint": ""}
+    if isinstance(exc, OSError) and exc.errno == errno.ENOSPC:
+        return {"code": "disk_full", "message": "Auf dem Laufwerk ist nicht genug Platz frei.",
+                "hint": "Speicherplatz freigeben (z. B. alte Projekte löschen) und erneut "
+                        "versuchen."}
     if isinstance(exc, MemoryError):
         return {"code": "ram", "message": "Der Arbeitsspeicher reicht nicht.",
                 "hint": "Einen kürzeren Ausschnitt wählen."}

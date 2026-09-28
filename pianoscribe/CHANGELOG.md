@@ -1,5 +1,19 @@
 # Changelog
 
+## Phase 7 – Feinschliff
+
+- Verständlichere Fehlermeldungen: eigener Hinweis bei vollem Datenträger; fehlt ffmpeg im
+  installierten Programm, rät die Meldung zur Neuinstallation statt zu Entwickler-Befehlen.
+- Desktop-Hülle richtet das Logging vor dem Import von pywebview ein (im Fenster-Modus ohne
+  Konsole sind stdout/stderr bis dahin nicht vorhanden).
+- Abschluss-Review: Absicherung des lokalen Servers (Token, Host-Prüfung, Projekt-IDs,
+  Datei-Whitelist) und der Schließen-Dialog unter WinForms (läuft synchron im GUI-Thread, kein
+  Deadlock) geprüft. Log nach `%LOCALAPPDATA%\PianoScribe\logs`, Fehlermeldungen mit
+  Handlungshinweis und die Tastenkürzel (Leertaste, `[` / `]`) gab es schon seit Phase 4/5.
+- Backlog, bewusst nicht umgesetzt: alternative Separatoren (RoFormer), zwei Stimmen pro Hand,
+  Akkordsymbole, Tempo-Map statt Einzeltempo, Übernahme der übrigen Stems, Noten direkt in der
+  App korrigieren.
+
 ## Phase 6 – Packaging & CI
 
 - PyInstaller-Spec (`packaging/pianoscribe.spec`, onedir): ein Programmordner mit

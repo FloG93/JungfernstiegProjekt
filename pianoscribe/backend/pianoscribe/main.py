@@ -137,14 +137,17 @@ def _show_error(message: str, url: str | None = None) -> None:
 
 
 def run_app() -> int:
+    from .logs import setup_logging
+
+    # Zuerst: im Fenster-Modus ohne Konsole sind stdout/stderr None, bis das Logging sie ersetzt.
+    log_path = setup_logging()
+
     import webview
 
     from .api import AppConfig
-    from .logs import setup_logging
     from .paths import data_dir
     from .server import start_background
 
-    log_path = setup_logging()
     problem = webview_problem()
     if problem:
         _show_error(*problem)

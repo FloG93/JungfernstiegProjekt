@@ -84,6 +84,9 @@ def ffmpeg_exe() -> str:
     found = shutil.which("ffmpeg")
     if found:
         return found
+    if is_frozen():
+        raise FFmpegNotFoundError(f"ffmpeg fehlt im Programmordner ({bundled}). "
+                                  "Bitte PianoScribe neu installieren.")
     raise FFmpegNotFoundError(
         "ffmpeg wurde nicht gefunden. Unter Windows 'uv run python ../scripts/fetch_assets.py' "
         "ausführen, unter Linux ffmpeg über den Paketmanager installieren."
