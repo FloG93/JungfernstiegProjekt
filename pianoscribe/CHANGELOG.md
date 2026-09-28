@@ -42,6 +42,13 @@
   Artefakt).
 - Linux-Probebuild der Spec (CPU-PyTorch, 0,85 GB): `selftest --models` grün, Browser-Tests
   (`e2e/smoke.mjs`, `e2e/new-project.mjs`) gegen den Server aus dem Bundle grün.
+- Windows-Build in GitHub Actions: Programmordner 2,8 GB (2880 Dateien), Installer 1,7 GB
+  (Setup-EXE + eine `.bin`-Datei), Build in gut 10 Minuten. `selftest --models` im gepackten
+  Programm auf dem Windows-Runner grün, inklusive gebündeltem ffmpeg, PyTorch 2.11 mit CUDA 13
+  (auf dem Runner ohne GPU im CPU-Modus) und Edge WebView2 über pythonnet.
+- Fix aus dem ersten Windows-Lauf: Die Kommandozeile gibt jetzt immer UTF-8 aus. Bei
+  umgeleiteter Ausgabe (Pipe, Datei, CI) benutzt Python unter Windows sonst cp1252 und bricht
+  bei Zeichen wie ✔ ab.
 - Kleinigkeit: Zahlen in der Oberfläche mit Dezimalkomma (Ausschnittsdauer, VRAM).
 
 ## Phase 5 – Desktop-Hülle

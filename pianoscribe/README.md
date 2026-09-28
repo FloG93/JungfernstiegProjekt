@@ -42,15 +42,19 @@ Weitere Befehle stehen in [`CLAUDE.md`](CLAUDE.md).
 
 ## Windows: Build und Installer
 
-Der Build erzeugt einen Programmordner (PyInstaller, onedir) und daraus einen Installer
-(Inno Setup). Wegen der CUDA-Bibliotheken von PyTorch ist der Ordner mehrere GB groß; der
-Installer wird deshalb in `PianoScribe-Setup-<Version>.exe` plus `.bin`-Dateien aufgeteilt, die
-zusammen im selben Ordner liegen müssen.
+Der Build erzeugt einen Programmordner (PyInstaller, onedir; ca. 2,8 GB wegen der
+CUDA-Bibliotheken von PyTorch) und daraus einen Installer (Inno Setup, ca. 1,7 GB). Der Installer
+besteht aus `PianoScribe-Setup-<Version>.exe` und einer oder mehreren `.bin`-Dateien, die im
+selben Ordner liegen müssen (eine einzelne Setup-EXE darf höchstens gut 2 GB groß werden).
 
-**Fertiger Installer aus GitHub Actions:** Der Workflow „PianoScribe Windows-Build“ baut bei
-Änderungen am Packaging (oder von Hand gestartet) unter Windows, führt den Selbsttest mit echten
-Modellen aus und stellt das Artefakt `PianoScribe-Setup-Windows` 14 Tage lang bereit
-(Actions → Lauf auswählen → Artifacts). ZIP entpacken und die Setup-Datei starten.
+**Fertiger Installer aus GitHub Actions:** Der Workflow „PianoScribe Windows-Build“ baut unter
+Windows, führt den Selbsttest mit echten Modellen aus und stellt das Artefakt
+`PianoScribe-Setup-Windows` 14 Tage lang bereit (Actions → Lauf auswählen → Artifacts; zum
+Herunterladen muss man bei GitHub angemeldet sein). Er läuft bei Änderungen an Packaging oder
+Abhängigkeiten und lässt sich von Hand über „Run workflow“ starten, sobald die Workflow-Datei im
+Standard-Branch liegt. ZIP entpacken und die Setup-Datei starten. Programm und Installer sind
+nicht signiert: Windows SmartScreen fragt deshalb beim ersten Start nach („Weitere
+Informationen“ → „Trotzdem ausführen“).
 
 **Selbst bauen** (Windows 10/11, etwa 20 GB freier Platz, 15–30 Minuten):
 
