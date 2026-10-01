@@ -1,0 +1,8 @@
+[
+  { "id": "waffenschaden", "name": "Waffenschaden", "stats": ["ele"], "mode": "add", "perRank": 2 },
+  { "id": "kraft", "name": "Kraft", "stats": ["kra"], "mode": "pct", "perRank": 1 },
+  { "id": "kritschaden", "name": "Krit-Schaden", "stats": ["ksd"], "mode": "add", "perRank": 2 },
+  { "id": "tempo", "name": "Tempo", "stats": ["tmp"], "mode": "add", "perRank": 1 },
+  { "id": "vitalitaet", "name": "Vitalität", "stats": ["leb"], "mode": "pct", "perRank": 2 },
+  { "id": "panzerung", "name": "Panzerung", "stats": ["rue", "res"], "mode": "pct", "perRank": 2 }
+]

@@ -1,0 +1,23 @@
+[
+  { "id": "hazard_feuersaeule", "chapter": 1, "shape": "circle", "radiusPx": 90 },
+  {
+    "id": "hazard_eisbrocken", "chapter": 2, "shape": "circle", "radiusPx": 80,
+    "linger": { "ms": 4000, "tickMs": 500, "status": { "id": "bewegung_malus", "ms": 600, "value": 30 } }
+  },
+  {
+    "id": "hazard_blitz", "chapter": 3, "shape": "circle", "radiusPx": 70,
+    "hitStatus": { "id": "schock", "ms": 3000 }
+  },
+  {
+    "id": "hazard_wurzel", "chapter": 4, "shape": "line", "widthPx": 60, "lengthPx": 300, "orientation": "horizontal",
+    "hitStatus": { "id": "wurzel", "ms": 1000 }
+  },
+  {
+    "id": "hazard_lichtstrahl", "chapter": 5, "shape": "line", "widthPx": 50, "lengthPx": 240, "orientation": "vertical",
+    "hitStatus": { "id": "blendung", "ms": 3000 }
+  },
+  {
+    "id": "hazard_schattenzone", "chapter": 6, "shape": "circle", "radiusPx": 100,
+    "linger": { "ms": 5000, "tickMs": 1000, "status": { "id": "verderbnis", "ms": 6000, "stacks": 1 } }
+  }
+]

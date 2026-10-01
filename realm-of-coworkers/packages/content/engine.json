@@ -1,0 +1,45 @@
+{
+  "world": {
+    "bandDepthPx": 240,
+    "viewWidthPx": 960,
+    "spawnEdgeOffsetPx": 100,
+    "separationRadiusPx": 28,
+    "separationPushPxPerS": 80,
+    "hazardSpreadPx": 420
+  },
+  "hero": {
+    "chaseRangeFraction": 0.85,
+    "reviveRadiusPx": 90
+  },
+  "enemy": {
+    "cultistOrbRadiusPx": 60,
+    "meleeOrbitPx": 70,
+    "projectileSpeedPxPerS": 700,
+    "bomberDeathFuse": true
+  },
+  "boss": {
+    "rangedThrowSpeedPxPerS": 600,
+    "beamRotationDeg": 30,
+    "addSpawnInsetPx": 40
+  },
+  "idle": {
+    "autoPotionBelowPct": 40,
+    "autoContinueDelayS": 8
+  },
+  "appearance": { "bodies": 4, "portraits": 8, "palettes": 6 },
+  "limits": {
+    "heroNameMin": 3,
+    "heroNameMax": 16,
+    "usernameMin": 3,
+    "usernameMax": 20,
+    "passwordMin": 8,
+    "sessionDays": 30
+  },
+  "party": {
+    "codeLength": 6,
+    "codeAlphabet": "ABCDEFGHJKLMNPQRSTUVWXYZ23456789",
+    "startCountdownS": 5,
+    "pingMs": 3000,
+    "quickMessages": 5
+  }
+}
