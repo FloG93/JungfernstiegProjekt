@@ -1,4 +1,8 @@
 {
+  "elements": {
+    "weakMult": 1.5,
+    "resistMult": 0.5
+  },
   "world": {
     "bandDepthPx": 240,
     "viewWidthPx": 960,
@@ -26,7 +30,11 @@
     "autoPotionBelowPct": 40,
     "autoContinueDelayS": 8
   },
-  "appearance": { "bodies": 4, "portraits": 8, "palettes": 6 },
+  "appearance": {
+    "bodies": 4,
+    "portraits": 8,
+    "palettes": 6
+  },
   "limits": {
     "heroNameMin": 3,
     "heroNameMax": 16,

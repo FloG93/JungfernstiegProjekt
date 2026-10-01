@@ -491,6 +491,7 @@ export const GendersFileSchema = z.record(z.string(), z.enum(['m', 'f', 'n', 'pl
 export type GendersFile = z.infer<typeof GendersFileSchema>;
 
 export const EngineFileSchema = z.strictObject({
+  elements: z.strictObject({ weakMult: pos, resistMult: pos }),
   world: z.strictObject({
     bandDepthPx: pos,
     viewWidthPx: pos,

@@ -6,7 +6,7 @@ Je Sitzung einen Meilenstein (16.2). Nach jeder Sitzung diesen Stand aktualisier
 | --- | --- | --- | --- |
 | M0 Gerüst | erledigt | 2026-10-01 | pnpm-Workspace, TS 6 strict mit Projektverweisen, ESLint 10 (no-magic-numbers in sim), Vitest 5, Dockerfile, docker-compose, CI im Repo-Wurzelverzeichnis |
 | M1 Shared-Kern | erledigt | 2026-10-01 | Zod-Schemas aller Dateien, Loader mit Querprüfungen, Formeln, Werteberechnung, Item-Erzeugung, mulberry32. Ergänzte Dateien siehe OPEN-006 bis OPEN-008 |
-| M2 Kampfsimulation | offen | | |
+| M2 Kampfsimulation | erledigt | 2026-10-01 | Tick-Simulation (20 Hz), Effekt-Schema, 15 Helden-Handler mit eigener Datei und Test, Status (6.3/6.4), Bedrohung, Zonen/Telegraphen, Auto-Cast. Gemessenes K: Krieger 1,119 · Magier 1,657 · Waldläufer 1,649 · Schurke 1,664 · Kleriker 0,655 · Runenweber 0,839 (OPEN-013) |
 | M3 Gegner, Stages, Autowalk | offen | | |
 | M4 Bosse | offen | | |
 | M5 Persistenz und HTTP | offen | | |
