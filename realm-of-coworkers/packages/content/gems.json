@@ -1,0 +1,104 @@
+{
+  "kinds": [
+    {
+      "id": "granat",
+      "stat": "leb"
+    },
+    {
+      "id": "rubin",
+      "stat": "kra"
+    },
+    {
+      "id": "onyx",
+      "stat": "rue"
+    },
+    {
+      "id": "aquamarin",
+      "stat": "res"
+    },
+    {
+      "id": "topas",
+      "stat": "tmp"
+    },
+    {
+      "id": "saphir",
+      "stat": "krt"
+    },
+    {
+      "id": "smaragd",
+      "stat": "ksd"
+    }
+  ],
+  "tierPoints": [
+    5,
+    9,
+    14,
+    19,
+    25
+  ],
+  "tierNames": [
+    "Roh",
+    "Geschliffen",
+    "Fein",
+    "Makellos",
+    "Strahlend"
+  ],
+  "combineCostMult": 60,
+  "swapCostMult": 40,
+  "slotUnlockLevels": [
+    3,
+    6,
+    9,
+    12,
+    15,
+    18,
+    21,
+    24,
+    27
+  ],
+  "chestTierByChapter": {
+    "1": [
+      80,
+      20,
+      0,
+      0,
+      0
+    ],
+    "2": [
+      40,
+      50,
+      10,
+      0,
+      0
+    ],
+    "3": [
+      0,
+      45,
+      45,
+      10,
+      0
+    ],
+    "4": [
+      0,
+      25,
+      55,
+      20,
+      0
+    ],
+    "5": [
+      0,
+      0,
+      50,
+      40,
+      10
+    ],
+    "6": [
+      0,
+      0,
+      30,
+      50,
+      20
+    ]
+  },
+  "bossTierOffset": 1
+}

@@ -1,0 +1,16 @@
+{
+  "name": "realm-of-coworkers",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "dev": "pnpm --parallel --filter \"./apps/*\" dev",
+    "build": "pnpm -r build",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc -b --pretty false",
+    "balance": "python3 tools/validate_content.py && python3 tools/crosscheck_balance.py && pnpm --filter @aethra/balance start",
+    "content:check": "python3 tools/validate_content.py && python3 tools/crosscheck_balance.py"
+  }
+}

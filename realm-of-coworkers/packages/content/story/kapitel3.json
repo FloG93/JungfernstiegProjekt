@@ -1,0 +1,48 @@
+{
+  "chapter": 3,
+  "stageIntros": {
+    "stage-11": "Die Sturmklippen empfangen euch mit einem Schlag, der den Boden aufreißt. Über den Felsen hängen Blitze, die nicht verlöschen. Jemand hat sie dort festgebunden.",
+    "stage-12": "Ein Orden von Leuchtturmwärtern hat die Klippen mit Kupfer durchzogen. Sie wollten das Wetter berechenbar machen. Das Wetter war anderer Meinung.",
+    "stage-13": "Die Türme senden weiter ihr Signal, obwohl niemand mehr darin lebt. Aus jedem Fenster starrt eine Lampe, die nie ausgeht.",
+    "stage-14": "Im höchsten Turm steckt der dritte Splitter im Blitzableiter. Die Luft schmeckt nach Metall und Vorahnung.",
+    "stage-15": "Der letzte Aufstieg. Voltrax wusste immer schon, dass ihr kommt. Er weiß es seit Jahren, und er hat sich vorbereitet."
+  },
+  "dialogs": {
+    "voltrax_before": [
+      {
+        "speaker": "Voltrax",
+        "text": "Ihr seid vier Tage später als berechnet."
+      },
+      {
+        "speaker": "Held",
+        "text": "Du hast uns erwartet?"
+      },
+      {
+        "speaker": "Voltrax",
+        "text": "Ich erwarte alles. Das ist der Sinn."
+      },
+      {
+        "speaker": "Voltrax",
+        "text": "Einmal wurde ich überrascht. Einmal reicht."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Die Blitze über den Klippen ordnen sich zu einem Netz, dessen Mitte ihr seid."
+      }
+    ],
+    "voltrax_after": [
+      {
+        "speaker": "Voltrax",
+        "text": "Ihr wart nicht in der Rechnung."
+      },
+      {
+        "speaker": "Voltrax",
+        "text": "Das ist… ungewohnt. Fast angenehm."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Die Blitze fallen in sich zusammen, und über den Klippen steht zum ersten Mal seit Jahren ein gewöhnlicher Himmel."
+      }
+    ]
+  }
+}

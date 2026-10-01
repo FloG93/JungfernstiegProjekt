@@ -1,0 +1,35 @@
+{
+  "first": {
+    "weapon": 100,
+    "item": {
+      "episch": 85,
+      "legendaer": 15
+    },
+    "gem": 100,
+    "splinters": 6,
+    "goldFactor": 2.0,
+    "xpFactor": 1.0
+  },
+  "repeat": {
+    "weapon": 20,
+    "item": {
+      "selten": 30,
+      "episch": 60,
+      "legendaer": 10
+    },
+    "gem": 50,
+    "splinters": 3,
+    "goldFactor": 1.0,
+    "xpFactor": 0.5
+  },
+  "itemSlotWeights": {
+    "ruestung": 20,
+    "nebenhand": 15,
+    "helm": 15,
+    "handschuhe": 15,
+    "umhang": 15,
+    "stiefel": 15,
+    "waffe": 5
+  },
+  "elementCoreChance": 2
+}

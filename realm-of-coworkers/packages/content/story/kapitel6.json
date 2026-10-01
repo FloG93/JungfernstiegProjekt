@@ -1,0 +1,74 @@
+{
+  "chapter": 6,
+  "stageIntros": {
+    "stage-26": "Der Schattenthron hat keine Mauern. Er beginnt dort, wo Farbe aufhört, und ihr merkt es erst, wenn ihr euch umdreht.",
+    "stage-27": "Hier liegen die Dinge, die die Stille genommen hat: Lieder, Namen, das Lachen eines Markttages. Alles sauber sortiert.",
+    "stage-28": "Ihr begegnet euren eigenen Schritten, die vor euch zurückkommen. Nyxhara zeigt euch, wie ruhig es sein könnte.",
+    "stage-29": "Der sechste Splitter schwebt in einer Kammer ohne Boden. Er ist der einzige Gegenstand hier, der noch eine Farbe hat.",
+    "stage-30": "Der letzte Weg. Fünf Splitter schlagen in euren Taschen im Takt, und der sechste antwortet."
+  },
+  "dialogs": {
+    "nyxhara_before": [
+      {
+        "speaker": "Nyxhara",
+        "text": "Ihr habt sie alle aufgeweckt. War es das wert?"
+      },
+      {
+        "speaker": "Held",
+        "text": "Sie waren nicht tot. Sie waren nur angehalten."
+      },
+      {
+        "speaker": "Nyxhara",
+        "text": "Ich war die Erste, die einen Splitter trug. Ich habe gesehen, was Menschen mit Trauer machen."
+      },
+      {
+        "speaker": "Nyxhara",
+        "text": "Also habe ich sie weggenommen. Und mit ihr alles, was sie hält."
+      },
+      {
+        "speaker": "Nyxhara",
+        "text": "Es ist ruhig geworden, findet ihr nicht?"
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Wo sie steht, hat die Welt keine Farbe mehr. Nur die fünf Splitter in euren Taschen schlagen weiter."
+      }
+    ],
+    "nyxhara_after": [
+      {
+        "speaker": "Nyxhara",
+        "text": "Ihr gebt es zurück. Alles davon."
+      },
+      {
+        "speaker": "Held",
+        "text": "Alles davon."
+      },
+      {
+        "speaker": "Nyxhara",
+        "text": "Dann haltet es besser fest als ich."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Der sechste Splitter löst sich aus ihrer Hand, und der Kristall schließt sich mit einem Ton, den ihr eher spürt als hört."
+      }
+    ]
+  },
+  "epilogue": [
+    {
+      "speaker": "Erzähler",
+      "text": "Farbe kehrt zurück wie Blut in eine eingeschlafene Hand: erst unangenehm, dann überwältigend."
+    },
+    {
+      "speaker": "Erzähler",
+      "text": "In den Aschenwäldern wächst Gras. In den Frostmooren beerdigt ein Dorf seine Toten und feiert danach drei Tage."
+    },
+    {
+      "speaker": "Erzähler",
+      "text": "Die sechs Hüter sind nicht vergessen. Man erzählt sich, sie hätten jeder für sich beschlossen, dass Schmerz sich verhindern lässt."
+    },
+    {
+      "speaker": "Erzähler",
+      "text": "In der letzten Laterne brennt weiter ein Licht. Es ist klein, und es geht nicht aus."
+    }
+  ]
+}

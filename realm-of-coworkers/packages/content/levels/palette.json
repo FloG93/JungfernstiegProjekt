@@ -1,0 +1,57 @@
+{
+  "1": {
+    "scherge": 40,
+    "hetzer": 20,
+    "schuetze": 20,
+    "schwarmling": 20
+  },
+  "2": {
+    "scherge": 30,
+    "hetzer": 15,
+    "schuetze": 15,
+    "schwarmling": 15,
+    "brecher": 15,
+    "priester": 10
+  },
+  "3": {
+    "scherge": 25,
+    "hetzer": 15,
+    "schuetze": 15,
+    "schwarmling": 10,
+    "brecher": 15,
+    "priester": 5,
+    "kultist": 15
+  },
+  "4": {
+    "scherge": 20,
+    "hetzer": 15,
+    "schuetze": 15,
+    "schwarmling": 10,
+    "brecher": 15,
+    "priester": 5,
+    "kultist": 10,
+    "bomber": 10
+  },
+  "5": {
+    "scherge": 20,
+    "hetzer": 15,
+    "schuetze": 15,
+    "schwarmling": 10,
+    "brecher": 15,
+    "priester": 5,
+    "kultist": 10,
+    "bomber": 5,
+    "waechter": 5
+  },
+  "6": {
+    "scherge": 15,
+    "hetzer": 15,
+    "schuetze": 15,
+    "schwarmling": 10,
+    "brecher": 15,
+    "priester": 5,
+    "kultist": 10,
+    "bomber": 5,
+    "waechter": 10
+  }
+}

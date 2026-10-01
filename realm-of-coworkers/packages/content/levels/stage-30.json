@@ -1,0 +1,44 @@
+{
+  "stage": 30,
+  "chapter": 6,
+  "recommendedLevel": 30,
+  "lengthPx": 4500,
+  "encounters": [
+    {
+      "x": 1800,
+      "points": 8,
+      "groupSplit": [
+        0.5,
+        0.5
+      ],
+      "groupDelaysS": [
+        0,
+        8
+      ],
+      "elites": 0,
+      "hazard": false
+    },
+    {
+      "x": 3600,
+      "points": 10,
+      "groupSplit": [
+        0.5,
+        0.5
+      ],
+      "groupDelaysS": [
+        0,
+        8
+      ],
+      "elites": 0,
+      "hazard": false
+    }
+  ],
+  "checkpoints": [
+    2700,
+    4500
+  ],
+  "hazard": null,
+  "boss": "nyxhara",
+  "introId": "stage-30",
+  "loot": "boss"
+}

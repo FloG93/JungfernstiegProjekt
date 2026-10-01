@@ -1,0 +1,48 @@
+{
+  "chapter": 4,
+  "stageIntros": {
+    "stage-16": "Unter den Bergen atmet etwas. Die Tiefenwurzeln sind keine Höhlen, sie sind Gänge, und sie wurden angelegt. Nicht von Menschen.",
+    "stage-17": "Die Stollen der Bergleute enden abrupt an einer Wand, die vorher nicht da war. Auf der anderen Seite klopft es zurück.",
+    "stage-18": "Ein unterirdischer Wald aus Steinwurzeln, jede so dick wie ein Turm. Sie wachsen langsam, aber sie wachsen auf euch zu.",
+    "stage-19": "Der vierte Splitter liegt in einer Kammer, die wie ein Grab aussieht und wie ein Nest gebaut ist. Gorthul hat ihn bewacht, seit er ihn nicht mehr versteht.",
+    "stage-20": "Der Gang zur Kammer des Wächters. Jeder Schritt hallt dreimal: einmal von euch, zweimal von etwas Größerem."
+  },
+  "dialogs": {
+    "gorthul_before": [
+      {
+        "speaker": "Gorthul",
+        "text": "Halt. Nennt euren Zweck."
+      },
+      {
+        "speaker": "Held",
+        "text": "Wir holen den Splitter."
+      },
+      {
+        "speaker": "Gorthul",
+        "text": "Unbekannter Zweck. Veränderung. Abgelehnt."
+      },
+      {
+        "speaker": "Gorthul",
+        "text": "Ich bewache. Das ist meine Aufgabe. Ich habe vergessen, wovor, aber die Aufgabe bleibt."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Die Steinwurzeln richten sich auf wie die Finger einer Hand."
+      }
+    ],
+    "gorthul_after": [
+      {
+        "speaker": "Gorthul",
+        "text": "Aufgabe… beendet?"
+      },
+      {
+        "speaker": "Gorthul",
+        "text": "Dann war es ein Fels. Nur ein Fels. Und ich stand davor."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Der Wächter sinkt zurück in den Stein, und die Gänge werden zum ersten Mal wieder still."
+      }
+    ]
+  }
+}

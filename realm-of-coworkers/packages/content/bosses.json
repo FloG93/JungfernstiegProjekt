@@ -1,0 +1,527 @@
+[
+  {
+    "id": "ignarch",
+    "chapter": 1,
+    "name": "Ignarch, der Glutkönig",
+    "hpBase": 11400,
+    "element": "feuer",
+    "armorMit": 0.3,
+    "resMit": 0.2,
+    "timerMinutes": 15,
+    "phases": [
+      {
+        "fromPct": 100,
+        "toPct": 66,
+        "element": "feuer"
+      },
+      {
+        "fromPct": 66,
+        "toPct": 33,
+        "element": "eis"
+      },
+      {
+        "fromPct": 33,
+        "toPct": 0,
+        "element": "feuer"
+      }
+    ],
+    "attacks": {
+      "standard": {
+        "intervalMs": 2500,
+        "pctRefHp": 11,
+        "dmgType": "phys",
+        "shape": "single",
+        "radiusPx": 130
+      },
+      "pulse": {
+        "intervalMs": 12000,
+        "pctRefHp": 8,
+        "dmgType": "elem",
+        "shape": "all"
+      },
+      "telegraph": {
+        "intervalMs": 20000,
+        "pctRefHp": 30,
+        "dmgType": "elem",
+        "shape": "circle",
+        "radiusPx": 110,
+        "telegraphMs": 1500
+      },
+      "signature": {
+        "intervalMs": 30000,
+        "pctRefHp": 20,
+        "dmgType": "elem",
+        "shape": "handler",
+        "fromPhase": 2,
+        "telegraphMs": 1500,
+        "handler": "sig_glutregen",
+        "params": {
+          "pillars": 8,
+          "radiusPx": 90
+        }
+      }
+    },
+    "passive": {
+      "id": "boss_glutmantel",
+      "params": {
+        "radiusPx": 120,
+        "everyS": 3,
+        "stacks": 1
+      }
+    },
+    "debuff": "verbrennung",
+    "weapon": {
+      "status": "verbrennung",
+      "stacks": 1,
+      "chance": 0.05
+    },
+    "adds": {
+      "enemy": "schwarmling",
+      "firstAtS": 15,
+      "everyS": 30,
+      "groupsPerWave": 1
+    },
+    "arena": "arena_aschenwaelder",
+    "dialog": {
+      "before": "ignarch_before",
+      "after": "ignarch_after"
+    }
+  },
+  {
+    "id": "glaciara",
+    "chapter": 2,
+    "name": "Glaciara, die Frostwitwe",
+    "hpBase": 18600,
+    "element": "eis",
+    "armorMit": 0.35,
+    "resMit": 0.2,
+    "timerMinutes": 25,
+    "phases": [
+      {
+        "fromPct": 100,
+        "toPct": 66,
+        "element": "eis"
+      },
+      {
+        "fromPct": 66,
+        "toPct": 33,
+        "element": "feuer"
+      },
+      {
+        "fromPct": 33,
+        "toPct": 0,
+        "element": "eis"
+      }
+    ],
+    "attacks": {
+      "standard": {
+        "intervalMs": 2500,
+        "pctRefHp": 11,
+        "dmgType": "phys",
+        "shape": "single",
+        "radiusPx": 130
+      },
+      "pulse": {
+        "intervalMs": 12000,
+        "pctRefHp": 8,
+        "dmgType": "elem",
+        "shape": "all"
+      },
+      "telegraph": {
+        "intervalMs": 20000,
+        "pctRefHp": 30,
+        "dmgType": "elem",
+        "shape": "circle",
+        "radiusPx": 110,
+        "telegraphMs": 1500
+      },
+      "signature": {
+        "intervalMs": 30000,
+        "pctRefHp": 20,
+        "dmgType": "elem",
+        "shape": "handler",
+        "fromPhase": 2,
+        "telegraphMs": 1500,
+        "handler": "sig_frostnova",
+        "params": {
+          "radiusPx": 260,
+          "frostStacks": 2
+        }
+      }
+    },
+    "passive": {
+      "id": "boss_eispanzer",
+      "params": {
+        "pctMaxHp": 2,
+        "renewS": 45
+      }
+    },
+    "debuff": "frost",
+    "weapon": {
+      "status": "frost",
+      "stacks": 1,
+      "chance": 0.05
+    },
+    "adds": {
+      "enemy": "schwarmling",
+      "firstAtS": 15,
+      "everyS": 30,
+      "groupsPerWave": 1
+    },
+    "arena": "arena_frostmoore",
+    "dialog": {
+      "before": "glaciara_before",
+      "after": "glaciara_after"
+    }
+  },
+  {
+    "id": "voltrax",
+    "chapter": 3,
+    "name": "Voltrax, der Sturmtyrann",
+    "hpBase": 26300,
+    "element": "blitz",
+    "armorMit": 0.2,
+    "resMit": 0.3,
+    "timerMinutes": 40,
+    "phases": [
+      {
+        "fromPct": 100,
+        "toPct": 66,
+        "element": "blitz"
+      },
+      {
+        "fromPct": 66,
+        "toPct": 33,
+        "element": "erde"
+      },
+      {
+        "fromPct": 33,
+        "toPct": 0,
+        "element": "blitz"
+      }
+    ],
+    "attacks": {
+      "standard": {
+        "intervalMs": 2500,
+        "pctRefHp": 11,
+        "dmgType": "phys",
+        "shape": "single",
+        "radiusPx": 130
+      },
+      "pulse": {
+        "intervalMs": 12000,
+        "pctRefHp": 8,
+        "dmgType": "elem",
+        "shape": "all"
+      },
+      "telegraph": {
+        "intervalMs": 20000,
+        "pctRefHp": 30,
+        "dmgType": "elem",
+        "shape": "circle",
+        "radiusPx": 110,
+        "telegraphMs": 1500
+      },
+      "signature": {
+        "intervalMs": 30000,
+        "pctRefHp": 15,
+        "dmgType": "elem",
+        "shape": "handler",
+        "fromPhase": 2,
+        "telegraphMs": 1500,
+        "handler": "sig_kettenblitz",
+        "params": {
+          "jumps": 5,
+          "jumpRadiusPx": 300,
+          "shockMs": 6000
+        }
+      }
+    },
+    "passive": {
+      "id": "boss_statische_ladung",
+      "params": {
+        "everyS": 30,
+        "ms": 8000,
+        "dmgDealtPct": 25
+      }
+    },
+    "debuff": "schock",
+    "weapon": {
+      "status": "schock",
+      "stacks": 1,
+      "chance": 0.05
+    },
+    "adds": {
+      "enemy": "schwarmling",
+      "firstAtS": 15,
+      "everyS": 30,
+      "groupsPerWave": 1
+    },
+    "arena": "arena_sturmklippen",
+    "dialog": {
+      "before": "voltrax_before",
+      "after": "voltrax_after"
+    }
+  },
+  {
+    "id": "gorthul",
+    "chapter": 4,
+    "name": "Gorthul, der Steinwächter",
+    "hpBase": 34300,
+    "element": "erde",
+    "armorMit": 0.45,
+    "resMit": 0.15,
+    "timerMinutes": 60,
+    "phases": [
+      {
+        "fromPct": 100,
+        "toPct": 66,
+        "element": "erde"
+      },
+      {
+        "fromPct": 66,
+        "toPct": 33,
+        "element": "blitz"
+      },
+      {
+        "fromPct": 33,
+        "toPct": 0,
+        "element": "erde"
+      }
+    ],
+    "attacks": {
+      "standard": {
+        "intervalMs": 2500,
+        "pctRefHp": 11,
+        "dmgType": "phys",
+        "shape": "single",
+        "radiusPx": 130
+      },
+      "pulse": {
+        "intervalMs": 12000,
+        "pctRefHp": 8,
+        "dmgType": "elem",
+        "shape": "all"
+      },
+      "telegraph": {
+        "intervalMs": 20000,
+        "pctRefHp": 30,
+        "dmgType": "elem",
+        "shape": "circle",
+        "radiusPx": 110,
+        "telegraphMs": 1500
+      },
+      "signature": {
+        "intervalMs": 30000,
+        "pctRefHp": 25,
+        "dmgType": "elem",
+        "shape": "handler",
+        "fromPhase": 2,
+        "telegraphMs": 1500,
+        "handler": "sig_beben",
+        "params": {
+          "radiusPx": 300,
+          "stunMs": 1500
+        }
+      }
+    },
+    "passive": {
+      "id": "boss_steinhaut",
+      "params": {
+        "physDamageMalusPct": 25
+      }
+    },
+    "debuff": "wurzel",
+    "weapon": {
+      "status": "ruestungsbruch",
+      "stacks": 1,
+      "chance": 0.05
+    },
+    "adds": {
+      "enemy": "schwarmling",
+      "firstAtS": 15,
+      "everyS": 30,
+      "groupsPerWave": 1
+    },
+    "arena": "arena_tiefenwurzeln",
+    "dialog": {
+      "before": "gorthul_before",
+      "after": "gorthul_after"
+    }
+  },
+  {
+    "id": "solaris",
+    "chapter": 5,
+    "name": "Solaris, der gefallene Seraph",
+    "hpBase": 42700,
+    "element": "licht",
+    "armorMit": 0.25,
+    "resMit": 0.25,
+    "timerMinutes": 90,
+    "phases": [
+      {
+        "fromPct": 100,
+        "toPct": 66,
+        "element": "licht"
+      },
+      {
+        "fromPct": 66,
+        "toPct": 33,
+        "element": "schatten"
+      },
+      {
+        "fromPct": 33,
+        "toPct": 0,
+        "element": "licht"
+      }
+    ],
+    "attacks": {
+      "standard": {
+        "intervalMs": 2500,
+        "pctRefHp": 11,
+        "dmgType": "phys",
+        "shape": "single",
+        "radiusPx": 130
+      },
+      "pulse": {
+        "intervalMs": 12000,
+        "pctRefHp": 8,
+        "dmgType": "elem",
+        "shape": "all"
+      },
+      "telegraph": {
+        "intervalMs": 20000,
+        "pctRefHp": 30,
+        "dmgType": "elem",
+        "shape": "circle",
+        "radiusPx": 110,
+        "telegraphMs": 1500
+      },
+      "signature": {
+        "intervalMs": 30000,
+        "pctRefHp": 20,
+        "dmgType": "elem",
+        "shape": "handler",
+        "fromPhase": 2,
+        "telegraphMs": 1500,
+        "handler": "sig_strahlenbuendel",
+        "params": {
+          "beams": 3,
+          "widthPx": 50
+        }
+      }
+    },
+    "passive": {
+      "id": "boss_sonnenschild",
+      "params": {
+        "pctMaxHp": 3,
+        "onPhaseStart": 1
+      }
+    },
+    "debuff": "blendung",
+    "weapon": {
+      "status": "blendung",
+      "stacks": 1,
+      "chance": 0.05
+    },
+    "adds": {
+      "enemy": "schwarmling",
+      "firstAtS": 15,
+      "everyS": 30,
+      "groupsPerWave": 1
+    },
+    "arena": "arena_sonnenruinen",
+    "dialog": {
+      "before": "solaris_before",
+      "after": "solaris_after"
+    }
+  },
+  {
+    "id": "nyxhara",
+    "chapter": 6,
+    "name": "Nyxhara, die Stille",
+    "hpBase": 51600,
+    "element": "schatten",
+    "armorMit": 0.25,
+    "resMit": 0.25,
+    "timerMinutes": 120,
+    "phases": [
+      {
+        "fromPct": 100,
+        "toPct": 66,
+        "element": "schatten"
+      },
+      {
+        "fromPct": 66,
+        "toPct": 33,
+        "element": "licht"
+      },
+      {
+        "fromPct": 33,
+        "toPct": 0,
+        "element": "schatten"
+      }
+    ],
+    "attacks": {
+      "standard": {
+        "intervalMs": 2500,
+        "pctRefHp": 11,
+        "dmgType": "phys",
+        "shape": "single",
+        "radiusPx": 130
+      },
+      "pulse": {
+        "intervalMs": 12000,
+        "pctRefHp": 8,
+        "dmgType": "elem",
+        "shape": "all"
+      },
+      "telegraph": {
+        "intervalMs": 20000,
+        "pctRefHp": 30,
+        "dmgType": "elem",
+        "shape": "circle",
+        "radiusPx": 110,
+        "telegraphMs": 1500
+      },
+      "signature": {
+        "intervalMs": 30000,
+        "pctRefHp": 15,
+        "dmgType": "elem",
+        "shape": "handler",
+        "fromPhase": 2,
+        "telegraphMs": 1500,
+        "handler": "sig_stille",
+        "params": {
+          "circles": 3,
+          "radiusPx": 120,
+          "delayMs": 3000,
+          "fearMs": 2000
+        }
+      }
+    },
+    "passive": {
+      "id": "boss_schattenhuelle",
+      "params": {
+        "elemDamageMalusPct": 10
+      }
+    },
+    "debuff": "verderbnis",
+    "weapon": {
+      "status": "verderbnis",
+      "stacks": 1,
+      "chance": 0.05
+    },
+    "adds": {
+      "enemy": "schwarmling",
+      "firstAtS": 15,
+      "everyS": 30,
+      "groupsPerWave": 1
+    },
+    "arena": "arena_schattenthron",
+    "dialog": {
+      "before": "nyxhara_before",
+      "after": "nyxhara_after"
+    }
+  }
+]

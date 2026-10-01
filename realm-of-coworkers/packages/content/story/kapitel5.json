@@ -1,0 +1,48 @@
+{
+  "chapter": 5,
+  "stageIntros": {
+    "stage-21": "Die Sonnenruinen liegen offen im Licht, und das Licht lässt nichts aus. Nach zwanzig Schritten seht ihr eure Hände nicht mehr.",
+    "stage-22": "Ein Tempelhof voller Statuen, alle mit erhobenem Blick. Die Gesichter sind abgeschliffen, als hätte jemand sie zu oft angesehen.",
+    "stage-23": "In den Wandelgängen steht geschrieben, was man glauben soll. Es steht überall. Es steht so oft, dass die Steine dünn geworden sind.",
+    "stage-24": "Der fünfte Splitter liegt auf einem Altar, unbewacht und makellos. Genau das macht euch Sorgen.",
+    "stage-25": "Der Aufstieg zum Sonnenthron. Solaris duldet keinen Zweifel, und Zweifel ist alles, was euch noch trägt."
+  },
+  "dialogs": {
+    "solaris_before": [
+      {
+        "speaker": "Solaris",
+        "text": "Tretet ins Licht. Es gibt hier nichts zu verbergen."
+      },
+      {
+        "speaker": "Held",
+        "text": "Wir sehen nichts."
+      },
+      {
+        "speaker": "Solaris",
+        "text": "Ihr seht, was richtig ist. Mehr braucht niemand."
+      },
+      {
+        "speaker": "Solaris",
+        "text": "Der Zweifel hat diese Welt zerbrochen. Ich habe ihn abgeschafft."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Die Statuen im Hof stehen alle gleich, und keine hat ein Gesicht."
+      }
+    ],
+    "solaris_after": [
+      {
+        "speaker": "Solaris",
+        "text": "Es wird dunkler. Ich kann… ich kann wieder Umrisse sehen."
+      },
+      {
+        "speaker": "Solaris",
+        "text": "Sie ist es, vor der ich geleuchtet habe. Geht. Und zweifelt, so viel ihr könnt."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Das Licht sinkt auf eine erträgliche Helligkeit, und die Ruinen werfen wieder Schatten."
+      }
+    ]
+  }
+}

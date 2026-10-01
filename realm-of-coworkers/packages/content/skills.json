@@ -1,0 +1,935 @@
+[
+  {
+    "id": "krieger_schwerthieb",
+    "class": "krieger",
+    "slot": "auto",
+    "unlockLevel": 1,
+    "cooldownS": 1.0,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 0.78
+      }
+    ]
+  },
+  {
+    "id": "krieger_spott",
+    "class": "krieger",
+    "slot": "s1",
+    "unlockLevel": 1,
+    "cooldownS": 10,
+    "target": "self",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "any",
+        "rules": [
+          {
+            "when": "enemiesNear",
+            "count": 2,
+            "radiusPx": 300
+          },
+          {
+            "when": "bossPresent"
+          }
+        ]
+      }
+    },
+    "effects": [
+      {
+        "k": "handler",
+        "id": "taunt",
+        "params": {
+          "radiusPx": 300,
+          "ms": 4000,
+          "bossThreatBonusPct": 10
+        },
+        "to": "enemiesAroundSelf"
+      },
+      {
+        "k": "damage",
+        "coef": 0.3,
+        "to": "enemiesAroundSelf",
+        "radiusPx": 300
+      },
+      {
+        "k": "buff",
+        "stat": "dmgTaken",
+        "ms": 4000,
+        "to": "self",
+        "mult": 0.7,
+        "display": "spott_schutz"
+      }
+    ]
+  },
+  {
+    "id": "krieger_schildstoss",
+    "class": "krieger",
+    "slot": "s2",
+    "unlockLevel": 2,
+    "cooldownS": 8,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 1.6
+      },
+      {
+        "k": "status",
+        "id": "betaeubung",
+        "ms": 1500,
+        "bossReplace": {
+          "k": "status",
+          "id": "angriffstempo_malus",
+          "ms": 3000,
+          "value": 20
+        }
+      }
+    ]
+  },
+  {
+    "id": "krieger_wirbelhieb",
+    "class": "krieger",
+    "slot": "s3",
+    "unlockLevel": 3,
+    "cooldownS": 12,
+    "target": "self",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemiesNear",
+        "count": 2,
+        "radiusPx": 120
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 1.2,
+        "to": "enemiesAroundSelf",
+        "radiusPx": 120
+      }
+    ]
+  },
+  {
+    "id": "krieger_bollwerk",
+    "class": "krieger",
+    "slot": "ult",
+    "unlockLevel": 5,
+    "cooldownS": 60,
+    "target": "self",
+    "autoCast": {
+      "default": false,
+      "rule": {
+        "when": "any",
+        "rules": [
+          {
+            "when": "alliesBelowPct",
+            "pct": 60,
+            "count": 2
+          },
+          {
+            "when": "selfBelowPct",
+            "pct": 40
+          }
+        ]
+      }
+    },
+    "effects": [
+      {
+        "k": "shield",
+        "pctMaxHpOf": "caster",
+        "pct": 15,
+        "ms": 6000,
+        "to": "allies"
+      },
+      {
+        "k": "buff",
+        "stat": "dmgTaken",
+        "ms": 6000,
+        "to": "self",
+        "mult": 0.6,
+        "display": "bollwerk"
+      }
+    ]
+  },
+  {
+    "id": "krieger_standhaft",
+    "class": "krieger",
+    "slot": "passive",
+    "unlockLevel": 1,
+    "cooldownS": 0,
+    "target": "none",
+    "effects": [
+      {
+        "k": "buff",
+        "stat": "rue",
+        "ms": 0,
+        "to": "self",
+        "mult": 1.15
+      }
+    ]
+  },
+  {
+    "id": "magier_arkanblitz",
+    "class": "magier",
+    "slot": "auto",
+    "unlockLevel": 1,
+    "cooldownS": 1.0,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 0.75
+      }
+    ]
+  },
+  {
+    "id": "magier_elementarkugel",
+    "class": "magier",
+    "slot": "s1",
+    "unlockLevel": 1,
+    "cooldownS": 6,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 2.4,
+        "splashPct": 60,
+        "radiusPx": 100
+      }
+    ]
+  },
+  {
+    "id": "magier_elementarnova",
+    "class": "magier",
+    "slot": "s2",
+    "unlockLevel": 2,
+    "cooldownS": 9,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 2.6,
+        "to": "enemiesAroundTarget",
+        "radiusPx": 220
+      }
+    ]
+  },
+  {
+    "id": "magier_arkane_barriere",
+    "class": "magier",
+    "slot": "s3",
+    "unlockLevel": 3,
+    "cooldownS": 15,
+    "target": "self",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "selfBelowPct",
+        "pct": 80
+      }
+    },
+    "effects": [
+      {
+        "k": "shield",
+        "pctMaxHpOf": "self",
+        "pct": 20,
+        "ms": 6000,
+        "to": "self"
+      }
+    ]
+  },
+  {
+    "id": "magier_kataklysmus",
+    "class": "magier",
+    "slot": "ult",
+    "unlockLevel": 5,
+    "cooldownS": 60,
+    "target": "ground",
+    "autoCast": {
+      "default": false,
+      "rule": {
+        "when": "enemiesNear",
+        "count": 4,
+        "radiusPx": 300
+      }
+    },
+    "effects": [
+      {
+        "k": "handler",
+        "id": "groundDelayed",
+        "params": {
+          "radiusPx": 300,
+          "delayMs": 1000,
+          "coef": 12.0
+        }
+      }
+    ]
+  },
+  {
+    "id": "magier_elementarfluss",
+    "class": "magier",
+    "slot": "passive",
+    "unlockLevel": 1,
+    "cooldownS": 0,
+    "target": "none",
+    "effects": [
+      {
+        "k": "handler",
+        "id": "cooldownResetOnSwap",
+        "params": {
+          "skill": "magier_elementarkugel",
+          "lockoutMs": 20000
+        }
+      }
+    ]
+  },
+  {
+    "id": "waldlaeufer_pfeilschuss",
+    "class": "waldlaeufer",
+    "slot": "auto",
+    "unlockLevel": 1,
+    "cooldownS": 1.0,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 0.7
+      }
+    ]
+  },
+  {
+    "id": "waldlaeufer_gezielter_schuss",
+    "class": "waldlaeufer",
+    "slot": "s1",
+    "unlockLevel": 1,
+    "cooldownS": 6,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "handler",
+        "id": "pierce",
+        "params": {
+          "coef": 2.6,
+          "secondaryPct": 50
+        }
+      }
+    ]
+  },
+  {
+    "id": "waldlaeufer_fallensteller",
+    "class": "waldlaeufer",
+    "slot": "s2",
+    "unlockLevel": 2,
+    "cooldownS": 12,
+    "target": "ground",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "handler",
+        "id": "trap",
+        "params": {
+          "radiusPx": 80,
+          "lifetimeMs": 15000,
+          "maxActive": 2,
+          "coef": 1.6,
+          "rootMs": 2000,
+          "bossSlowPct": 30,
+          "bossSlowMs": 3000
+        }
+      }
+    ]
+  },
+  {
+    "id": "waldlaeufer_pfeilhagel",
+    "class": "waldlaeufer",
+    "slot": "s3",
+    "unlockLevel": 3,
+    "cooldownS": 12,
+    "target": "ground",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "handler",
+        "id": "barrage",
+        "params": {
+          "arrows": 5,
+          "coef": 0.7,
+          "durationMs": 1500,
+          "radiusPx": 150
+        }
+      }
+    ]
+  },
+  {
+    "id": "waldlaeufer_adlerauge",
+    "class": "waldlaeufer",
+    "slot": "ult",
+    "unlockLevel": 5,
+    "cooldownS": 60,
+    "target": "self",
+    "autoCast": {
+      "default": false,
+      "rule": {
+        "when": "bossPresent"
+      }
+    },
+    "effects": [
+      {
+        "k": "buff",
+        "stat": "dmgDealt",
+        "ms": 10000,
+        "to": "self",
+        "mult": 1.3,
+        "display": "adlerauge"
+      },
+      {
+        "k": "buff",
+        "stat": "rangePx",
+        "ms": 10000,
+        "to": "self",
+        "add": 100,
+        "display": "adlerauge"
+      }
+    ]
+  },
+  {
+    "id": "waldlaeufer_faehrtenleser",
+    "class": "waldlaeufer",
+    "slot": "passive",
+    "unlockLevel": 1,
+    "cooldownS": 0,
+    "target": "none",
+    "effects": [
+      {
+        "k": "buff",
+        "stat": "moveSpeed",
+        "ms": 0,
+        "to": "self",
+        "mult": 1.1
+      },
+      {
+        "k": "handler",
+        "id": "rollCooldown",
+        "params": {
+          "cooldownS": 7
+        }
+      }
+    ]
+  },
+  {
+    "id": "schurke_doppelstich",
+    "class": "schurke",
+    "slot": "auto",
+    "unlockLevel": 1,
+    "cooldownS": 1.0,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 0.65
+      }
+    ]
+  },
+  {
+    "id": "schurke_meucheln",
+    "class": "schurke",
+    "slot": "s1",
+    "unlockLevel": 1,
+    "cooldownS": 8,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "handler",
+        "id": "conditionalBonus",
+        "params": {
+          "coef": 2.8,
+          "mult": 1.5,
+          "statuses": "gift,blutung,verbrennung",
+          "orWeakened": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "schurke_giftklinge",
+    "class": "schurke",
+    "slot": "s2",
+    "unlockLevel": 2,
+    "cooldownS": 10,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "status",
+        "id": "gift",
+        "ms": 6000,
+        "stacks": 1,
+        "value": 0.35
+      }
+    ]
+  },
+  {
+    "id": "schurke_schattenschritt",
+    "class": "schurke",
+    "slot": "s3",
+    "unlockLevel": 3,
+    "cooldownS": 9,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "handler",
+        "id": "teleportBehind",
+        "params": {
+          "coef": 1.0,
+          "stealthMs": 2000,
+          "nextHitBonusPct": 25
+        }
+      }
+    ]
+  },
+  {
+    "id": "schurke_klingentanz",
+    "class": "schurke",
+    "slot": "ult",
+    "unlockLevel": 5,
+    "cooldownS": 55,
+    "target": "self",
+    "autoCast": {
+      "default": false,
+      "rule": {
+        "when": "enemiesNear",
+        "count": 3,
+        "radiusPx": 90
+      }
+    },
+    "effects": [
+      {
+        "k": "handler",
+        "id": "channelSpin",
+        "params": {
+          "hits": 6,
+          "coef": 0.9,
+          "durationMs": 1500,
+          "radiusPx": 90,
+          "invulnerable": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "schurke_blutdurst",
+    "class": "schurke",
+    "slot": "passive",
+    "unlockLevel": 1,
+    "cooldownS": 0,
+    "target": "none",
+    "effects": [
+      {
+        "k": "buff",
+        "stat": "krt",
+        "ms": 0,
+        "to": "self",
+        "add": 10
+      }
+    ]
+  },
+  {
+    "id": "kleriker_heiliger_schlag",
+    "class": "kleriker",
+    "slot": "auto",
+    "unlockLevel": 1,
+    "cooldownS": 1.0,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 0.6
+      }
+    ]
+  },
+  {
+    "id": "kleriker_heilendes_licht",
+    "class": "kleriker",
+    "slot": "s1",
+    "unlockLevel": 1,
+    "cooldownS": 6,
+    "target": "lowestAlly",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "allyBelowPct",
+        "pct": 90
+      }
+    },
+    "effects": [
+      {
+        "k": "heal",
+        "coef": 2.0,
+        "to": "lowestAllies",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "id": "kleriker_segensaura",
+    "class": "kleriker",
+    "slot": "s2",
+    "unlockLevel": 2,
+    "cooldownS": 14,
+    "target": "lowestAlly",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "allyBelowPct",
+        "pct": 90
+      }
+    },
+    "effects": [
+      {
+        "k": "status",
+        "id": "regeneration",
+        "ms": 8000,
+        "value": 0.25,
+        "to": "lowestAllies",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "id": "kleriker_laeuterung",
+    "class": "kleriker",
+    "slot": "s3",
+    "unlockLevel": 3,
+    "cooldownS": 16,
+    "target": "self",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "any",
+        "rules": [
+          {
+            "when": "allyHasDebuff"
+          },
+          {
+            "when": "alliesBelowPct",
+            "pct": 80,
+            "count": 2
+          }
+        ]
+      }
+    },
+    "effects": [
+      {
+        "k": "handler",
+        "id": "cleanse",
+        "params": {
+          "perAlly": 1
+        },
+        "to": "allies"
+      },
+      {
+        "k": "heal",
+        "coef": 1.2,
+        "to": "allies"
+      },
+      {
+        "k": "damage",
+        "coef": 0.8,
+        "to": "enemiesAroundSelf",
+        "radiusPx": 300
+      }
+    ]
+  },
+  {
+    "id": "kleriker_wunder",
+    "class": "kleriker",
+    "slot": "ult",
+    "unlockLevel": 5,
+    "cooldownS": 90,
+    "target": "self",
+    "autoCast": {
+      "default": false,
+      "rule": {
+        "when": "any",
+        "rules": [
+          {
+            "when": "allyDead"
+          },
+          {
+            "when": "alliesBelowPct",
+            "pct": 40,
+            "count": 2
+          }
+        ]
+      }
+    },
+    "effects": [
+      {
+        "k": "heal",
+        "pctMaxHp": 60,
+        "to": "allies"
+      },
+      {
+        "k": "handler",
+        "id": "revive",
+        "params": {
+          "pct": 30
+        },
+        "to": "allies"
+      }
+    ]
+  },
+  {
+    "id": "kleriker_gnade",
+    "class": "kleriker",
+    "slot": "passive",
+    "unlockLevel": 1,
+    "cooldownS": 0,
+    "target": "none",
+    "effects": [
+      {
+        "k": "handler",
+        "id": "overhealShield",
+        "params": {
+          "maxPctMaxHp": 10,
+          "ms": 6000
+        }
+      }
+    ]
+  },
+  {
+    "id": "runenweber_runenstrahl",
+    "class": "runenweber",
+    "slot": "auto",
+    "unlockLevel": 1,
+    "cooldownS": 1.0,
+    "target": "nearest",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "damage",
+        "coef": 0.73
+      }
+    ]
+  },
+  {
+    "id": "runenweber_rune_der_kraft",
+    "class": "runenweber",
+    "slot": "s1",
+    "unlockLevel": 1,
+    "cooldownS": 16,
+    "target": "self",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "inCombat"
+      }
+    },
+    "effects": [
+      {
+        "k": "buff",
+        "stat": "kra",
+        "ms": 8000,
+        "to": "allies",
+        "mult": 1.15,
+        "display": "kraftrune"
+      }
+    ]
+  },
+  {
+    "id": "runenweber_runenbruch",
+    "class": "runenweber",
+    "slot": "s2",
+    "unlockLevel": 2,
+    "cooldownS": 20,
+    "target": "focus",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "enemyInRange"
+      }
+    },
+    "effects": [
+      {
+        "k": "status",
+        "id": "runenbruch",
+        "ms": 8000,
+        "value": 10
+      },
+      {
+        "k": "damage",
+        "coef": 1.0
+      }
+    ]
+  },
+  {
+    "id": "runenweber_rune_des_schutzes",
+    "class": "runenweber",
+    "slot": "s3",
+    "unlockLevel": 3,
+    "cooldownS": 18,
+    "target": "self",
+    "autoCast": {
+      "default": true,
+      "rule": {
+        "when": "inCombat"
+      }
+    },
+    "effects": [
+      {
+        "k": "buff",
+        "stat": "rue",
+        "ms": 8000,
+        "to": "allies",
+        "mult": 1.2,
+        "display": "schutzrune"
+      },
+      {
+        "k": "buff",
+        "stat": "res",
+        "ms": 8000,
+        "to": "allies",
+        "mult": 1.2,
+        "display": "schutzrune"
+      }
+    ]
+  },
+  {
+    "id": "runenweber_runensturm",
+    "class": "runenweber",
+    "slot": "ult",
+    "unlockLevel": 5,
+    "cooldownS": 75,
+    "target": "self",
+    "autoCast": {
+      "default": false,
+      "rule": {
+        "when": "bossPresent"
+      }
+    },
+    "effects": [
+      {
+        "k": "buff",
+        "stat": "tmp",
+        "ms": 12000,
+        "to": "allies",
+        "add": 25,
+        "display": "runensturm"
+      },
+      {
+        "k": "buff",
+        "stat": "krt",
+        "ms": 12000,
+        "to": "allies",
+        "add": 20,
+        "display": "runensturm"
+      }
+    ]
+  },
+  {
+    "id": "runenweber_resonanz",
+    "class": "runenweber",
+    "slot": "passive",
+    "unlockLevel": 1,
+    "cooldownS": 0,
+    "target": "none",
+    "effects": [
+      {
+        "k": "handler",
+        "id": "buffedDamageReduction",
+        "params": {
+          "pct": 5
+        }
+      }
+    ]
+  }
+]

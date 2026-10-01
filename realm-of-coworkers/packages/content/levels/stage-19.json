@@ -1,0 +1,107 @@
+{
+  "stage": 19,
+  "chapter": 4,
+  "recommendedLevel": 19,
+  "lengthPx": 12000,
+  "encounters": [
+    {
+      "x": 1800,
+      "points": 8,
+      "groupSplit": [
+        0.5,
+        0.5
+      ],
+      "groupDelaysS": [
+        0,
+        8
+      ],
+      "elites": 0,
+      "hazard": false
+    },
+    {
+      "x": 3600,
+      "points": 10,
+      "groupSplit": [
+        0.5,
+        0.5
+      ],
+      "groupDelaysS": [
+        0,
+        8
+      ],
+      "elites": 0,
+      "hazard": false
+    },
+    {
+      "x": 5400,
+      "points": 10,
+      "groupSplit": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "groupDelaysS": [
+        0,
+        8,
+        16
+      ],
+      "elites": 0,
+      "hazard": true
+    },
+    {
+      "x": 7200,
+      "points": 12,
+      "groupSplit": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "groupDelaysS": [
+        0,
+        8,
+        16
+      ],
+      "elites": 1,
+      "hazard": false
+    },
+    {
+      "x": 9000,
+      "points": 12,
+      "groupSplit": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "groupDelaysS": [
+        0,
+        8,
+        16
+      ],
+      "elites": 0,
+      "hazard": true
+    },
+    {
+      "x": 10800,
+      "points": 14,
+      "groupSplit": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "groupDelaysS": [
+        0,
+        8,
+        16
+      ],
+      "elites": 1,
+      "hazard": false
+    }
+  ],
+  "checkpoints": [
+    4500,
+    8100
+  ],
+  "hazard": "hazard_wurzel",
+  "introId": "stage-19",
+  "loot": "normal"
+}

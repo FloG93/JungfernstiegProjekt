@@ -1,0 +1,524 @@
+[
+  {
+    "id": "krieger_amulett",
+    "class": "krieger",
+    "slot": "amulett",
+    "name": "Eisenherz",
+    "unlockBoss": "ignarch",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "balance.combat.potion.pct",
+        "set": 45
+      }
+    }
+  },
+  {
+    "id": "krieger_ring",
+    "class": "krieger",
+    "slot": "ring",
+    "name": "Mauerbrecher",
+    "unlockBoss": "voltrax",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:krieger_spott.cooldownS",
+        "add": -2
+      }
+    }
+  },
+  {
+    "id": "krieger_relikt",
+    "class": "krieger",
+    "slot": "relikt",
+    "name": "Wächtersiegel",
+    "unlockBoss": "solaris",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:krieger_bollwerk.effects.0.ms",
+        "set": 7000
+      }
+    }
+  },
+  {
+    "id": "magier_amulett",
+    "class": "magier",
+    "slot": "amulett",
+    "name": "Sternenglas",
+    "unlockBoss": "ignarch",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:magier_arkane_barriere.effects.0.pct",
+        "set": 25
+      }
+    }
+  },
+  {
+    "id": "magier_ring",
+    "class": "magier",
+    "slot": "ring",
+    "name": "Flussband",
+    "unlockBoss": "voltrax",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "handler:magier_elementarfluss.lockoutMs",
+        "set": 14000
+      }
+    }
+  },
+  {
+    "id": "magier_relikt",
+    "class": "magier",
+    "slot": "relikt",
+    "name": "Kometenkern",
+    "unlockBoss": "solaris",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "handler:magier_kataklysmus.delayMs",
+        "set": 700
+      }
+    }
+  },
+  {
+    "id": "waldlaeufer_amulett",
+    "class": "waldlaeufer",
+    "slot": "amulett",
+    "name": "Falkenfeder",
+    "unlockBoss": "ignarch",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "balance.combat.roll.px",
+        "set": 200
+      }
+    }
+  },
+  {
+    "id": "waldlaeufer_ring",
+    "class": "waldlaeufer",
+    "slot": "ring",
+    "name": "Jägerband",
+    "unlockBoss": "voltrax",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "handler:waldlaeufer_fallensteller.lifetimeMs",
+        "set": 20000
+      }
+    }
+  },
+  {
+    "id": "waldlaeufer_relikt",
+    "class": "waldlaeufer",
+    "slot": "relikt",
+    "name": "Windauge",
+    "unlockBoss": "solaris",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:waldlaeufer_adlerauge.effects.0.ms",
+        "set": 12000
+      }
+    }
+  },
+  {
+    "id": "schurke_amulett",
+    "class": "schurke",
+    "slot": "amulett",
+    "name": "Schattenzahn",
+    "unlockBoss": "ignarch",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "handler:schurke_schattenschritt.stealthMs",
+        "set": 3000
+      }
+    }
+  },
+  {
+    "id": "schurke_ring",
+    "class": "schurke",
+    "slot": "ring",
+    "name": "Giftfinger",
+    "unlockBoss": "voltrax",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:schurke_giftklinge.effects.0.ms",
+        "set": 8000
+      }
+    }
+  },
+  {
+    "id": "schurke_relikt",
+    "class": "schurke",
+    "slot": "relikt",
+    "name": "Mondsichel",
+    "unlockBoss": "solaris",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:schurke_klingentanz.cooldownS",
+        "add": -5
+      }
+    }
+  },
+  {
+    "id": "kleriker_amulett",
+    "class": "kleriker",
+    "slot": "amulett",
+    "name": "Gnadenperle",
+    "unlockBoss": "ignarch",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "handler:kleriker_gnade.maxPctMaxHp",
+        "set": 15
+      }
+    }
+  },
+  {
+    "id": "kleriker_ring",
+    "class": "kleriker",
+    "slot": "ring",
+    "name": "Lichtreif",
+    "unlockBoss": "voltrax",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:kleriker_heilendes_licht.cooldownS",
+        "add": -1
+      }
+    }
+  },
+  {
+    "id": "kleriker_relikt",
+    "class": "kleriker",
+    "slot": "relikt",
+    "name": "Sonnenkelch",
+    "unlockBoss": "solaris",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:kleriker_wunder.effects.0.pctMaxHp",
+        "set": 70
+      }
+    }
+  },
+  {
+    "id": "runenweber_amulett",
+    "class": "runenweber",
+    "slot": "amulett",
+    "name": "Runenherz",
+    "unlockBoss": "ignarch",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "self.buffDurationMs",
+        "add": 1000
+      }
+    }
+  },
+  {
+    "id": "runenweber_ring",
+    "class": "runenweber",
+    "slot": "ring",
+    "name": "Bandschmied",
+    "unlockBoss": "voltrax",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:runenweber_rune_der_kraft.cooldownS",
+        "add": -2
+      }
+    }
+  },
+  {
+    "id": "runenweber_relikt",
+    "class": "runenweber",
+    "slot": "relikt",
+    "name": "Urrune",
+    "unlockBoss": "solaris",
+    "rankPoints": [
+      12,
+      18,
+      24,
+      30,
+      36
+    ],
+    "rankCost": [
+      0,
+      6,
+      8,
+      12,
+      16
+    ],
+    "effect": {
+      "k": "handler",
+      "id": "modifyValue",
+      "params": {
+        "path": "skill:runenweber_runensturm.effects.0.ms",
+        "set": 14000
+      }
+    }
+  }
+]

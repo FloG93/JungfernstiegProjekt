@@ -1,0 +1,61 @@
+{
+  "itemsPerChest": 2,
+  "eliteItemChance": 0.25,
+  "gemChance": 0.5,
+  "splinters": 2,
+  "slotWeights": {
+    "waffe": 16,
+    "ruestung": 14,
+    "nebenhand": 14,
+    "helm": 14,
+    "handschuhe": 14,
+    "umhang": 14,
+    "stiefel": 14
+  },
+  "rarityByChapter": {
+    "1": {
+      "gewoehnlich": 60,
+      "ungewoehnlich": 30,
+      "selten": 10
+    },
+    "2": {
+      "gewoehnlich": 40,
+      "ungewoehnlich": 35,
+      "selten": 20,
+      "episch": 5
+    },
+    "3": {
+      "gewoehnlich": 25,
+      "ungewoehnlich": 35,
+      "selten": 30,
+      "episch": 10
+    },
+    "4": {
+      "gewoehnlich": 15,
+      "ungewoehnlich": 30,
+      "selten": 35,
+      "episch": 20
+    },
+    "5": {
+      "gewoehnlich": 10,
+      "ungewoehnlich": 25,
+      "selten": 40,
+      "episch": 25
+    },
+    "6": {
+      "gewoehnlich": 5,
+      "ungewoehnlich": 20,
+      "selten": 40,
+      "episch": 35
+    }
+  },
+  "weaponElement": {
+    "physisch": 40,
+    "feuer": 10,
+    "eis": 10,
+    "blitz": 10,
+    "erde": 10,
+    "licht": 10,
+    "schatten": 10
+  }
+}

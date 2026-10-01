@@ -1,0 +1,44 @@
+[
+  {
+    "id": "physisch",
+    "color": "#FFFFFF",
+    "icon": "schwert",
+    "weakTo": null
+  },
+  {
+    "id": "feuer",
+    "color": "#E8552B",
+    "icon": "flamme",
+    "weakTo": "eis"
+  },
+  {
+    "id": "eis",
+    "color": "#6EC6F0",
+    "icon": "kristall",
+    "weakTo": "feuer"
+  },
+  {
+    "id": "blitz",
+    "color": "#F2D030",
+    "icon": "blitz",
+    "weakTo": "erde"
+  },
+  {
+    "id": "erde",
+    "color": "#8B5E34",
+    "icon": "fels",
+    "weakTo": "blitz"
+  },
+  {
+    "id": "licht",
+    "color": "#F7E39B",
+    "icon": "sonne",
+    "weakTo": "schatten"
+  },
+  {
+    "id": "schatten",
+    "color": "#7B4FBF",
+    "icon": "mond",
+    "weakTo": "licht"
+  }
+]

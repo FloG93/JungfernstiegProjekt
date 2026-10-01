@@ -1,0 +1,48 @@
+{
+  "chapter": 1,
+  "stageIntros": {
+    "stage-01": "Der Grenzwald brennt seit drei Wochen, und niemand weiß, woran. Die Laterne im Lager ist die letzte, die noch wärmt. Ihr folgt dem Rauch nach Osten.",
+    "stage-02": "Zwischen verkohlten Stämmen liegen Werkzeuge, als hätten die Köhler sie eben erst fallen lassen. Von den Menschen fehlt jede Spur. Nur die Asche hält ihre Umrisse.",
+    "stage-03": "Ein Hüttendorf, halb geschmolzen, halb unberührt. Was das Feuer verschont hat, hat etwas anderes genommen: Hier ist es vollkommen still.",
+    "stage-04": "Am Fuß des Glutbergs findet ihr den ersten Splitter, eingeschlossen in schwarzem Glas. Er ist warm. Er schlägt wie ein Herz.",
+    "stage-05": "Der Aufstieg zum Krater. Über euch färbt sich der Himmel kupfern, und aus dem Berg antwortet eine Stimme, die einmal menschlich war."
+  },
+  "dialogs": {
+    "ignarch_before": [
+      {
+        "speaker": "Ignarch",
+        "text": "Ihr bringt Wasser in mein Reich? Wie rührend."
+      },
+      {
+        "speaker": "Ignarch",
+        "text": "Ich habe diesen Wald gehütet, als ihr noch nicht geboren wart."
+      },
+      {
+        "speaker": "Held",
+        "text": "Und jetzt verbrennt ihr ihn."
+      },
+      {
+        "speaker": "Ignarch",
+        "text": "Ich halte ihn warm. Es kommt etwas, das alles kalt macht, und ihr lauft ihm entgegen."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Der Boden glüht, und der Splitter in seiner Brust pulsiert im Takt seines Zorns."
+      }
+    ],
+    "ignarch_after": [
+      {
+        "speaker": "Ignarch",
+        "text": "Nehmt ihn. Er hat mich ohnehin nur wach gehalten."
+      },
+      {
+        "speaker": "Ignarch",
+        "text": "Fragt die Nächste, was sie eingefroren hat. Fragt sie, warum."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Die Glut erlischt, und zum ersten Mal seit Wochen riecht der Wald nach Regen."
+      }
+    ]
+  }
+}

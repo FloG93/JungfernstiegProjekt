@@ -1,0 +1,335 @@
+[
+  {
+    "id": "betaeubung",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 1500,
+    "weakening": false,
+    "cleanseOrder": 1,
+    "bossImmune": true,
+    "eliteDurationMult": 0.5,
+    "params": {
+      "blocksActions": 1
+    }
+  },
+  {
+    "id": "eingefroren",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 1500,
+    "weakening": false,
+    "cleanseOrder": 2,
+    "bossImmune": true,
+    "eliteDurationMult": 0.5,
+    "params": {
+      "blocksActions": 1
+    }
+  },
+  {
+    "id": "wurzel",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 2000,
+    "weakening": false,
+    "cleanseOrder": 3,
+    "bossImmune": true,
+    "eliteDurationMult": 0.5,
+    "params": {
+      "blocksMovement": 1
+    }
+  },
+  {
+    "id": "furcht",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 2000,
+    "weakening": false,
+    "cleanseOrder": 4,
+    "bossImmune": true,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "blocksAbilities": 1
+    }
+  },
+  {
+    "id": "verderbnis",
+    "kind": "debuff",
+    "maxStacks": 3,
+    "defaultMs": 6000,
+    "weakening": true,
+    "cleanseOrder": 5,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "dmgTakenPctPerStack": 10
+    }
+  },
+  {
+    "id": "ruestungsbruch",
+    "kind": "debuff",
+    "maxStacks": 3,
+    "defaultMs": 6000,
+    "weakening": true,
+    "cleanseOrder": 6,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "armorResMalusPctPerStack": 15
+    }
+  },
+  {
+    "id": "blendung",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 5000,
+    "weakening": true,
+    "cleanseOrder": 7,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "dmgDealtMalusPct": 20
+    }
+  },
+  {
+    "id": "frost",
+    "kind": "debuff",
+    "maxStacks": 3,
+    "defaultMs": 5000,
+    "weakening": true,
+    "cleanseOrder": 8,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "attackSpeedMalusPct": 20,
+      "moveSpeedMalusPct": 30,
+      "freezeAtStacks": 3,
+      "freezeMs": 1500,
+      "bossSlowAtMaxPct": 40,
+      "bossSlowAtMaxMs": 3000
+    }
+  },
+  {
+    "id": "schock",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 6000,
+    "weakening": true,
+    "cleanseOrder": 9,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "cooldownSlowPct": 25
+    }
+  },
+  {
+    "id": "gift",
+    "kind": "debuff",
+    "maxStacks": 3,
+    "defaultMs": 6000,
+    "tickMs": 1000,
+    "weakening": false,
+    "cleanseOrder": 10,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "heroCoefPerS": 0.35,
+      "enemyPctRefHpPerS": 0.8,
+      "healingReceivedMalusPct": 30,
+      "physical": 0
+    }
+  },
+  {
+    "id": "blutung",
+    "kind": "debuff",
+    "maxStacks": 3,
+    "defaultMs": 5000,
+    "tickMs": 1000,
+    "weakening": false,
+    "cleanseOrder": 11,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "heroCoefPerS": 0.3,
+      "enemyPctRefHpPerS": 0.8,
+      "physical": 1
+    }
+  },
+  {
+    "id": "verbrennung",
+    "kind": "debuff",
+    "maxStacks": 3,
+    "defaultMs": 5000,
+    "tickMs": 1000,
+    "weakening": false,
+    "cleanseOrder": 12,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "heroCoefPerS": 0.25,
+      "enemyPctRefHpPerS": 1.0,
+      "physical": 0
+    }
+  },
+  {
+    "id": "runenbruch",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 8000,
+    "weakening": true,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "ignoreElementResist": 1,
+      "dmgTakenPct": 10
+    }
+  },
+  {
+    "id": "verspottet",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 4000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  },
+  {
+    "id": "angriffstempo_malus",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 3000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "attackSpeedMalusPct": 20
+    }
+  },
+  {
+    "id": "bewegung_malus",
+    "kind": "debuff",
+    "maxStacks": 1,
+    "defaultMs": 3000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "moveSpeedMalusPct": 30
+    }
+  },
+  {
+    "id": "schild",
+    "kind": "buff",
+    "maxStacks": 8,
+    "defaultMs": 6000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  },
+  {
+    "id": "regeneration",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 8000,
+    "tickMs": 1000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "heroCoefPerS": 0.25
+    }
+  },
+  {
+    "id": "raserei",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 8000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {
+      "dmgDealtPct": 25
+    }
+  },
+  {
+    "id": "kraftrune",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 8000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  },
+  {
+    "id": "schutzrune",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 8000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  },
+  {
+    "id": "runensturm",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 12000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  },
+  {
+    "id": "adlerauge",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 10000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  },
+  {
+    "id": "tarnung",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 2000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  },
+  {
+    "id": "bollwerk",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 6000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  },
+  {
+    "id": "spott_schutz",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 4000,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  },
+  {
+    "id": "unverwundbar",
+    "kind": "buff",
+    "maxStacks": 1,
+    "defaultMs": 500,
+    "weakening": false,
+    "bossImmune": false,
+    "eliteDurationMult": 1.0,
+    "params": {}
+  }
+]

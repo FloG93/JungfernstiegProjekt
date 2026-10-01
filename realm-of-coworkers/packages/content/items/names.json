@@ -1,0 +1,113 @@
+{
+  "prefixes": {
+    "gewoehnlich": [
+      "Zerschlissener",
+      "Schlichter",
+      "Abgenutzter",
+      "Einfacher",
+      "Rostiger"
+    ],
+    "ungewoehnlich": [
+      "Solider",
+      "Gehärteter",
+      "Geschliffener",
+      "Verstärkter",
+      "Gepflegter"
+    ],
+    "selten": [
+      "Geweihter",
+      "Sturmgeschmiedeter",
+      "Runenbesetzter",
+      "Funkelnder",
+      "Erhabener"
+    ],
+    "episch": [
+      "Uralter",
+      "Glutgeborener",
+      "Nachtsilberner",
+      "Titanischer",
+      "Sternenklarer"
+    ],
+    "legendaer": [
+      "Splittergeschmiedeter",
+      "Aeonischer",
+      "Unvergänglicher"
+    ]
+  },
+  "suffixes": [
+    "der Wachsamkeit",
+    "des Bergwinds",
+    "der stillen Stunde",
+    "des Splitterträgers",
+    "der letzten Laterne",
+    "des Aschenpfads",
+    "der tiefen Wurzel",
+    "des klaren Blicks",
+    "der zweiten Chance",
+    "des langen Marsches"
+  ],
+  "types": {
+    "krieger": {
+      "waffe": "Langschwert",
+      "ruestung": "Plattenharnisch",
+      "nebenhand": "Schild",
+      "helm": "Plattenhelm",
+      "handschuhe": "Plattenhandschuhe",
+      "umhang": "Wappenmantel",
+      "stiefel": "Plattenstiefel"
+    },
+    "magier": {
+      "waffe": "Zauberstab",
+      "ruestung": "Stoffrobe",
+      "nebenhand": "Grimoire",
+      "helm": "Stoffkapuze",
+      "handschuhe": "Stoffhandschuhe",
+      "umhang": "Sternenmantel",
+      "stiefel": "Stoffschuhe"
+    },
+    "waldlaeufer": {
+      "waffe": "Bogen",
+      "ruestung": "Lederwams",
+      "nebenhand": "Köcher",
+      "helm": "Lederkappe",
+      "handschuhe": "Lederhandschuhe",
+      "umhang": "Jagdmantel",
+      "stiefel": "Lederstiefel"
+    },
+    "schurke": {
+      "waffe": "Dolche",
+      "ruestung": "Schattenkluft",
+      "nebenhand": "Parierdolch",
+      "helm": "Lederhaube",
+      "handschuhe": "Schattenhandschuhe",
+      "umhang": "Schattenmantel",
+      "stiefel": "Schleichstiefel"
+    },
+    "kleriker": {
+      "waffe": "Streitkolben",
+      "ruestung": "Kettenhemd",
+      "nebenhand": "Heiliges Symbol",
+      "helm": "Kettenhaube",
+      "handschuhe": "Kettenhandschuhe",
+      "umhang": "Chormantel",
+      "stiefel": "Kettenstiefel"
+    },
+    "runenweber": {
+      "waffe": "Runenstab",
+      "ruestung": "Runenrobe",
+      "nebenhand": "Runenbuch",
+      "helm": "Runenkapuze",
+      "handschuhe": "Runenhandschuhe",
+      "umhang": "Webermantel",
+      "stiefel": "Runenschuhe"
+    }
+  },
+  "bossGenitive": {
+    "ignarch": "des Glutkönigs",
+    "glaciara": "der Frostwitwe",
+    "voltrax": "des Sturmtyrannen",
+    "gorthul": "des Steinwächters",
+    "solaris": "des Seraphs",
+    "nyxhara": "der Stille"
+  }
+}

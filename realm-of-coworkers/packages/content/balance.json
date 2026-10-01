@@ -1,0 +1,341 @@
+{
+  "stats": {
+    "perPoint": {
+      "leb": 6,
+      "kra": 0.5,
+      "rue": 1,
+      "res": 1,
+      "tmp": 0.15,
+      "krt": 0.1,
+      "ksd": 0.4
+    },
+    "base": {
+      "leb": [
+        120,
+        14
+      ],
+      "kra": [
+        10,
+        2.2
+      ],
+      "rue": [
+        10,
+        2.4
+      ],
+      "res": [
+        8,
+        2.0
+      ],
+      "tmp": 0,
+      "krt": 5,
+      "ksd": 150
+    },
+    "caps": {
+      "tmp": 40,
+      "krt": 60,
+      "krtBuffed": 75,
+      "ksd": 250,
+      "ele": 15
+    },
+    "maxLevel": 30,
+    "levelUpHealPct": 30
+  },
+  "items": {
+    "slotWeights": {
+      "waffe": 2.0,
+      "ruestung": 1.4,
+      "nebenhand": 1.2,
+      "helm": 1.0,
+      "handschuhe": 0.8,
+      "umhang": 0.8,
+      "stiefel": 0.8
+    },
+    "rarity": {
+      "gewoehnlich": 1.0,
+      "ungewoehnlich": 1.12,
+      "selten": 1.28,
+      "episch": 1.48,
+      "legendaer": 1.75
+    },
+    "budget": {
+      "base": 8,
+      "perIlvl": 2.2
+    },
+    "rollJitter": [
+      0.92,
+      1.08
+    ],
+    "maxIlvl": 34,
+    "reqOffset": 4,
+    "legendaryElePct": 1,
+    "sellDivisor": 4,
+    "inventory": 80,
+    "stash": 40
+  },
+  "weapon": {
+    "xp": {
+      "mult": 300,
+      "exp": 1.4,
+      "round": 10,
+      "share": 0.5,
+      "shareAtMaxLevel": 1.0
+    },
+    "bonusPerLevel": 0.03,
+    "maxLevel": 10,
+    "swapMs": 500,
+    "swapLockS": 4,
+    "transferGoldPerLevel": 300,
+    "elementChangeGoldPerIlvl": 20,
+    "enchant": {
+      "lines": 3,
+      "maxRank": 5,
+      "goldPerRankSq": 100,
+      "changeTypeGold": 500
+    }
+  },
+  "combat": {
+    "tickRate": 20,
+    "mitigation": {
+      "base": 40,
+      "perLevel": 12
+    },
+    "roll": {
+      "px": 160,
+      "invulnMs": 500,
+      "cooldownS": 8
+    },
+    "revive": {
+      "channelS": 3,
+      "pct": 30
+    },
+    "potion": {
+      "charges": 4,
+      "pct": 35,
+      "cooldownS": 15
+    },
+    "maxEffects": 8,
+    "threatSwitch": 1.1,
+    "healThreat": 0.5,
+    "meleeSlots": 4,
+    "telegraphMs": 1500
+  },
+  "movement": {
+    "manual": 220,
+    "autowalk": 90,
+    "leashPx": 700,
+    "formationReturnS": 3,
+    "sameClassDepthPx": 40
+  },
+  "enemy": {
+    "life": {
+      "base": 60,
+      "perLevel": 38
+    },
+    "damage": {
+      "base": 1,
+      "perLevel": 0.35
+    }
+  },
+  "stage": {
+    "lengthPx": 12000,
+    "encounterX": [
+      1800,
+      3600,
+      5400,
+      7200,
+      9000,
+      10800
+    ],
+    "encounterPoints": [
+      8,
+      10,
+      10,
+      12,
+      12,
+      14
+    ],
+    "groupSplit": [
+      [
+        0.5,
+        0.5
+      ],
+      [
+        0.5,
+        0.5
+      ],
+      [
+        0.4,
+        0.3,
+        0.3
+      ],
+      [
+        0.4,
+        0.3,
+        0.3
+      ],
+      [
+        0.4,
+        0.3,
+        0.3
+      ],
+      [
+        0.4,
+        0.3,
+        0.3
+      ]
+    ],
+    "groupDelaysS": [
+      0,
+      8,
+      16
+    ],
+    "minGroupSize": 3,
+    "restDropBelow": 0.3,
+    "spawnRightShare": 0.7,
+    "maxAlive": 30,
+    "resumeBelow": 24,
+    "rushAfterS": 45,
+    "rushSpeed": 160,
+    "checkpointX": [
+      4500,
+      8100
+    ],
+    "regenBetweenPct": 4,
+    "reviveAtEncounterEndPct": 50,
+    "intro": {
+      "stages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "mult": 0.8
+    },
+    "hazard": {
+      "encounters": [
+        3,
+        5
+      ],
+      "pctRefHp": 4,
+      "everyS": 6,
+      "telegraphMs": 1500
+    },
+    "bossStage": {
+      "encounterX": [
+        1800,
+        3600
+      ],
+      "encounterPoints": [
+        8,
+        10
+      ],
+      "checkpointX": [
+        2700,
+        4500
+      ],
+      "lengthPx": 4500
+    }
+  },
+  "party": {
+    "maxSize": 6,
+    "spawnCount": {
+      "perExtra": 0.5
+    },
+    "life": {
+      "perExtra": 0.75
+    },
+    "lateJoinerLevels": 3
+  },
+  "boss": {
+    "damage": {
+      "base": 0.25,
+      "perExtra": 0.15
+    },
+    "kampfstufeProzent": 5,
+    "kampfstufeMax": 4,
+    "levelPerChapter": 5,
+    "refLife": [
+      407,
+      611,
+      815,
+      1019,
+      1223,
+      1427
+    ],
+    "enrage": {
+      "seconds": 480,
+      "bonus": 0.25,
+      "stepSeconds": 30,
+      "stepBonus": 0.1
+    },
+    "phaseTransition": {
+      "invulnMs": 5000,
+      "healPct": 25,
+      "revivePct": 50
+    },
+    "rage": {
+      "everyS": 15,
+      "ms": 4000
+    },
+    "moveSpeed": 80,
+    "meleeRangePx": 130,
+    "slowCapPct": 40,
+    "readyCountdownS": 10,
+    "timersMinutes": [
+      15,
+      25,
+      40,
+      60,
+      90,
+      120
+    ]
+  },
+  "progression": {
+    "xpCurve": {
+      "mult": 100,
+      "exp": 1.5,
+      "round": 10
+    },
+    "xpFactors": {
+      "bossStageEncounters": 0.4,
+      "bossFirst": 1.0,
+      "bossRepeat": 0.5,
+      "stageRepeat": 0.4,
+      "helper": 0
+    }
+  },
+  "gold": {
+    "stage": {
+      "perPoint": 66,
+      "base": 2,
+      "perStage": 0.6
+    },
+    "bossStagePoints": 18,
+    "bossFirst": 2.0,
+    "bossRepeat": 1.0,
+    "stageRepeat": 1.0
+  },
+  "artifacts": {
+    "splinters": {
+      "stage": 2,
+      "bossFirst": 6,
+      "bossRepeat": 3
+    }
+  },
+  "session": {
+    "soloPauseMaxS": 600,
+    "inviteTtlS": 60,
+    "awayAfterS": 600,
+    "chatMaxLen": 200
+  },
+  "net": {
+    "snapshotEveryTicks": 2,
+    "fullSnapshotS": 5,
+    "maxInputsPerS": 20,
+    "maxMsgsPerS": 30,
+    "disconnectGraceS": 90,
+    "emptyRunTimeoutS": 300,
+    "maxRuns": 10,
+    "maxSnapshotBytes": 8192
+  }
+}

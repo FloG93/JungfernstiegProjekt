@@ -1,0 +1,44 @@
+{
+  "stage": 20,
+  "chapter": 4,
+  "recommendedLevel": 20,
+  "lengthPx": 4500,
+  "encounters": [
+    {
+      "x": 1800,
+      "points": 8,
+      "groupSplit": [
+        0.5,
+        0.5
+      ],
+      "groupDelaysS": [
+        0,
+        8
+      ],
+      "elites": 0,
+      "hazard": false
+    },
+    {
+      "x": 3600,
+      "points": 10,
+      "groupSplit": [
+        0.5,
+        0.5
+      ],
+      "groupDelaysS": [
+        0,
+        8
+      ],
+      "elites": 0,
+      "hazard": false
+    }
+  ],
+  "checkpoints": [
+    2700,
+    4500
+  ],
+  "hazard": null,
+  "boss": "gorthul",
+  "introId": "stage-20",
+  "loot": "boss"
+}

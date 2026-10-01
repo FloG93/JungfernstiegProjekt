@@ -1,0 +1,176 @@
+[
+  {
+    "id": "krieger",
+    "name": "Krieger",
+    "role": "Tank, Nahkampf",
+    "weapon": "Langschwert",
+    "offhand": "Schild",
+    "material": "Platte",
+    "rangePx": 90,
+    "hpFactor": 1.3,
+    "threat": 3.0,
+    "solo": 1.6,
+    "formationOffsetPx": 0,
+    "shares": {
+      "leb": 0.28,
+      "kra": 0.28,
+      "rue": 0.22,
+      "res": 0.08,
+      "tmp": 0.06,
+      "krt": 0.08
+    },
+    "skills": [
+      "krieger_schwerthieb",
+      "krieger_spott",
+      "krieger_schildstoss",
+      "krieger_wirbelhieb",
+      "krieger_bollwerk",
+      "krieger_standhaft"
+    ]
+  },
+  {
+    "id": "magier",
+    "name": "Magier",
+    "role": "Flächenschaden, Fernkampf",
+    "weapon": "Zauberstab",
+    "offhand": "Grimoire",
+    "material": "Stoff",
+    "rangePx": 500,
+    "hpFactor": 0.8,
+    "threat": 1.0,
+    "solo": 1.0,
+    "formationOffsetPx": -280,
+    "shares": {
+      "leb": 0.14,
+      "kra": 0.42,
+      "rue": 0.06,
+      "res": 0.1,
+      "tmp": 0.14,
+      "krt": 0.14
+    },
+    "skills": [
+      "magier_arkanblitz",
+      "magier_elementarkugel",
+      "magier_elementarnova",
+      "magier_arkane_barriere",
+      "magier_kataklysmus",
+      "magier_elementarfluss"
+    ]
+  },
+  {
+    "id": "waldlaeufer",
+    "name": "Waldläufer",
+    "role": "Einzelziel-Schaden, Fernkampf",
+    "weapon": "Bogen",
+    "offhand": "Köcher",
+    "material": "Leder",
+    "rangePx": 560,
+    "hpFactor": 0.95,
+    "threat": 1.0,
+    "solo": 1.0,
+    "formationOffsetPx": -300,
+    "shares": {
+      "leb": 0.16,
+      "kra": 0.4,
+      "rue": 0.08,
+      "res": 0.08,
+      "tmp": 0.14,
+      "krt": 0.14
+    },
+    "skills": [
+      "waldlaeufer_pfeilschuss",
+      "waldlaeufer_gezielter_schuss",
+      "waldlaeufer_fallensteller",
+      "waldlaeufer_pfeilhagel",
+      "waldlaeufer_adlerauge",
+      "waldlaeufer_faehrtenleser"
+    ]
+  },
+  {
+    "id": "schurke",
+    "name": "Schurke",
+    "role": "Nahkampf-Burst, Debuff-Nutzer",
+    "weapon": "Dolche",
+    "offhand": "Parierdolch",
+    "material": "Leder",
+    "rangePx": 90,
+    "hpFactor": 0.9,
+    "threat": 1.0,
+    "solo": 1.0,
+    "formationOffsetPx": -40,
+    "shares": {
+      "leb": 0.18,
+      "kra": 0.38,
+      "rue": 0.1,
+      "res": 0.06,
+      "tmp": 0.14,
+      "krt": 0.14
+    },
+    "skills": [
+      "schurke_doppelstich",
+      "schurke_meucheln",
+      "schurke_giftklinge",
+      "schurke_schattenschritt",
+      "schurke_klingentanz",
+      "schurke_blutdurst"
+    ]
+  },
+  {
+    "id": "kleriker",
+    "name": "Kleriker",
+    "role": "Heiler",
+    "weapon": "Streitkolben",
+    "offhand": "Heiliges Symbol",
+    "material": "Kette",
+    "rangePx": 320,
+    "hpFactor": 1.05,
+    "threat": 0.6,
+    "solo": 2.4,
+    "formationOffsetPx": -120,
+    "shares": {
+      "leb": 0.24,
+      "kra": 0.3,
+      "rue": 0.14,
+      "res": 0.14,
+      "tmp": 0.1,
+      "krt": 0.08
+    },
+    "skills": [
+      "kleriker_heiliger_schlag",
+      "kleriker_heilendes_licht",
+      "kleriker_segensaura",
+      "kleriker_laeuterung",
+      "kleriker_wunder",
+      "kleriker_gnade"
+    ]
+  },
+  {
+    "id": "runenweber",
+    "name": "Runenweber",
+    "role": "Unterstützer, Buffs",
+    "weapon": "Runenstab",
+    "offhand": "Runenbuch",
+    "material": "Stoff",
+    "rangePx": 480,
+    "hpFactor": 0.9,
+    "threat": 0.8,
+    "solo": 2.0,
+    "formationOffsetPx": -220,
+    "shares": {
+      "leb": 0.2,
+      "kra": 0.32,
+      "rue": 0.1,
+      "res": 0.12,
+      "tmp": 0.16,
+      "krt": 0.1
+    },
+    "skills": [
+      "runenweber_runenstrahl",
+      "runenweber_rune_der_kraft",
+      "runenweber_runenbruch",
+      "runenweber_rune_des_schutzes",
+      "runenweber_runensturm",
+      "runenweber_resonanz"
+    ]
+  }
+]

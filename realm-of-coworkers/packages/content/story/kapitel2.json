@@ -1,0 +1,48 @@
+{
+  "chapter": 2,
+  "stageIntros": {
+    "stage-06": "Die Frostmoore beginnen dort, wo der Rauch endet. Der Übergang ist scharf wie ein Schnitt. Euer Atem gefriert, bevor er den Boden erreicht.",
+    "stage-07": "Ein Dorf unter Eis, jede Tür offen, jeder Tisch gedeckt. Die Menschen stehen noch da, wo sie standen. Sie sehen nicht aus, als hätten sie sich gewehrt.",
+    "stage-08": "Am Rand des Moores liegt ein Kinderschlitten, sorgfältig abgestellt. Die Spuren daneben führen nur in eine Richtung.",
+    "stage-09": "Im Eis unter euren Füßen liegt der zweite Splitter und darüber ein Gesicht, das euch ansieht. Es blinzelt nicht.",
+    "stage-10": "Der Weg zum Frostpalast. Was hier friert, friert nicht aus Kälte, sondern weil jemand beschlossen hat, dass nichts mehr weh tun soll."
+  },
+  "dialogs": {
+    "glaciara_before": [
+      {
+        "speaker": "Glaciara",
+        "text": "Leise. Sie schlafen."
+      },
+      {
+        "speaker": "Held",
+        "text": "Sie sind tot."
+      },
+      {
+        "speaker": "Glaciara",
+        "text": "Sie sind unversehrt. Niemand hier wird älter, niemand verliert jemanden."
+      },
+      {
+        "speaker": "Glaciara",
+        "text": "Ich habe den schlimmsten Tag genommen und ihn angehalten. Das nennt ihr Verbrechen?"
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Hinter ihr steht ein Dorf wie ein Uhrwerk ohne Zeiger."
+      }
+    ],
+    "glaciara_after": [
+      {
+        "speaker": "Glaciara",
+        "text": "Wenn das Eis geht, kommt der Tag zurück."
+      },
+      {
+        "speaker": "Glaciara",
+        "text": "Bleibt bei ihnen, wenn sie aufwachen. Es wird nicht leicht."
+      },
+      {
+        "speaker": "Erzähler",
+        "text": "Das Eis löst sich langsam, und irgendwo im Dorf beginnt ein Kind zu weinen."
+      }
+    ]
+  }
+}

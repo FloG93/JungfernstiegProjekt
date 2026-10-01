@@ -1,0 +1,68 @@
+[
+  {
+    "id": "arena_aschenwaelder",
+    "widthPx": 1600,
+    "depthPx": 240,
+    "heroStartX": [
+      200,
+      700
+    ],
+    "bossStartX": 1100,
+    "background": "bg_aschenwaelder_arena"
+  },
+  {
+    "id": "arena_frostmoore",
+    "widthPx": 1600,
+    "depthPx": 240,
+    "heroStartX": [
+      200,
+      700
+    ],
+    "bossStartX": 1100,
+    "background": "bg_frostmoore_arena"
+  },
+  {
+    "id": "arena_sturmklippen",
+    "widthPx": 1600,
+    "depthPx": 240,
+    "heroStartX": [
+      200,
+      700
+    ],
+    "bossStartX": 1100,
+    "background": "bg_sturmklippen_arena"
+  },
+  {
+    "id": "arena_tiefenwurzeln",
+    "widthPx": 1600,
+    "depthPx": 240,
+    "heroStartX": [
+      200,
+      700
+    ],
+    "bossStartX": 1100,
+    "background": "bg_tiefenwurzeln_arena"
+  },
+  {
+    "id": "arena_sonnenruinen",
+    "widthPx": 1600,
+    "depthPx": 240,
+    "heroStartX": [
+      200,
+      700
+    ],
+    "bossStartX": 1100,
+    "background": "bg_sonnenruinen_arena"
+  },
+  {
+    "id": "arena_schattenthron",
+    "widthPx": 1600,
+    "depthPx": 240,
+    "heroStartX": [
+      200,
+      700
+    ],
+    "bossStartX": 1100,
+    "background": "bg_schattenthron_arena"
+  }
+]
