@@ -13,6 +13,8 @@ export interface ApplyStatusOpts {
   /** Festgehaltener Schaden oder Heilung je Stapel und Tick (Quelle Held). */
   perStackTick?: number;
   attackerLevel?: number;
+  /** Faktor auf Schaden über Zeit aus Boss-Quellen (OPEN-020). */
+  scale?: number;
 }
 
 export function isBossLike(u: Unit): boolean {
@@ -27,6 +29,9 @@ export function applyStatus(w: World, src: Unit | null, dst: Unit, id: StatusId,
   if (dst.dead) return false;
   const def = w.content.statusById[id];
   if (def.bossImmune && isBossLike(dst)) return false;
+  if (o.scale === undefined && src?.kind === 'boss' && src.foe) {
+    o = { ...o, scale: (src.foe.hs['dmgScale'] ?? 1) * (1 + (src.foe.hs['enrage'] ?? 0)) };
+  }
   if (def.kind === 'debuff' && dst.statuses.some((s) => s.id === 'unverwundbar') && src && src.side !== dst.side) {
     return false;
   }
@@ -38,6 +43,7 @@ export function applyStatus(w: World, src: Unit | null, dst: Unit, id: StatusId,
     existing.stacks = Math.min(def.maxStacks, existing.stacks + stacks);
     existing.endsAt = Math.max(existing.endsAt, w.t + ms);
     if (o.value !== undefined) existing.value = o.value;
+    if (o.scale !== undefined) existing.scale = o.scale;
     if (o.perStackTick !== undefined) existing.perStackTick = Math.max(existing.perStackTick ?? 0, o.perStackTick);
     if (src) {
       existing.srcId = src.id;
@@ -58,6 +64,7 @@ export function applyStatus(w: World, src: Unit | null, dst: Unit, id: StatusId,
     if (o.value !== undefined) inst.value = o.value;
     if (o.perStackTick !== undefined) inst.perStackTick = o.perStackTick;
     if (o.attackerLevel !== undefined) inst.attackerLevel = o.attackerLevel;
+    if (o.scale !== undefined) inst.scale = o.scale;
     if (def.tickMs) inst.nextTickAt = w.t + def.tickMs;
     dst.statuses.push(inst);
     emit(w, { e: 'fx', id: dst.id, fx: id, add: true });
@@ -197,7 +204,7 @@ function tickOnce(w: World, u: Unit, s: StatusInst): void {
     if (amount > 0) dealDotDamage(w, src, u, amount, physical, { coefPerStackTick: coefOf(w, s) * tickS, stacks: s.stacks });
   } else {
     const pct = statusParam(w, s.id, 'enemyPctRefHpPerS');
-    const amount = (pct / PERCENT) * w.scenario.refLife(w) * tickS * s.stacks;
+    const amount = (pct / PERCENT) * w.scenario.refLife(w) * tickS * s.stacks * (s.scale ?? 1);
     if (amount > 0) dealDotDamage(w, src, u, amount, physical, { attackerLevel: s.attackerLevel ?? w.scenario.attackerLevel(w) });
   }
 }

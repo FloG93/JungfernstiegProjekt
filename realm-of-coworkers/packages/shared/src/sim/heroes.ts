@@ -85,6 +85,7 @@ export function addHero(w: World, setup: HeroSetup, o: AddHeroOpts): Unit {
       appearance: setup.appearance ?? null, sets: setup.sets, activeSet: setup.activeSet,
       swapUntil: 0, swapLockUntil: 0, skills, balance: hd.balance, buffDurationAddMs: hd.buffDurationAddMs,
       potionCharges: c.balance.combat.potion.charges, potionReadyAt: 0, autoPotion: setup.autoPotion,
+      autoDodge: setup.autoDodge ?? true,
       rollReadyAt: 0, rollUntil: 0, rollDir: { x: 1, y: 0 }, focusId: null,
       input: { mx: 0, my: 0, moveTo: null, lastInputAt: 0 }, manualUntil: 0,
       formationOffsetX: cls.formationOffsetPx, formationOffsetY: offsetY,

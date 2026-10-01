@@ -4,6 +4,9 @@ import { refLife } from '../formulas';
 import type { Scenario, Unit, World } from './types';
 import { livingFoes, newId } from './util';
 
+/** Halbe Breite der Trainingswelt in Sichtbreiten (endlich, damit Flächen im Band liegen). */
+const TRAINING_HALF_SPAN_VIEWS = 4;
+
 export interface TrainingOpts {
   chapter?: number;
   attackerLevel?: number;
@@ -20,7 +23,10 @@ export function trainingScenario(o: TrainingOpts = {}): Scenario {
     inCombat: (w) => o.combat ?? livingFoes(w).length > 0,
     attackerLevel: () => o.attackerLevel ?? chapter,
     refLife: (w) => refLife(w.content.balance, chapter),
-    bounds: () => ({ minX: -Infinity, maxX: Infinity }),
+    bounds: (w) => {
+      const half = w.content.engine.world.viewWidthPx * TRAINING_HALF_SPAN_VIEWS;
+      return { minX: -half, maxX: half };
+    },
   };
 }
 

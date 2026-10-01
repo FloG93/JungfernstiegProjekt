@@ -499,6 +499,8 @@ export const EngineFileSchema = z.strictObject({
     separationRadiusPx: pos,
     separationPushPxPerS: pos,
     hazardSpreadPx: pos,
+    cameraLeadPx: num,
+    spawnSpreadPx: nonneg,
   }),
   hero: z.strictObject({
     chaseRangeFraction: pos.max(1),
@@ -509,13 +511,16 @@ export const EngineFileSchema = z.strictObject({
     meleeOrbitPx: pos,
     projectileSpeedPxPerS: pos,
     bomberDeathFuse: z.boolean(),
+    holdRangeFraction: pos.max(1),
+    eliteGroupWithLast: z.boolean(),
   }),
   boss: z.strictObject({
     rangedThrowSpeedPxPerS: pos,
     beamRotationDeg: num,
     addSpawnInsetPx: nonneg,
+    beamDurationMs: pos,
   }),
-  idle: z.strictObject({ autoPotionBelowPct: pos, autoContinueDelayS: pos }),
+  idle: z.strictObject({ autoPotionBelowPct: pos, autoContinueDelayS: pos, autoDodgeReactMs: nonneg, autoDodgeMarginPx: nonneg }),
   appearance: z.strictObject({ bodies: int.positive(), portraits: int.positive(), palettes: int.positive() }),
   limits: z.strictObject({
     heroNameMin: int.positive(),

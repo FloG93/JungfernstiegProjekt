@@ -9,6 +9,7 @@ import type { StatBlock } from '../stats';
 
 export type Side = 'hero' | 'foe';
 export type BossPhase = 1 | 2 | 3;
+export type StagePhase = 'walk' | 'fight' | 'gate' | 'countdown' | 'boss' | 'won';
 export type UnitKind = 'hero' | 'enemy' | 'boss' | 'add';
 export type UnitState = 'idle' | 'walk' | 'attack' | 'cast' | 'roll' | 'stun' | 'dead';
 export type WeaponSet = 'A' | 'B';
@@ -44,6 +45,8 @@ export interface StatusInst {
   srcClass?: ClassId;
   /** Angreiferstufe für Schaden über Zeit aus Gegnerquellen (5.6). */
   attackerLevel?: number;
+  /** Faktor auf Schaden über Zeit aus Boss-Quellen: M(n) × Kampfstufe × Enrage (10.4). OPEN-020 */
+  scale?: number;
 }
 
 export interface ShieldInst {
@@ -107,6 +110,8 @@ export interface HeroComp {
   potionCharges: number;
   potionReadyAt: number;
   autoPotion: boolean;
+  /** Auto-Ausweichen (E-023): ohne Eingabe aus feindlichen Flächen gehen bzw. in Lichtkreise. */
+  autoDodge: boolean;
   rollReadyAt: number;
   rollUntil: number;
   rollDir: Vec;
@@ -246,7 +251,13 @@ export type GameEvent =
   | { e: 'bossText'; boss: number; text: string }
   | { e: 'potion'; id: number }
   | { e: 'roll'; id: number }
-  | { e: 'swap'; id: number; set: WeaponSet };
+  | { e: 'swap'; id: number; set: WeaponSet }
+  /** Anteil am Topf einer Begegnung (12.3), bereits auf den Rest gekappt (6.8). */
+  | { e: 'reward'; encounter: number; frac: number }
+  /** Elite besiegt: Chance auf einen Gegenstand je Spieler (9.7), je Begegnung und Elite einmal pro Run (6.8). */
+  | { e: 'eliteLoot'; encounter: number; slot: number }
+  | { e: 'stage'; phase: StagePhase; anchorX?: number; endsAt?: number }
+  | { e: 'bossDefeated'; boss: string };
 
 export interface HeroSetup {
   /** Einheiten-ID wird von der Welt vergeben; dbId ist die Helden-ID der Datenbank. */
@@ -261,6 +272,8 @@ export interface HeroSetup {
   artifacts: { slot: 'amulett' | 'ring' | 'relikt'; rank: number }[];
   autocast: Record<string, boolean>;
   autoPotion: boolean;
+  /** Standard: an (E-023). */
+  autoDodge?: boolean;
 }
 
 export type HeroAction =

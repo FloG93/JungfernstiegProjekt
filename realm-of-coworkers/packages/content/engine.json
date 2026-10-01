@@ -9,7 +9,9 @@
     "spawnEdgeOffsetPx": 100,
     "separationRadiusPx": 28,
     "separationPushPxPerS": 80,
-    "hazardSpreadPx": 420
+    "hazardSpreadPx": 420,
+    "cameraLeadPx": -150,
+    "spawnSpreadPx": 80
   },
   "hero": {
     "chaseRangeFraction": 0.85,
@@ -19,16 +21,21 @@
     "cultistOrbRadiusPx": 60,
     "meleeOrbitPx": 70,
     "projectileSpeedPxPerS": 700,
-    "bomberDeathFuse": true
+    "bomberDeathFuse": true,
+    "holdRangeFraction": 0.9,
+    "eliteGroupWithLast": true
   },
   "boss": {
     "rangedThrowSpeedPxPerS": 600,
     "beamRotationDeg": 30,
-    "addSpawnInsetPx": 40
+    "addSpawnInsetPx": 40,
+    "beamDurationMs": 1500
   },
   "idle": {
     "autoPotionBelowPct": 40,
-    "autoContinueDelayS": 8
+    "autoContinueDelayS": 8,
+    "autoDodgeReactMs": 600,
+    "autoDodgeMarginPx": 20
   },
   "appearance": {
     "bodies": 4,

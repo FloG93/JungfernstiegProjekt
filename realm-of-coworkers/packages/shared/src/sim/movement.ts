@@ -1,4 +1,5 @@
 // Bewegung der Helden (6.5, 9.2): Formation, manuelle Steuerung, Rückkehr, Verfolgung im Kampf. OPEN-012
+import { dodgeGoal } from './dodge';
 import { canMove, moveMult } from './effstats';
 import { skillRange } from './heroutil';
 import type { Unit, Vec, World } from './types';
@@ -68,6 +69,17 @@ export function moveHero(w: World, u: Unit): void {
     return;
   }
   if (w.t < h.manualUntil) return;
+
+  // Auto-Ausweichen (E-023)
+  const dodge = dodgeGoal(w, u);
+  if (w.t < h.rollUntil) return;
+  if (dodge) {
+    if (stepToward(w, u, dodge, speed)) {
+      u.state = 'walk';
+      u.stateUntil = w.t + w.tickMs;
+    }
+    return;
+  }
 
   // Wiederbeleben: zum Gefallenen laufen
   const rt = unitById(w, h.reviveTargetId);

@@ -4,7 +4,8 @@ import { heroMitigation } from '../formulas';
 import {
   dmgDealtMult, dmgTakenMult, elementFactor, foeMitigation, heroStats, kraftEff, selfBuffDealtMult, statusParam,
 } from './effstats';
-import { foeIncomingMult, heroPassiveHooks } from './handlers';
+import { onBossDamaged } from './boss';
+import { foeIncomingMult, getHandler, heroPassiveHooks } from './handlers';
 import { applyStatus, clearStatuses, removeStatus } from './status';
 import type { ShieldInst, Unit, World } from './types';
 import { MS_PER_S, PERCENT, emit, hasStatus, livingFoes } from './util';
@@ -160,6 +161,7 @@ export function applyDamage(w: World, src: Unit | null, dst: Unit, raw: number, 
   if (dst.hero) dst.hero.meter.damageTaken += total;
   if (src?.hero && dst.foe) addThreat(dst, src.id, total * w.content.classById[src.hero.classId].threat);
   if (dst.foe) dst.foe.hs['lastDamageAt'] = w.t;
+  if (dst.kind === 'boss' && dst.foe?.bossId) onBossDamaged(w, dst);
   if (dst.hp <= 0) {
     if (dst.immortal) dst.hp = 1;
     else killUnit(w, dst, src);
@@ -225,6 +227,10 @@ export function killUnit(w: World, u: Unit, killer: Unit | null): void {
     u.hero.reviveTargetId = null;
   }
   emit(w, { e: 'death', id: u.id });
+  const f = u.foe;
+  if (f && f.type !== 'boss') {
+    for (const h of w.content.enemyById[f.type].handlers) getHandler(h.id)?.onDeath?.(w, u, h.params);
+  }
   w.scenario.onDeath?.(w, u, killer);
 }
 
