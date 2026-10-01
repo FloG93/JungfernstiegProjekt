@@ -7,3 +7,7 @@ data/
 .env
 .DS_Store
 __pycache__/
+*.tsbuildinfo
+.cache/
+test-results/
+playwright-report/

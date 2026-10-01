@@ -27,6 +27,15 @@
 ## Befehle
 pnpm install · pnpm dev · pnpm test · pnpm balance · pnpm build · docker compose up
 
+## Phaser 4
+- Es gilt die API von Phaser 4 (2.1). Phaser bringt Wissen als Skills mit:
+  `node_modules/phaser/skills/<thema>/SKILL.md` (nach `pnpm install` unter `apps/client/node_modules/phaser/skills/`),
+  zum Beispiel `v3-to-v4-migration`, `scale-and-responsive`, `input-keyboard-mouse-touch`, `graphics-and-shapes`.
+
+## Mobil und nebenbei (E-022, E-023)
+- Der Client ist mobile-first (Touch, Hoch- und Querformat, PWA). Tastatur und Maus bleiben (14.7).
+- Idle heißt hier: Der Run läuft ohne Eingaben weiter (Autowalk, Auto-Cast, Auto-Trank, Auto-Weiter).
+
 ## Mitgeliefert
 - packages/content/ ist vollständig und geprüft (17.5). In M1 nur Loader und Zod-Schemas bauen, die Daten nicht neu erzeugen.
 - tools/validate_content.py und tools/crosscheck_balance.py laufen in der CI und in pnpm balance mit.

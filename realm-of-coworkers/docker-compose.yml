@@ -1,0 +1,14 @@
+# Start: docker compose up -d (16.6). Umgebungsvariablen laut 2.8 in .env.
+services:
+  aethra:
+    build: .
+    image: realm-of-coworkers:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_PATH: /app/data/aethra.db
+      BACKUP_DIR: /app/data/backups
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data

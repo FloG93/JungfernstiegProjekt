@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "../../node_modules/.cache/tsc/server",
+    "tsBuildInfoFile": "../../node_modules/.cache/tsc/server.tsbuildinfo",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "references": [{ "path": "../../packages/shared" }]
+}

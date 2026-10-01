@@ -1,0 +1,7 @@
+{
+  "name": "@aethra/content",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Inhaltsdateien nach Spezifikation 15.5 (fertig und geprüft, 17.5)",
+  "files": ["**/*.json", "*.md"]
+}

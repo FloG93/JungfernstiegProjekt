@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../node_modules/.cache/tsc/client",
+    "tsBuildInfoFile": "../../node_modules/.cache/tsc/client.tsbuildinfo",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "types": ["vite/client"]
+  },
+  "include": ["src", "vite.config.ts"],
+  "references": [{ "path": "../../packages/shared" }]
+}

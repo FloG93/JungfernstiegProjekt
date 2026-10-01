@@ -4,7 +4,7 @@ Je Sitzung einen Meilenstein (16.2). Nach jeder Sitzung diesen Stand aktualisier
 
 | Meilenstein | Status | Datum | Hinweise |
 | --- | --- | --- | --- |
-| M0 Gerüst | offen | | Grundgerüst, CI und Werkzeuge liegen bereits vor, siehe unten |
+| M0 Gerüst | erledigt | 2026-10-01 | pnpm-Workspace, TS 6 strict mit Projektverweisen, ESLint 10 (no-magic-numbers in sim), Vitest 5, Dockerfile, docker-compose, CI im Repo-Wurzelverzeichnis |
 | M1 Shared-Kern | offen | | Content-Paket ist vorhanden, nur Loader und Zod-Schemas bauen |
 | M2 Kampfsimulation | offen | | |
 | M3 Gegner, Stages, Autowalk | offen | | |
