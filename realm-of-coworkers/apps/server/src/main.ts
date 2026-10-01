@@ -1,7 +1,10 @@
-import Fastify from 'fastify';
+// Start des Servers (16.6): docker compose up oder pnpm dev.
+import { buildApp } from './app';
+import { loadConfig } from './config';
 
-const app = Fastify({ logger: { level: process.env['LOG_LEVEL'] ?? 'info' } });
-app.get('/api/health', () => ({ ok: true, data: { status: 'up' } }));
-
-const port = Number(process.env['PORT'] ?? 3000);
-await app.listen({ port, host: '0.0.0.0' });
+const config = loadConfig();
+const { app, ctx } = await buildApp(config);
+const { attachRealtime } = await import('./ws/realtime');
+attachRealtime(app, ctx);
+await app.listen({ port: config.port, host: '0.0.0.0' });
+app.log.info(`Aethra läuft auf Port ${config.port}, Inhalte ${ctx.contentFiles.hash}`);
