@@ -1,0 +1,4 @@
+# Windows-Skripte mit CRLF auschecken; Icons sind binär.
+*.ps1 text eol=crlf
+*.iss text eol=crlf
+*.ico binary

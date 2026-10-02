@@ -1,0 +1,36 @@
+# Python / uv
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+backend/build/
+backend/dist/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+
+# Nicht eingecheckte Assets (scripts/fetch_assets.py)
+assets/ffmpeg/*
+!assets/ffmpeg/.gitkeep
+assets/samples/salamander/*
+!assets/samples/salamander/.gitkeep
+
+# Packaging-Ausgaben
+packaging/.venv-build/
+packaging/build/
+packaging/dist/
+packaging/Output/
+
+# Lokale Testdaten / Evaluation
+backend/evaluation/out/
+*.wav
+!backend/tests/fixtures/*.wav
+
+# Ausgaben der Browser-Tests
+frontend/e2e/*.png
+frontend/e2e/*.pdf
