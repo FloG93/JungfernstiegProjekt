@@ -7,7 +7,7 @@ import { getHandler } from './handlers';
 import { applyModifyValue } from './handlers/modifyValue';
 import type { ModTarget } from './handlers/modifyValue';
 import type { HeroBalance, HeroSetup, Unit, Vec, World } from './types';
-import { newId } from './util';
+import { PERCENT, newId } from './util';
 
 export interface HeroDefs {
   defs: Map<string, SkillDef>;
@@ -115,4 +115,25 @@ export function sameClassIndices(setups: HeroSetup[]): number[] {
     seen.set(s.classId, k + 1);
     return k;
   });
+}
+
+/** Werte eines Helden im laufenden Run aktualisieren (Stufenaufstieg, 12.1): Lebensanteil bleibt, dann Heilung. */
+export function updateHeroSetup(w: World, u: Unit, setup: HeroSetup, healPct = 0): void {
+  const h = u.hero;
+  if (!h) return;
+  const frac = u.maxHp > 0 ? u.hp / u.maxHp : 1;
+  h.level = setup.level;
+  h.sets = setup.sets;
+  if (!h.sets[h.activeSet].hasWeapon && h.sets[h.activeSet === 'A' ? 'B' : 'A'].hasWeapon) h.activeSet = h.activeSet === 'A' ? 'B' : 'A';
+  u.element = h.sets[h.activeSet].element;
+  refreshMaxHp(w, u, frac);
+  if (healPct > 0 && !u.dead) u.hp = Math.min(u.maxHp, u.hp + Math.round((u.maxHp * healPct) / PERCENT));
+}
+
+/** Held verlässt den Run (2.4, 11.5): Einheit entfernen, n neu setzen. */
+export function removeHeroUnit(w: World, unitId: number): void {
+  const before = w.units.length;
+  w.units = w.units.filter((u) => u.id !== unitId);
+  if (w.units.length !== before) w.removed.push(unitId);
+  w.heroSkillDefs.delete(unitId);
 }

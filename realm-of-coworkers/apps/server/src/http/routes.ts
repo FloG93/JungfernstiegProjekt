@@ -85,6 +85,7 @@ export function registerRoutes(app: FastifyInstance, ctx: AppCtx): void {
     const s = await sessionOf(ctx, req);
     if (!s) fail('UNAUTHORIZED', 'Bitte neu anmelden.');
     req.session = s;
+    ctx.onActivity?.(s.accountId);
   };
   const acc = (req: FastifyRequest) => req.session!.accountId;
 
@@ -156,7 +157,13 @@ export function registerRoutes(app: FastifyInstance, ctx: AppCtx): void {
     const b = parse(SettingsReq, req.body);
     const id = heroIdParam(req);
     await setSettings(g, acc(req), id, b);
-    ctx.onSettingsChanged?.(id, b);
+    const change: Parameters<NonNullable<AppCtx['onSettingsChanged']>>[1] = {};
+    if (b.autocast) change.autocast = b.autocast;
+    if (b.autoPotion !== undefined) change.autoPotion = b.autoPotion;
+    if (b.autoDodge !== undefined) change.autoDodge = b.autoDodge;
+    if (b.autoContinue !== undefined) change.autoContinue = b.autoContinue;
+    ctx.onSettingsChanged?.(id, change);
+    if (b.activeSet) ctx.onHeroChanged?.(id);
     return ok({});
   });
 
@@ -165,6 +172,7 @@ export function registerRoutes(app: FastifyInstance, ctx: AppCtx): void {
     app.post(path, { preHandler: auth }, async (req) => {
       const id = heroIdParam(req);
       const extra = await run(req, id);
+      ctx.onHeroChanged?.(id);
       return ok({ result: extra ?? null, state: await heroState(g, id) });
     });
   };

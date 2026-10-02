@@ -13,7 +13,7 @@ Je Sitzung einen Meilenstein (16.2). Nach jeder Sitzung diesen Stand aktualisier
 | M6 Beute und Fortschritt | erledigt | 2026-10-01 | Beute aus Truhen, Elite und Bossen (10.000 Würfe unter 2 Prozentpunkten), Topf-Regel, XP mit Stufenaufstieg, Waffen-XP, Boss-Timer und Kampfstufe. Kampagne 224.654 XP (12.4 exakt), 28.674 Gold, Ausrüstungskurve 12.9 innerhalb ±0,03 |
 | M7 Client-Grundlage | offen | | |
 | M8 Lager und Menüs | offen | | |
-| M9 Mehrspieler | offen | | |
+| M9 Mehrspieler | erledigt | 2026-10-02 | WebSocket `/ws` mit Cookie-Anmeldung, Origin-Prüfung, hello/4001, Ersetzen alter Verbindungen (4002), Zod-Prüfung und Rate-Limits. Lobby mit Online-Liste (Abwesend nach 10 min), Party per Code und Einladung, Anführer, Stage-Wahl mit Nachzügler-Regel, Bereit, Countdown, Chat. RunInstance: Simulation 20 Hz auf dem Server, Delta-Snapshots 10 Hz (vollständig alle 5 s), Ereignisse sofort, Topf-Regel je Spieler, Elite-Beute, Truhe, Boss-Beute mit Helfer und Kampfstufe, Autopilot 90 s, Wiedereinstieg am Checkpoint, Solo-Pause, Auto-Weiter, run_log mit Seed und Eingaben. Messung 6 Clients (3 × 150 ms, 3 × 400 ms), Stage 2: 5,8 KB/s komprimiert je Client (Ziel < 30), Snapshot höchstens 6,1 KB (Grenze 8), Eingaben nach einer Rundlaufzeit bestätigt, alle sehen dieselbe Welt. Annahmen OPEN-027 bis OPEN-036 |
 | M10 pnpm balance | offen | | TypeScript-Port von tools/balance/reference/ref_model.py |
 | M11 Politur | offen | | |
 | M12 Härtung und Betrieb | offen | | |
@@ -27,4 +27,4 @@ Je Sitzung einen Meilenstein (16.2). Nach jeder Sitzung diesen Stand aktualisier
 
 ## Letzte Sitzung
 
-Noch keine. Nächster Schritt: M0 nach 16.2.
+2026-10-02: M9 abgeschlossen (Mehrspieler auf dem Server, 222 Tests grün). Offen: M7/M8 (mobiler Client), M10 bis M12. Nächster Schritt: M7 Client-Grundlage (Phaser-Szene mit Interpolation, Touch-Steuerung, Verbindung über `/ws`).

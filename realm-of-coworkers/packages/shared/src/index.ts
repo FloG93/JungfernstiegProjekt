@@ -12,3 +12,5 @@ export * from './reference';
 export * from './loot';
 export * from './progression';
 export * from './api';
+export * from './protocol';
+export * from './snapshot';
