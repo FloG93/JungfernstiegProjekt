@@ -19,3 +19,4 @@ export * from './stage';
 export * from './boss';
 export * from './run';
 export * from './dodge';
+export * from './measure';
