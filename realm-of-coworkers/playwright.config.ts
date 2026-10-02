@@ -21,7 +21,8 @@ export default defineConfig({
   },
   projects: [{ name: 'handy', use: { ...devices['Pixel 7'] } }],
   webServer: {
-    command: 'node e2e/server.mjs',
+    // E2E_NODE: anderes Node für den Server, z. B. Node 22 wie auf dem Raspberry Pi 2 (OPEN-048)
+    command: `${process.env['E2E_NODE'] ?? 'node'} e2e/server.mjs`,
     url: `http://localhost:${E2E_PORT}/api/health`,
     reuseExistingServer: false,
     timeout: 60_000,

@@ -1,0 +1,28 @@
+# Aethra als Systemdienst (OPEN-048): startet beim Hochfahren und nach Abstürzen neu.
+# Eingerichtet von install.sh. Status: systemctl status aethra · Protokoll: journalctl -u aethra -f
+[Unit]
+Description=Aethra – Die Splitterchroniken (Spielserver)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aethra
+Group=aethra
+EnvironmentFile=/etc/aethra/aethra.env
+Environment=NODE_ENV=production
+WorkingDirectory=/opt/aethra
+ExecStart=/opt/aethra/node/bin/node --enable-source-maps /opt/aethra/dist/main.js
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+# Schutz: Programm nur lesbar, schreiben nur in den Datenordner
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ReadWritePaths=/var/lib/aethra
+
+[Install]
+WantedBy=multi-user.target

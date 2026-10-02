@@ -57,6 +57,38 @@ Das Terminal zeigt die Adressen, zum Beispiel `http://192.168.1.20:3000` für Ha
 trennen die Geräte voneinander, dann bleibt nur ein Codespace oder ein Server. Ohne HTTPS läuft das Spiel im Browser,
 lässt sich aber nicht als App installieren.
 
+## Spielen mit eigenem Raspberry Pi (ohne Docker)
+
+Ein Raspberry Pi im Heimnetz reicht als Server (10 Runs brauchen 3 % eines Kerns). Getestet ist das Paket mit Node 22,
+wie es auf dem 32-Bit-Raspberry-Pi-2 läuft (für 32-Bit-ARM gibt es kein Node 24, OPEN-048). Ab dem Raspberry Pi 3 mit
+64-Bit-System nimmt das Skript Node 24.
+
+1. **SD-Karte** mit dem Raspberry Pi Imager beschreiben: Gerät „Raspberry Pi 2“, System „Raspberry Pi OS Lite (32-bit)“
+   (ab Pi 3: 64-bit). In den Einstellungen des Imagers Hostname `aethra`, Benutzer mit Passwort und SSH einschalten.
+2. Den Pi per **LAN-Kabel** mit der Fritzbox verbinden (der Pi 2 hat kein WLAN) und einschalten.
+3. **Paket** besorgen: `pnpm pi:bundle` erzeugt `dist/aethra-pi.tar.gz`. Alternativ liegt es nach jedem Push im
+   GitHub-Actions-Lauf unter „Artifacts → aethra-pi“ (als ZIP, darin die `.tar.gz`). Auf den Pi kopieren:
+   `scp aethra-pi.tar.gz BENUTZER@aethra.local:` (klappt `aethra.local` nicht: `aethra.fritz.box` oder die IP aus der Fritzbox).
+4. Auf dem Pi (`ssh BENUTZER@aethra.local`):
+   ```bash
+   tar xzf aethra-pi.tar.gz
+   sudo ./aethra/install.sh
+   ```
+   Beim ersten Mal dauert das auf dem Pi 2 etwa 15 bis 30 Minuten.
+5. Die Frage nach **Tailscale Funnel** mit „J“ beantworten, den angezeigten Link öffnen und mit einem kostenlosen
+   Tailscale-Konto anmelden. Fragt Tailscale nach dem Freischalten von HTTPS oder Funnel, bestätigen. Am Ende zeigt das
+   Skript die feste Adresse (`https://aethra.….ts.net`) und den Einladungscode. Die Adresse funktioniert im Büro, im
+   Heimnetz und über mobile Daten. In der Fritzbox ist keine Portfreigabe nötig, auch nicht bei DS-Lite.
+
+Gut zu wissen:
+
+- **Aktualisieren:** neues Paket kopieren, dieselben zwei Befehle. Spielstände und Einstellungen bleiben.
+- **Bedienung:** `systemctl status aethra`, `journalctl -u aethra -f`, Verwaltung mit `sudo aethra-admin help`.
+  Einstellungen in `/etc/aethra/aethra.env`, Daten und Sicherungen in `/var/lib/aethra`.
+- **VPN:** Der Pi selbst sollte nicht über einen VPN-Anbieter (etwa hide.me) ins Netz gehen; auf den Handys stört ein VPN nicht.
+- **Node 22** bekommt Sicherheitsupdates bis April 2027. Danach braucht es einen 64-Bit-Pi (ab Raspberry Pi 3) oder einen
+  anderen Rechner.
+
 ## Betreiben
 
 ### Mit Docker (empfohlen)
@@ -78,7 +110,8 @@ Dann in `.env` zusätzlich `COOKIE_SECURE=1` setzen.
 
 ### Ohne Docker
 
-Am einfachsten mit `pnpm play` (siehe oben). Von Hand mit Node 24 und pnpm 10 (`corepack enable`):
+Am einfachsten mit `pnpm play` (siehe oben) oder dem Raspberry-Pi-Paket, das auf jedem Debian-Rechner läuft.
+Der Server läuft ab Node 22, entwickelt wird mit Node 24. Von Hand mit Node 24 und pnpm 10 (`corepack enable`):
 
 ```bash
 pnpm install
@@ -129,6 +162,7 @@ pnpm dev                 # Client auf :5173 (leitet /api, /ws, /content an :3000
 | `pnpm balance` | Inhaltsprüfungen und Referenzmodell (13.9) samt gemessenem K |
 | `pnpm e2e` | baut alles und spielt im Browser (Playwright, Handy-Ansicht); lokal mit `PW_CHROMIUM=/pfad/zu/chrome` |
 | `pnpm play` | baut bei Bedarf und startet den Server zum Spielen (auch im Codespace) |
+| `pnpm pi:bundle` | Paket für den Raspberry Pi und andere Rechner ohne Docker (`dist/aethra-pi.tar.gz`) |
 | `pnpm --filter @aethra/server loadtest` | 10 Runs mit je 6 Helden, misst die Rechenzeit (`RUNS`, `SECONDS`) |
 | `pnpm content:check` | Inhaltsdateien gegen die Spezifikation |
 

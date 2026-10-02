@@ -1,0 +1,11 @@
+#!/bin/sh
+# Verwaltung auf dem Pi mit den Einstellungen des Dienstes (README, Abschnitt Verwaltung), zum Beispiel:
+#   sudo aethra-admin reset-password lea neues-passwort
+#   sudo aethra-admin help
+set -e
+[ "$(id -u)" -eq 0 ] || exec sudo "$0" "$@"
+set -a
+. /etc/aethra/aethra.env
+set +a
+cd /opt/aethra
+exec runuser -u aethra -- /opt/aethra/node/bin/node /opt/aethra/dist/admin.js "$@"

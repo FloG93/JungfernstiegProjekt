@@ -38,6 +38,24 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Abnahme M7 und M8 im Browser
         run: pnpm exec playwright test
+      - name: Raspberry-Pi-Paket bauen (OPEN-048)
+        run: pnpm pi:bundle --no-build
+      - name: Raspberry-Pi-Paket mit Node 22 im Browser testen
+        # Wie auf dem Raspberry Pi 2: Node 22 (für 32-Bit-ARM gibt es Node 24 nicht), npm ci im entpackten Paket
+        run: |
+          base=https://nodejs.org/dist/latest-v22.x
+          file=$(curl -fsSL "$base/SHASUMS256.txt" | awk '{print $2}' | grep -E '^node-v[0-9.]+-linux-x64\.tar\.xz$')
+          mkdir -p "$RUNNER_TEMP/node22"
+          curl -fsSL "$base/$file" | tar -xJ -C "$RUNNER_TEMP/node22" --strip-components=1
+          N22="$RUNNER_TEMP/node22/bin"
+          (cd dist/pi/aethra && PATH="$N22:$PATH" npm ci --omit=dev --no-audit --no-fund)
+          E2E_SERVER_DIR=dist/pi/aethra E2E_NODE="$N22/node" pnpm exec playwright test e2e/m9-party.spec.ts
+      - name: Raspberry-Pi-Paket hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: aethra-pi
+          path: realm-of-coworkers/dist/aethra-pi.tar.gz
+          retention-days: 30
       - name: Bericht bei Fehlern
         if: failure()
         uses: actions/upload-artifact@v4

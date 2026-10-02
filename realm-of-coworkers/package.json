@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "pnpm --parallel --filter \"./apps/*\" dev",
     "play": "node tools/play.mjs",
+    "pi:bundle": "node tools/pi-bundle.mjs",
     "build": "pnpm -r build",
     "test": "vitest run",
     "lint": "eslint .",
