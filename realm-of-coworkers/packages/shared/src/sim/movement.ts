@@ -104,8 +104,10 @@ export function moveHero(w: World, u: Unit): void {
       const dy = u.y - t.y;
       const len = Math.hypot(dx, dy) || 1;
       goal = { x: t.x + (dx / len) * want, y: t.y + (dy / len) * want };
+      // Leine (OPEN-012): nicht weiter als 700 px vom Anker, außer das Ziel steht selbst außerhalb. Sonst erreicht ein
+      // Nahkämpfer einen Fernkämpfer knapp hinter der Leine nie, und der Kampf endet nicht (OPEN-049).
       const a = w.scenario.anchor(w);
-      if (w.scenario.kind === 'stage') goal.x = clamp(goal.x, a.x - mv.leashPx, a.x + mv.leashPx);
+      if (w.scenario.kind === 'stage' && Math.abs(t.x - a.x) <= mv.leashPx) goal.x = clamp(goal.x, a.x - mv.leashPx, a.x + mv.leashPx);
     }
   }
   if (stepToward(w, u, goal, speed)) {

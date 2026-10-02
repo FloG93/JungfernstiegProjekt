@@ -11,7 +11,6 @@ import { RunInstance } from './run';
 import type { EndReason, RunPlayerInit } from './run';
 
 const MS_PER_S = 1000;
-const SEED_RANGE = 0x1_0000_0000;
 
 export interface Member {
   accountId: number;
@@ -340,7 +339,7 @@ export class Lobby {
         });
       }
       if (inits.length === 0) fail('REQUIREMENT_NOT_MET', 'Niemand in der Party darf diese Stage betreten.');
-      const run = new RunInstance(this.hub, p, { id: randomUUID(), stage, seed: randomInt(SEED_RANGE), players: inits, kampfstufe });
+      const run = new RunInstance(this.hub, p, { id: randomUUID(), stage, seed: this.hub.newSeed(), players: inits, kampfstufe });
       await run.open();
       p.run = run;
       this.hub.addRun(run);

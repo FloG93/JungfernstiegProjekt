@@ -7,6 +7,7 @@ import { referenceHero } from '../reference';
 import { Rng } from '../rng';
 import { testContent } from '../testing';
 import { killUnit } from './combat';
+import { spawnEnemy } from './enemies';
 import { createRun } from './run';
 import type { Run } from './run';
 import { planEncounter, typeCost } from './spawn';
@@ -83,6 +84,28 @@ describe('Ablauf einer Stage (9.1, 9.2)', () => {
     kr!.hero!.connected = false;
     for (let i = 0; i < 40; i++) stepWorld(run.world);
     expect(run.scenario.anchorX).toBeGreaterThan(0);
+  });
+
+  it('Nahkämpfer erreicht einen Fernkämpfer knapp hinter der Leine (OPEN-049)', () => {
+    // Früher hielt die Leine den Krieger 700 px vom Anker fest; der Schütze dahinter blieb in seiner Reichweite stehen,
+    // keiner traf den anderen entscheidend, und der Run hing (gefunden im Koop-Test nach dem Entfernen eines Helden).
+    const run = createRun(c, { seed: 1, stage: 1, heroes: [referenceHero(c, 'krieger', 5)] });
+    const w = run.world;
+    const start = runUntil(run, (e) => e.some((x) => x.e === 'encounter' && x.state === 'start'));
+    const enc = start.find((e) => e.e === 'encounter' && e.state === 'start');
+    const kr = run.heroes[0]!;
+    const a = run.scenario.anchor(w);
+    const leash = c.balance.movement.leashPx;
+    const gap = 150;
+    const sh = spawnEnemy(w, {
+      type: 'schuetze', x: a.x - leash - gap, y: kr.y, level: 1, chapter: 1, n: 1,
+      encounter: enc?.e === 'encounter' ? enc.index : 0, side: -1,
+    });
+    for (const u of w.units) if (u.side === 'foe' && u !== sh) killUnit(w, u, null);
+    kr.x = a.x - leash;
+    const until = w.t + 30_000;
+    while (!sh.dead && w.t < until) stepWorld(w);
+    expect(sh.dead).toBe(true);
   });
 
   it('Topf-Regel: jede Begegnung zahlt genau ihren vollen Topf, auch nach einem Wipe (6.8, 12.3)', () => {

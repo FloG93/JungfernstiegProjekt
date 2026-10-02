@@ -189,13 +189,19 @@ export interface TestEnv {
   close(): Promise<void>;
 }
 
+/** Feste Seed-Folge je Testumgebung (TEST_SEED verschiebt sie, um andere Abläufe zu prüfen). */
+function seedSequence(): () => number {
+  let next = Number(process.env['TEST_SEED'] ?? 1);
+  return () => next++;
+}
+
 export async function makeEnv(env: Record<string, string> = {}): Promise<TestEnv> {
   const clock = new ManualClock();
   const config = loadConfig({
     SESSION_SECRET: 'test-geheimnis-mit-genug-laenge', INVITE_CODE: 'kollegen', DB_PATH: ':memory:', PUBLIC_DIR: '/nicht/da', ...env,
   });
   const b = await buildApp(config, { logger: false, now: () => clock.now() });
-  const hub = attachRealtime(b.app, b.ctx, { clock });
+  const hub = attachRealtime(b.app, b.ctx, { clock, seeds: seedSequence() });
   return {
     b, ctx: b.ctx, hub, clock,
     close: async () => {

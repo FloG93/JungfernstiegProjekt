@@ -1,4 +1,5 @@
 // Gateway (2.3, 11.1, 11.9, 15.3): Verbindungen, hello, Prüfung und Rate-Limits, Online-Liste, Takt für Runs und Lobby.
+import { randomInt } from 'node:crypto';
 import { ClientMsgSchema, PROTOCOL_VERSION } from '@aethra/shared';
 import type { ClientMsg, OnlineEntry } from '@aethra/shared';
 import type { FastifyBaseLogger } from 'fastify';
@@ -16,6 +17,8 @@ import type { Party } from './party';
 import type { EndReason, RunInstance } from './run';
 
 const MS_PER_S = 1000;
+/** Seeds der Runs (mulberry32, 32 Bit). */
+const SEED_RANGE = 0x1_0000_0000;
 /** Höchstens so viele nachgeholte Ticks je Durchlauf; größerer Rückstand wird verworfen. */
 const MAX_CATCHUP_TICKS = 4;
 
@@ -48,7 +51,15 @@ export class Hub implements HubApi {
   private loops = 0;
   private readonly tickMs: number;
 
-  constructor(readonly ctx: AppCtx, private readonly clock: Clock, readonly log: FastifyBaseLogger) {
+  /**
+   * @param newSeed Seed je Run; zufällig, in Tests eine feste Folge, damit Abläufe reproduzierbar sind.
+   */
+  constructor(
+    readonly ctx: AppCtx,
+    private readonly clock: Clock,
+    readonly log: FastifyBaseLogger,
+    readonly newSeed: () => number = () => randomInt(SEED_RANGE),
+  ) {
     this.lobby = new Lobby(this);
     // TICK_RATE (2.8) bestimmt den Takt in Echtzeit; ein Tick rechnet immer tickMs Simulationszeit (OPEN-038)
     this.tickMs = MS_PER_S / (ctx.config.tickRate > 0 ? ctx.config.tickRate : ctx.content.balance.combat.tickRate);

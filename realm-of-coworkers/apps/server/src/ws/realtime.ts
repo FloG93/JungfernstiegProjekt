@@ -61,10 +61,12 @@ function wrap(ws: WebSocket): Sock {
 
 export interface RealtimeOptions {
   clock?: Clock;
+  /** Seeds der Runs (Tests: feste Folge). */
+  seeds?: () => number;
 }
 
 export function attachRealtime(app: FastifyInstance, ctx: AppCtx, o: RealtimeOptions = {}): Hub {
-  const hub = new Hub(ctx, o.clock ?? systemClock(ctx.now), app.log);
+  const hub = new Hub(ctx, o.clock ?? systemClock(ctx.now), app.log, o.seeds);
   ctx.online = () => hub.online();
   ctx.runCount = () => hub.runCount();
   ctx.game.isHeroInRun = (heroId) => hub.isHeroInRun(heroId);
