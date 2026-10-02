@@ -111,7 +111,8 @@ has_systemd() { [ -d /run/systemd/system ]; }
 wait_healthy() {
   local port _
   port="$(get_env PORT)"
-  for _ in $(seq 1 90); do
+  # Der Raspberry Pi 2 braucht für Inhalte, Migration und Start-Sicherung deutlich länger als ein PC
+  for _ in $(seq 1 180); do
     curl -fsS "http://127.0.0.1:${port:-3000}/api/health" >/dev/null 2>&1 && return 0
     sleep 1
   done

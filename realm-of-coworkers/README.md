@@ -82,7 +82,8 @@ wie es auf dem 32-Bit-Raspberry-Pi-2 läuft (für 32-Bit-ARM gibt es kein Node 2
 
 Gut zu wissen:
 
-- **Aktualisieren:** neues Paket kopieren, dieselben zwei Befehle. Spielstände und Einstellungen bleiben.
+- **Aktualisieren:** neues Paket kopieren, dann `rm -rf aethra && tar xzf aethra-pi.tar.gz && sudo ./aethra/install.sh`.
+  Spielstände und Einstellungen bleiben.
 - **Bedienung:** `systemctl status aethra`, `journalctl -u aethra -f`, Verwaltung mit `sudo aethra-admin help`.
   Einstellungen in `/etc/aethra/aethra.env`, Daten und Sicherungen in `/var/lib/aethra`.
 - **VPN:** Der Pi selbst sollte nicht über einen VPN-Anbieter (etwa hide.me) ins Netz gehen; auf den Handys stört ein VPN nicht.

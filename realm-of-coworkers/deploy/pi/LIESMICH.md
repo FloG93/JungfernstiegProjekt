@@ -17,8 +17,13 @@ von überall erreichbar sein soll (feste HTTPS-Adresse, keine Portfreigabe in de
 
 ## Aktualisieren
 
-Neues Paket auf den Pi kopieren und dieselben zwei Befehle ausführen. Spielstände und Einstellungen bleiben,
-beim Start legt der Server eine Sicherung an.
+Neues Paket auf den Pi kopieren, den alten entpackten Ordner löschen und neu einrichten:
+
+```bash
+rm -rf aethra && tar xzf aethra-pi.tar.gz && sudo ./aethra/install.sh
+```
+
+Spielstände und Einstellungen bleiben, beim Start legt der Server eine Sicherung an.
 
 ## Nützliche Befehle
 
