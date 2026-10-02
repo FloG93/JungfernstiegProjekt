@@ -417,7 +417,9 @@ BALANCE_REQUIRED = {  # Startwerte aus 15.5, stichprobenartig gegen die Formeln 
     "net.disconnectGraceS": 90, "net.maxRuns": 10}
 I18N_GROUPS = ["app", "auth", "hero", "class", "role", "stat", "slot", "rarity", "element", "camp", "smith",
                "jeweler", "archive", "boss", "party", "stageSelect", "hud", "ping", "chat", "loot",
-               "progress", "settings", "error"]
+               "progress", "settings", "error",
+               # Ergänzung für den mobilen Client (E-022, OPEN-037): Namen für Fähigkeiten, Effekte, Gems, Artefakte
+               "skill", "status", "gem", "artifact"]
 ERROR_CODES = ["BAD_REQUEST", "UNAUTHORIZED", "FORBIDDEN", "NOT_FOUND", "CONFLICT", "HERO_IN_RUN",
                "NOT_ENOUGH_GOLD", "NOT_ENOUGH_SPLINTERS", "INVENTORY_FULL", "REQUIREMENT_NOT_MET",
                "NAME_TAKEN", "RATE_LIMITED", "SERVER_BUSY"]                                   # 15.2
@@ -486,6 +488,14 @@ def check_phase6(classes, bosses_ids):
         if i not in t["slot"]: err(f"de.json: slot.{i} fehlt")
     for code in ERROR_CODES:
         if code not in t["error"]: err(f"de.json: Fehlertext {code} fehlt (15.2)")
+    for sk in json.load(open(ROOT / "skills.json", encoding="utf-8")):
+        if sk["id"] not in t["skill"]: err(f"de.json: skill.{sk['id']} fehlt")
+    for st in json.load(open(ROOT / "status.json", encoding="utf-8")):
+        if st["id"] not in t["status"]: err(f"de.json: status.{st['id']} fehlt")
+    for g in json.load(open(ROOT / "gems.json", encoding="utf-8"))["kinds"]:
+        if g["id"] not in t["gem"]: err(f"de.json: gem.{g['id']} fehlt")
+    for a in json.load(open(ROOT / "artifacts.json", encoding="utf-8")):
+        if a["id"] not in t["artifact"]: err(f"de.json: artifact.{a['id']} fehlt")
     for g, v in t.items():
         for k, x in v.items():
             if not isinstance(x, str) or not x.strip(): err(f"de.json: {g}.{k} ist leer")

@@ -1,4 +1,5 @@
 // HTTP-Schnittstelle (15.2). Erfolg { ok: true, data }, Fehler { ok: false, error: { code, message } }.
+import { gzipSync } from 'node:zlib';
 import {
   AppearanceReq, ArtifactUpgradeReq, CombineReq, CreateHeroReq, DeleteHeroReq, ElementReq, EnchantReq, EquipReq,
   LockReq, LoginReq, RegisterReq, SellReq, SettingsReq, SocketReq, StashReq, StorySeenReq, SwapGemReq, TransferReq,
@@ -231,6 +232,18 @@ export function registerRoutes(app: FastifyInstance, ctx: AppCtx): void {
   app.get('/api/online', { preHandler: auth }, async () => ok(ctx.online()));
 
   // ---------- Inhalte und Zustand ----------
+  // Alle Inhalte in einer Antwort (mobile Netze, E-022), vorab komprimiert; Cache über den Hash (15.6)
+  const bundle = JSON.stringify({ hash: ctx.contentFiles.hash, files: ctx.contentFiles.raw });
+  const bundleGz = gzipSync(bundle);
+  app.get('/content/bundle.json', async (req, reply) => {
+    const etag = `"${ctx.contentFiles.hash}-b"`;
+    void reply.header('etag', etag).header('cache-control', 'no-cache').header('vary', 'accept-encoding');
+    if (req.headers['if-none-match'] === etag) return reply.status(304).send();
+    void reply.type('application/json; charset=utf-8');
+    if (/\bgzip\b/.test(String(req.headers['accept-encoding'] ?? ''))) return reply.header('content-encoding', 'gzip').send(bundleGz);
+    return reply.send(bundle);
+  });
+
   app.get('/content/index.json', async (_req, reply) => {
     void reply.header('etag', `"${ctx.contentFiles.hash}"`).header('cache-control', 'no-cache');
     return { hash: ctx.contentFiles.hash, files: Object.keys(ctx.contentFiles.text) };

@@ -94,6 +94,8 @@ export interface EntityMeta {
   affix?: string;
   boss?: string;
   level?: number;
+  /** Aussehen eines Helden: Körperform und Farbpalette (4.1). */
+  look?: [number, number];
 }
 
 /** Einheit im Snapshot (15.4); `meta` nur beim ersten Auftauchen und in vollständigen Snapshots. */

@@ -34,3 +34,14 @@ jobs:
       - run: pnpm build
       - name: Balance (13.9)
         run: pnpm balance
+      - name: Browser installieren (Playwright)
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Abnahme M7 und M8 im Browser
+        run: pnpm exec playwright test
+      - name: Bericht bei Fehlern
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-ergebnisse
+          path: realm-of-coworkers/test-results/
+          retention-days: 7

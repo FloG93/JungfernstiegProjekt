@@ -50,7 +50,8 @@ export class Hub implements HubApi {
 
   constructor(readonly ctx: AppCtx, private readonly clock: Clock, readonly log: FastifyBaseLogger) {
     this.lobby = new Lobby(this);
-    this.tickMs = MS_PER_S / ctx.content.balance.combat.tickRate;
+    // TICK_RATE (2.8) bestimmt den Takt in Echtzeit; ein Tick rechnet immer tickMs Simulationszeit (OPEN-038)
+    this.tickMs = MS_PER_S / (ctx.config.tickRate > 0 ? ctx.config.tickRate : ctx.content.balance.combat.tickRate);
   }
 
   now(): number {

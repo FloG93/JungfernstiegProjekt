@@ -30,6 +30,8 @@ function entityOf(w: World, u: Unit, own: boolean, withMeta: boolean): SnapEntit
       e.meta = { name: u.hero.name, cls: u.hero.classId, level: u.hero.level };
       const acc = Number(u.hero.playerId);
       if (Number.isFinite(acc)) e.meta.acc = acc;
+      const ap = u.hero.appearance as { body?: number; palette?: number } | null;
+      if (ap && typeof ap === 'object') e.meta.look = [ap.body ?? 0, ap.palette ?? 0];
     }
     else if (u.foe) {
       e.meta = { type: u.foe.type, level: u.foe.level };

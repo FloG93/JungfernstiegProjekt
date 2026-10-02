@@ -9,7 +9,10 @@
     "yes": "Ja",
     "no": "Nein",
     "save": "Speichern",
-    "retry": "Erneut versuchen"
+    "retry": "Erneut versuchen",
+    "reload": "Neu laden",
+    "tagline": "Ein Idle-RPG für die Mittagspause – allein oder mit Kollegen.",
+    "tapToContinue": "Antippen zum Weiterlesen"
   },
   "auth": {
     "login": "Anmelden",
@@ -19,7 +22,9 @@
     "password": "Passwort",
     "inviteCode": "Einladungscode",
     "loginFailed": "Benutzername oder Passwort stimmt nicht.",
-    "inviteInvalid": "Dieser Einladungscode gilt nicht."
+    "inviteInvalid": "Dieser Einladungscode gilt nicht.",
+    "toLogin": "Ich habe schon ein Konto",
+    "toRegister": "Neues Konto mit Einladungscode"
   },
   "hero": {
     "select": "Held wählen",
@@ -31,7 +36,11 @@
     "appearance": "Aussehen",
     "deleteConfirm": "Zum Löschen den Namen des Helden eingeben.",
     "nameTaken": "Diesen Namen gibt es schon.",
-    "classTaken": "Für diese Klasse gibt es bereits einen Helden."
+    "classTaken": "Für diese Klasse gibt es bereits einen Helden.",
+    "body": "Körper",
+    "portrait": "Gesicht",
+    "palette": "Farben",
+    "maxLevel": "Höchststufe erreicht"
   },
   "class": {
     "krieger": "Krieger",
@@ -99,7 +108,8 @@
     "away": "Abwesend",
     "inCamp": "Im Lager",
     "inStage": "In Stage {stage}",
-    "inBoss": "Im Bosskampf"
+    "inBoss": "Im Bosskampf",
+    "equipment": "Ausrüstung"
   },
   "smith": {
     "weaponSets": "Waffensätze",
@@ -114,7 +124,14 @@
     "cost": "Kosten: {gold} Gold",
     "needsLevel10": "Verzaubern ab Waffenstufe 10.",
     "transferWarning": "Die alte Waffe wird dabei zerstört.",
-    "enchantLost": "Die Ränge dieser Zeile gehen verloren."
+    "enchantLost": "Die Ränge dieser Zeile gehen verloren.",
+    "chooseType": "Art wählen …",
+    "enchanted": "Verzauberung verstärkt.",
+    "legendaryElement": "Legendäre Waffen behalten ihr Element.",
+    "noTransfer": "Keine Waffe mit höherer Waffenstufe im Inventar.",
+    "noWeapon": "In diesem Satz liegt keine Waffe.",
+    "rankUp": "Rang +1",
+    "transfer": "Übertragen"
   },
   "jeweler": {
     "title": "Juwelier",
@@ -125,7 +142,12 @@
     "bag": "Gem-Beutel",
     "lockedSlot": "Frei ab Stufe {level}",
     "combineHint": "3 × {tier} ergibt {next}.",
-    "tierV": "Stufe V ist die höchste Stufe."
+    "tierV": "Stufe V ist die höchste Stufe.",
+    "slots": "Gem-Slots",
+    "allKinds": "Alle Arten",
+    "combined": "Kombiniert.",
+    "empty": "Der Beutel ist leer.",
+    "pickSocket": "Jetzt einen freien Slot antippen."
   },
   "archive": {
     "title": "Archiv",
@@ -133,7 +155,10 @@
     "splinters": "Artefaktsplitter: {n}",
     "locked": "Freigeschaltet durch {boss}",
     "maxRank": "Höchster Rang erreicht.",
-    "chronicle": "Chronik"
+    "chronicle": "Chronik",
+    "artifacts": "Artefakte",
+    "empty": "Noch keine Einträge. Jede Stage erzählt ein Stück.",
+    "upgraded": "Artefakt aufgewertet."
   },
   "boss": {
     "title": "Bosstafel",
@@ -162,7 +187,20 @@
     "accept": "Annehmen",
     "decline": "Ablehnen",
     "full": "Die Party ist voll.",
-    "inviteExpired": "Die Einladung ist abgelaufen."
+    "inviteExpired": "Die Einladung ist abgelaufen.",
+    "autoContinue": "Auto-Weiter",
+    "cancelRejoin": "Nicht wieder einsteigen",
+    "helperTag": "Helfer",
+    "inRun": "im Run",
+    "join": "Beitreten",
+    "noStage": "Noch keine Stage gewählt.",
+    "notAllowed": "Stufe zu niedrig",
+    "notReady": "Doch nicht bereit",
+    "ready": "Bereit",
+    "rejoin": "Am Checkpoint einsteigen",
+    "rejoining": "steigt am Checkpoint ein",
+    "runActive": "Die Party ist gerade unterwegs.",
+    "solo": "Solo"
   },
   "stageSelect": {
     "title": "Stage wählen",
@@ -187,7 +225,25 @@
     "checkpoint": "Checkpoint erreicht",
     "encounter": "Begegnung {n} von {total}",
     "wipe": "Alle gefallen. Neustart am Checkpoint.",
-    "paused": "Pausiert"
+    "paused": "Pausiert",
+    "autoReady": "Auto-Weiter: bereit in {s} s",
+    "autopilot": "Autopilot – zum Übernehmen tippen oder bewegen",
+    "autopilotLeft": "Dein Held kämpft noch {s} s im Autopilot weiter.",
+    "dead": "Gefallen – warte auf Wiederbelebung",
+    "leave": "Run verlassen",
+    "menu": "Menü",
+    "off": "aus",
+    "on": "an",
+    "pause": "Pause",
+    "resume": "Weiter",
+    "stageProgress": "Fortschritt der Stage",
+    "stick": "Bewegen",
+    "swapHint": "Jetzt die Waffe wechseln, wenn das Element nicht passt.",
+    "closed_camp": "Die Party ist ins Lager zurückgekehrt.",
+    "closed_empty": "Der Run wurde beendet, weil niemand mehr verbunden war.",
+    "closed_pause": "Der Run wurde nach 10 Minuten Pause beendet.",
+    "closed_server": "Der Server startet neu. Erhaltene Beute bleibt erhalten.",
+    "closed_left": "Alle haben den Run verlassen."
   },
   "ping": {
     "hint": "Hinweis",
@@ -200,7 +256,9 @@
     "quick2": "Danke!",
     "quick3": "Sammeln!",
     "quick4": "Brauche Hilfe!",
-    "quick5": "Bereit!"
+    "quick5": "Bereit!",
+    "title": "Chat",
+    "needParty": "Der Chat gehört zur Party. Erstelle eine oder tritt einer bei."
   },
   "loot": {
     "title": "Beute",
@@ -219,7 +277,26 @@
     "gold": "Gold",
     "xp": "EP",
     "inventoryFull": "Das Inventar ist voll.",
-    "weakElementWarning": "Schwach gegen das Element dieses Kapitels."
+    "weakElementWarning": "Schwach gegen das Element dieses Kapitels.",
+    "aborted": "Run beendet",
+    "alreadyHandled": "Die Beute wurde bereits verkauft oder abgelegt.",
+    "autoSold": "{n} Gegenstände automatisch verkauft (+{gold} Gold), Inventar und Truhe waren voll.",
+    "equipped": "Angelegt",
+    "firstClear": "Erster Abschluss",
+    "inventory": "Inventar",
+    "next": "Weiter",
+    "sellConfirm": "{name} für {gold} Gold verkaufen?",
+    "sold": "Verkauft für {gold} Gold.",
+    "stash": "Truhe",
+    "strongElement": "Stark gegen das Element dieses Kapitels.",
+    "toCamp": "Zum Lager",
+    "toInventory": "Ins Inventar",
+    "toStash": "In die Truhe",
+    "unequip": "Ablegen",
+    "victory": "Stage geschafft!",
+    "victoryBoss": "Boss besiegt!",
+    "waitLeader": "Der Anführer wählt, wie es weitergeht.",
+    "weaponXp": "Waffen-EP"
   },
   "progress": {
     "levelUp": "Stufe {level} erreicht",
@@ -247,7 +324,16 @@
     "fontSize": "Schriftgröße",
     "hudScale": "HUD-Größe",
     "reduceMotion": "Weniger Bewegung",
-    "keyBindings": "Tastenbelegung"
+    "keyBindings": "Tastenbelegung",
+    "idle": "Nebenbei spielen",
+    "autoPotion": "Auto-Trank (unter 40 % Leben)",
+    "autoDodge": "Auto-Ausweichen",
+    "autoContinue": "Auto-Weiter nach der Beute (als Anführer)",
+    "idleHint": "Mit Auto-Cast, Autowalk und diesen Schaltern läuft ein Run ohne Eingaben weiter. Aktiv spielen bleibt besser: ausweichen, Waffe wechseln, Ziel wählen.",
+    "damageNumbers": "Schadenszahlen anzeigen",
+    "edgeWarning": "Warnung am Bildschirmrand",
+    "keysHint": "Tastatur: WASD bewegen, Leertaste rollen, 1–3 und R Fähigkeiten, F Trank, Q Waffe, Tab Ziel, T Autowalk, P Pause.",
+    "leftHanded": "Linkshänder (Stick rechts)"
   },
   "error": {
     "BAD_REQUEST": "Die Anfrage war fehlerhaft.",
@@ -265,6 +351,103 @@
     "SERVER_BUSY": "Server ausgelastet, bitte später erneut versuchen.",
     "connectionLost": "Verbindung verloren. Neuer Versuch in {seconds} s.",
     "connectionPoor": "Verbindung schlecht",
-    "versionMismatch": "Neue Version verfügbar. Bitte Seite neu laden."
+    "versionMismatch": "Neue Version verfügbar. Bitte Seite neu laden.",
+    "replaced": "Dein Konto ist in einem anderen Fenster angemeldet."
+  },
+  "skill": {
+    "krieger_schwerthieb": "Schwerthieb",
+    "krieger_spott": "Spott",
+    "krieger_schildstoss": "Schildstoß",
+    "krieger_wirbelhieb": "Wirbelhieb",
+    "krieger_bollwerk": "Bollwerk",
+    "krieger_standhaft": "Standhaft",
+    "magier_arkanblitz": "Arkanblitz",
+    "magier_elementarkugel": "Elementarkugel",
+    "magier_elementarnova": "Elementarnova",
+    "magier_arkane_barriere": "Arkane Barriere",
+    "magier_kataklysmus": "Kataklysmus",
+    "magier_elementarfluss": "Elementarfluss",
+    "waldlaeufer_pfeilschuss": "Pfeilschuss",
+    "waldlaeufer_gezielter_schuss": "Gezielter Schuss",
+    "waldlaeufer_fallensteller": "Fallensteller",
+    "waldlaeufer_pfeilhagel": "Pfeilhagel",
+    "waldlaeufer_adlerauge": "Adlerauge",
+    "waldlaeufer_faehrtenleser": "Fährtenleser",
+    "schurke_doppelstich": "Doppelstich",
+    "schurke_meucheln": "Meucheln",
+    "schurke_giftklinge": "Giftklinge",
+    "schurke_schattenschritt": "Schattenschritt",
+    "schurke_klingentanz": "Klingentanz",
+    "schurke_blutdurst": "Blutdurst",
+    "kleriker_heiliger_schlag": "Heiliger Schlag",
+    "kleriker_heilendes_licht": "Heilendes Licht",
+    "kleriker_segensaura": "Segensaura",
+    "kleriker_laeuterung": "Läuterung",
+    "kleriker_wunder": "Wunder",
+    "kleriker_gnade": "Gnade",
+    "runenweber_runenstrahl": "Runenstrahl",
+    "runenweber_rune_der_kraft": "Rune der Kraft",
+    "runenweber_runenbruch": "Runenbruch",
+    "runenweber_rune_des_schutzes": "Rune des Schutzes",
+    "runenweber_runensturm": "Runensturm",
+    "runenweber_resonanz": "Resonanz"
+  },
+  "status": {
+    "betaeubung": "Betäubung",
+    "eingefroren": "Eingefroren",
+    "wurzel": "Wurzel",
+    "furcht": "Furcht",
+    "verderbnis": "Verderbnis",
+    "ruestungsbruch": "Rüstungsbruch",
+    "blendung": "Blendung",
+    "frost": "Frost",
+    "schock": "Schock",
+    "gift": "Gift",
+    "blutung": "Blutung",
+    "verbrennung": "Verbrennung",
+    "runenbruch": "Runenbruch",
+    "verspottet": "Verspottet",
+    "angriffstempo_malus": "Langsamere Angriffe",
+    "bewegung_malus": "Verlangsamt",
+    "schild": "Schild",
+    "regeneration": "Regeneration",
+    "raserei": "Raserei",
+    "kraftrune": "Rune der Kraft",
+    "schutzrune": "Rune des Schutzes",
+    "runensturm": "Runensturm",
+    "adlerauge": "Adlerauge",
+    "tarnung": "Tarnung",
+    "bollwerk": "Bollwerk",
+    "spott_schutz": "Spott-Schutz",
+    "unverwundbar": "Unverwundbar"
+  },
+  "gem": {
+    "granat": "Granat",
+    "rubin": "Rubin",
+    "onyx": "Onyx",
+    "aquamarin": "Aquamarin",
+    "topas": "Topas",
+    "saphir": "Saphir",
+    "smaragd": "Smaragd"
+  },
+  "artifact": {
+    "krieger_amulett": "Heiltrank heilt 45 % statt 35 %.",
+    "krieger_ring": "Abklingzeit von Spott −2 s.",
+    "krieger_relikt": "Bollwerk dauert 7 s statt 6 s.",
+    "magier_amulett": "Arkane Barriere gibt 25 % statt 20 % Schild.",
+    "magier_ring": "Elementarfluss: Sperre 14 s statt 20 s.",
+    "magier_relikt": "Kataklysmus-Markierung dauert 0,7 s statt 1,0 s.",
+    "waldlaeufer_amulett": "Ausweichrolle 200 px statt 160 px.",
+    "waldlaeufer_ring": "Fallen halten 20 s, höchstens 3 aktiv.",
+    "waldlaeufer_relikt": "Adlerauge dauert 12 s statt 10 s.",
+    "schurke_amulett": "Tarnung von Schattenschritt dauert 3 s statt 2 s.",
+    "schurke_ring": "Gift dauert 8 s statt 6 s.",
+    "schurke_relikt": "Abklingzeit von Klingentanz −5 s.",
+    "kleriker_amulett": "Gnade: Schild bis 15 % statt 10 % Max-Leben.",
+    "kleriker_ring": "Abklingzeit von Heilendes Licht −1 s.",
+    "kleriker_relikt": "Wunder heilt 70 % statt 60 % Max-Leben.",
+    "runenweber_amulett": "Alle eigenen Buffs dauern 1 s länger.",
+    "runenweber_ring": "Abklingzeit von Rune der Kraft −2 s.",
+    "runenweber_relikt": "Runensturm dauert 14 s statt 12 s."
   }
 }
