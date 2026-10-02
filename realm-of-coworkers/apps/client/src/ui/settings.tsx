@@ -1,8 +1,9 @@
 // Einstellungen (14.6, 14.9, E-023): Ton, Barrierefreiheit, Steuerung, Idle-Schalter des Helden.
 import type { JSX } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 import { api } from '../lib/api';
 import { t } from '../lib/i18n';
-import { settings } from '../lib/settings';
+import { DEFAULT_KEYS, settings } from '../lib/settings';
 import type { ColorBlind, Settings, TelegraphStyle } from '../lib/settings';
 import { useStore } from '../lib/store';
 import { errorToast, heroState, logout, refreshHero } from '../state';
@@ -24,6 +25,52 @@ function Toggle(p: { label: string; checked: boolean; onChange: (v: boolean) => 
       <input type="checkbox" checked={p.checked} onChange={(e) => p.onChange(e.currentTarget.checked)} data-testid={p.testid} />
       {p.label}
     </label>
+  );
+}
+
+const KEY_ACTIONS = ['up', 'down', 'left', 'right', 'roll', 's1', 's2', 's3', 'ult', 'potion', 'swap', 'target', 'autowalk', 'pause', 'chat'] as const;
+
+function keyLabel(code: string): string {
+  if (code.startsWith('Key')) return code.slice(3);
+  if (code.startsWith('Digit')) return code.slice(5);
+  if (code === 'Space') return '␣';
+  return code;
+}
+
+/** Tastenbelegung (14.6): Aktion antippen, dann die neue Taste drücken. Doppelte Belegung wird getauscht. */
+function KeyBindings(): JSX.Element {
+  const s = useStore(settings);
+  const [wait, setWait] = useState<string | null>(null);
+  useEffect(() => {
+    if (!wait) return;
+    const f = (e: KeyboardEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.code !== 'Escape') {
+        const keys = { ...settings.get().keys };
+        const other = Object.entries(keys).find(([a, c]) => c === e.code && a !== wait);
+        if (other) keys[other[0]] = keys[wait] ?? '';
+        keys[wait] = e.code;
+        settings.patch({ keys });
+      }
+      setWait(null);
+    };
+    window.addEventListener('keydown', f, { capture: true });
+    return () => window.removeEventListener('keydown', f, { capture: true });
+  }, [wait]);
+  return (
+    <div class="keys">
+      {KEY_ACTIONS.map((a) => (
+        <>
+          <span>{t(`settings.key_${a}`)}</span>
+          <button type="button" class={`btn ghost small ${wait === a ? 'wait' : ''}`} onClick={() => setWait(a)}>
+            <kbd>{wait === a ? '…' : keyLabel(s.keys[a] ?? '')}</kbd>
+          </button>
+        </>
+      ))}
+      <span />
+      <Btn small kind="ghost" onClick={() => settings.patch({ keys: { ...DEFAULT_KEYS } })}>{t('settings.keysReset')}</Btn>
+    </div>
   );
 }
 
@@ -85,6 +132,8 @@ export function SettingsView(p: { onClose: () => void }): JSX.Element {
         <h3>{t('settings.controls')}</h3>
         <Toggle label={t('settings.leftHanded')} checked={s.leftHanded} onChange={(v) => settings.patch({ leftHanded: v })} />
         <p class="muted small">{t('settings.keysHint')}</p>
+        <h3>{t('settings.keyBindings')}</h3>
+        <KeyBindings />
       </section>
       <div class="row end">
         <Btn kind="danger" small onClick={logout}>{t('auth.logout')}</Btn>

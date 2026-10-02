@@ -14,6 +14,10 @@ let master: GainNode | null = null;
 let voices = 0;
 const recent = new Map<Sfx, number[]>();
 
+export function audioContext(): AudioContext | null {
+  return ctx;
+}
+
 /** Audio startet nach der ersten Eingabe (Browser-Regel). */
 export function unlockAudio(): void {
   if (ctx) {

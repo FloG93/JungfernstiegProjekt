@@ -6,7 +6,7 @@ import { t } from '../lib/i18n';
 import { net } from '../lib/net';
 import { useStore } from '../lib/store';
 import { chat, heroState, heroes, party, presence, screen } from '../state';
-import { Bar, Btn, Gold } from './common';
+import { Bar, Btn, Gold, Modal } from './common';
 import { Equipment } from './equipment';
 import { HeroPortrait } from './heroes';
 import { InviteToasts, OnlineList, PartyPanel, StageSelect } from './party';
@@ -28,7 +28,7 @@ export function ChatBox(p: { compact?: boolean }): JSX.Element {
   };
   return (
     <div class={`chat ${p.compact ? 'compact' : ''}`}>
-      <div class="chat-lines" aria-live="polite">
+      <div class="chat-lines" aria-live="polite" data-testid="chat-lines">
         {lines.slice(-30).map((l) => <p><b>{l.name}:</b> {l.text}</p>)}
         {!pt && <p class="muted">{t('chat.needParty')}</p>}
       </div>
@@ -39,7 +39,7 @@ export function ChatBox(p: { compact?: boolean }): JSX.Element {
             e.preventDefault();
             send(text);
           }}>
-            <input value={text} maxLength={c.balance.session.chatMaxLen} placeholder={t('chat.placeholder')} onInput={(e) => setText(e.currentTarget.value)} />
+            <input value={text} maxLength={c.balance.session.chatMaxLen} placeholder={t('chat.placeholder')} onInput={(e) => setText(e.currentTarget.value)} data-testid="chat-input" />
             <button type="submit" class="btn small">➤</button>
           </form>
         </>
@@ -98,7 +98,7 @@ export function Camp(): JSX.Element {
       <PartyPanel onStages={() => setWin('stages')} />
       <footer class="camp-foot">
         <Btn kind="ghost" small onClick={() => setWin('online')} testid="online-open">👥 {t('camp.online')} ({online.length})</Btn>
-        <Btn kind="ghost" small onClick={() => setWin('chat')}>💬 {t('chat.title')}</Btn>
+        <Btn kind="ghost" small onClick={() => setWin('chat')} testid="chat-open">💬 {t('chat.title')}</Btn>
         <Btn kind="ghost" small onClick={() => setWin('settings')} testid="settings-open">⚙ {t('settings.title')}</Btn>
         {heroes.get().length > 0 && !pt?.inRun && <Btn kind="ghost" small onClick={() => screen.set('heroes')}>⇄ {t('hero.select')}</Btn>}
       </footer>
@@ -111,11 +111,7 @@ export function Camp(): JSX.Element {
       {win === 'stages' && <StageSelect pt={pt} onPick={pickStage} onClose={close} />}
       {win === 'online' && <OnlineList onClose={close} />}
       {win === 'settings' && <SettingsView onClose={close} />}
-      {win === 'chat' && (
-        <div class="modal-back" onClick={(e) => e.target === e.currentTarget && close()}>
-          <div class="modal"><header><h2>{t('chat.title')}</h2><button type="button" class="x" onClick={close}>✕</button></header><ChatBox /></div>
-        </div>
-      )}
+      {win === 'chat' && <Modal title={t('chat.title')} onClose={close} testid="chat"><ChatBox /></Modal>}
     </div>
   );
 }

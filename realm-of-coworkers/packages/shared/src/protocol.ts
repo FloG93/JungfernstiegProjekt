@@ -112,6 +112,8 @@ export interface SnapEntity {
   fx?: { id: StatusId | string; stacks: number; ms: number }[];
   el?: ElementId;
   cd?: Record<string, number>;
+  /** Gegner und Bosse: aktuelles Ziel (Bedrohungskrone 14.3, Wutwechsel 14.4). */
+  tgt?: number;
   meta?: EntityMeta;
 }
 

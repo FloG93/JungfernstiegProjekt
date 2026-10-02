@@ -85,7 +85,7 @@ export function PartyPanel(p: { onStages: () => void }): JSX.Element {
               <Btn onClick={() => {
                 net.send({ t: 'party.join', code });
                 setJoining(false);
-              }} disabled={code.length !== c.engine.party.codeLength}>{t('party.join')}</Btn>
+              }} disabled={code.length !== c.engine.party.codeLength} testid="party-join-submit">{t('party.join')}</Btn>
             </div>
           </Modal>
         )}

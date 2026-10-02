@@ -9,6 +9,7 @@ import { play } from './lib/audio';
 import { content, contentHash, loadGameContent } from './lib/content';
 import { t } from './lib/i18n';
 import { net } from './lib/net';
+import { settings } from './lib/settings';
 import { Store } from './lib/store';
 import { Controls } from './game/controls';
 import { RunView } from './game/runview';
@@ -56,6 +57,8 @@ export interface Frame {
   own: boolean;
   fx: { id: string; stacks: number; ms: number }[];
   el: ElementId;
+  /** Der Boss greift diesen Helden an (Wutwechsel, 14.4). */
+  targeted: boolean;
 }
 
 export interface RunHud {
@@ -91,6 +94,8 @@ export const loot = new Store<RunEndMsg | null>(null);
 export const toasts = new Store<Toast[]>([]);
 export const banners = new Store<Banner[]>([]);
 export const story = new Store<Story | null>(null);
+/** Zeitpunkt der letzten Warnung am Bildschirmrand (14.6). */
+export const edgeFlash = new Store<number>(0);
 /** Serverzeit minus Clientzeit (für Countdowns aus party.state). */
 export let serverOffset = 0;
 
@@ -219,7 +224,7 @@ function deriveHud(v: RunView): RunHud | null {
       frames.push({
         id: e.id, acc: e.meta.acc ?? null, name: e.meta.name ?? '?', cls: (e.meta.cls ?? 'krieger') as ClassId, level: e.meta.level ?? 1,
         hp: e.cur.hp, maxHp: e.cur.maxHp, shield: e.cur.shield ?? 0, dead: e.cur.state === 'dead', own: e.id === v.ownId,
-        fx: e.cur.fx ?? [], el: (e.cur.el ?? 'physisch') as ElementId,
+        fx: e.cur.fx ?? [], el: (e.cur.el ?? 'physisch') as ElementId, targeted: false,
       });
     } else if (e.kind === 'boss') {
       boss = {
@@ -229,6 +234,8 @@ function deriveHud(v: RunView): RunHud | null {
     }
   }
   frames.sort((a, b) => Number(b.own) - Number(a.own) || a.id - b.id);
+  const bossTgt = [...v.ents.values()].find((e) => e.kind === 'boss' && e.removedAt === null)?.cur.tgt;
+  for (const fr of frames) fr.targeted = fr.id === bossTgt;
   const own = v.own();
   const p = party.get();
   const myAcc = me.get()?.accountId ?? -1;
@@ -349,7 +356,10 @@ function onSnapshot(): void {
     for (const z of v.zones) {
       if (pendingTelegraphs.has(z.z.id)) {
         pendingTelegraphs.delete(z.z.id);
-        if (z.z.hostile) play('telegraph');
+        if (z.z.hostile) {
+          play('telegraph');
+          if (settings.get().edgeWarning) edgeFlash.set(Date.now());
+        }
       }
     }
     pendingTelegraphs.clear();

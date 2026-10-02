@@ -2,9 +2,10 @@
 import type { JSX } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { unlockAudio } from './lib/audio';
+import { setMood } from './lib/music';
 import { t } from './lib/i18n';
 import { useStore } from './lib/store';
-import { boot, screen, toasts } from './state';
+import { boot, hud, screen, toasts } from './state';
 import { Camp } from './ui/camp';
 import { closeTopModal } from './ui/common';
 import { HeroSelect } from './ui/heroes';
@@ -24,9 +25,18 @@ function Toasts(): JSX.Element {
 
 export function App(): JSX.Element {
   const sc = useStore(screen);
+  const arena = useStore(hud)?.run.arena ?? false;
+  useEffect(() => {
+    setMood(sc === 'run' ? (arena ? 'boss' : 'stage') : sc === 'camp' || sc === 'loot' ? 'camp' : 'off');
+  }, [sc, arena]);
   useEffect(() => {
     void boot();
-    const first = () => unlockAudio();
+    const first = () => {
+      unlockAudio();
+      setMood('off');
+      const sc0 = screen.get();
+      if (sc0 === 'camp') setMood('camp');
+    };
     window.addEventListener('pointerdown', first, { once: true });
     const esc = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && screen.get() !== 'run') closeTopModal();

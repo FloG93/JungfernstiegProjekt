@@ -13,6 +13,10 @@ export interface Config {
   contentDir: string;
   publicDir: string;
   backupDir: string;
+  /** Aufbewahrung der Sicherungen in Tagen (16.6). */
+  backupKeepDays: number;
+  /** Stunde der nächtlichen Sicherung (Ortszeit des Servers). */
+  backupHour: number;
   cookieSecure: boolean;
 }
 
@@ -39,6 +43,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     contentDir: env['CONTENT_DIR'] ?? resolve(here, '../../../packages/content'),
     publicDir: env['PUBLIC_DIR'] ?? resolve(here, '../../client/dist'),
     backupDir: env['BACKUP_DIR'] ?? resolve(dirname(dbPath), 'backups'),
+    backupKeepDays: Number(env['BACKUP_KEEP_DAYS'] ?? 14),
+    backupHour: Number(env['BACKUP_HOUR'] ?? 3),
     cookieSecure: env['COOKIE_SECURE'] === '1' || env['COOKIE_SECURE'] === 'true',
   };
 }

@@ -5,7 +5,8 @@ import './styles.css';
 
 applyDocumentSettings();
 const root = document.getElementById('app');
-if (root) render(<App />, root);
+if (location.search.includes('bench')) void import('./bench').then((b) => b.runBench());
+else if (root) render(<App />, root);
 
 // PWA: Offline-Hülle, nur im gebauten Client (E-022)
 if ('serviceWorker' in navigator && import.meta.env.PROD) {

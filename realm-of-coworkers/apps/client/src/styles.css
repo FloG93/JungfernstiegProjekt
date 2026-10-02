@@ -361,3 +361,12 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 1.2em; m
 .toast.error { border-color: var(--bad); }
 .toast.good { border-color: var(--good); }
 .toast.loot { border-color: var(--gold); }
+
+/* Wutwechsel und Randwarnung (14.4, 14.6) */
+.frame.targeted { border-color: var(--bad); animation: blink 0.5s infinite alternate; }
+[data-motion='reduce'] .frame.targeted { animation: none; }
+.edge-flash { position: absolute; inset: 0; z-index: 14; pointer-events: none; box-shadow: inset 0 0 0 6px var(--danger), inset 0 0 60px rgba(229, 57, 53, 0.6); animation: edge 0.65s ease-out forwards; }
+@keyframes edge { to { opacity: 0; } }
+.keys { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; align-items: center; }
+.keys kbd { font: inherit; background: var(--bg2); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; min-width: 72px; text-align: center; }
+.keys button.wait kbd { border-color: var(--gold); }

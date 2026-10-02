@@ -7,7 +7,8 @@
     "dev": "tsx watch --env-file-if-exists=../../.env src/main.ts",
     "start": "node dist/main.js",
     "build": "node build.mjs",
-    "admin": "tsx src/admin.ts"
+    "admin": "tsx src/admin.ts",
+    "loadtest": "tsx src/loadtest.ts"
   },
   "dependencies": {
     "@aethra/shared": "workspace:*",

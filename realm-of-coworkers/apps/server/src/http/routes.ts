@@ -82,6 +82,10 @@ export function registerRoutes(app: FastifyInstance, ctx: AppCtx): void {
     void reply.status(500).send({ ok: false, error: { code: 'CONFLICT', message: 'Interner Fehler, bitte erneut versuchen.' } });
   });
 
+  app.addHook('onRequest', async (req) => {
+    if (req.url.startsWith('/api/') && !req.url.startsWith('/api/health')) ctx.limiter.check(`api:${req.ip}`, 'api');
+  });
+
   const auth = async (req: FastifyRequest) => {
     const s = await sessionOf(ctx, req);
     if (!s) fail('UNAUTHORIZED', 'Bitte neu anmelden.');

@@ -15,8 +15,8 @@ Je Sitzung einen Meilenstein (16.2). Nach jeder Sitzung diesen Stand aktualisier
 | M8 Lager und Menüs | erledigt | 2026-10-02 | Anmeldung, Heldenwahl und -erstellung, Lager mit Schmiede, Juwelier, Archiv (Chronik), Bosstafel, Tavernentisch, Ausrüstung mit Vergleich und Empfehlung (14.5), Beute-Bildschirm mit „Alles Empfohlene anlegen“, Einstellungen (Ton, Barrierefreiheit, Idle-Schalter), Online-Liste, Einladungen, Chat mit Schnellnachrichten, PWA. Verwaltung per `pnpm admin`. Abnahme: Playwright-Ablauf Registrieren, Held erstellen, ausrüsten, Gem kombinieren, verzaubern (OPEN-037) |
 | M9 Mehrspieler | erledigt | 2026-10-02 | WebSocket `/ws` mit Cookie-Anmeldung, Origin-Prüfung, hello/4001, Ersetzen alter Verbindungen (4002), Zod-Prüfung und Rate-Limits. Lobby mit Online-Liste (Abwesend nach 10 min), Party per Code und Einladung, Anführer, Stage-Wahl mit Nachzügler-Regel, Bereit, Countdown, Chat. RunInstance: Simulation 20 Hz auf dem Server, Delta-Snapshots 10 Hz (vollständig alle 5 s), Ereignisse sofort, Topf-Regel je Spieler, Elite-Beute, Truhe, Boss-Beute mit Helfer und Kampfstufe, Autopilot 90 s, Wiedereinstieg am Checkpoint, Solo-Pause, Auto-Weiter, run_log mit Seed und Eingaben. Messung 6 Clients (3 × 150 ms, 3 × 400 ms), Stage 2: 5,8 KB/s komprimiert je Client (Ziel < 30), Snapshot höchstens 6,1 KB (Grenze 8), Eingaben nach einer Rundlaufzeit bestätigt, alle sehen dieselbe Welt. Annahmen OPEN-027 bis OPEN-036 |
 | M10 pnpm balance | erledigt | 2026-10-02 | TypeScript-Port von ref_model.py: Spielwerte aus den JSON-Dateien, nur die Modellannahmen aus 13.11 im Werkzeug. Alle festen Ausgaben stimmen mit ref_model.py überein (Test), Zufallsteile innerhalb der Toleranz. Alle 16 Grenzen aus 13.9 grün, dazu Boss-Druck mit den echten Bossdaten (OPEN-041) und K aus der Simulation (13.10, höchstens +7,5 %). Rot bei veränderten Konstanten (8 Varianten im Test) |
-| M11 Politur | offen | | |
-| M12 Härtung und Betrieb | offen | | |
+| M11 Politur | erledigt | 2026-10-02 | Bedrohungskrone und Boss-Zielpfeil (OPEN-042), Randwarnung für Angriffe außerhalb des Bildes, Schadenszahlen abschaltbar, Tastenbelegung änderbar, Linkshänder-Modus, Musik je Ort per WebAudio (OPEN-043), Bildsymbole und PWA-Manifest, Texte vollständig in de.json. Browser-Test mit zwei Handys: Party per Code, Chat, gemeinsamer Run, Neuladen mitten im Run |
+| M12 Härtung und Betrieb | erledigt | 2026-10-02 | Sicherung beim Start und nächtlich (OPEN-044), Rate-Limit der API (OPEN-045), sauberes Beenden bei SIGTERM, Lasttest 10 Runs × 6 Helden: 3 % eines Kerns (OPEN-046). Client: Erstladen 281 KB, Szene mit 6 Helden und 40 Gegnern rund 1 ms je Frame (Bench-Modus `?bench`). README mit Hosting, Umgebungsvariablen, Sicherung und Verwaltung |
 
 ## Bereits vorhanden (vor M0 eingebracht)
 
@@ -27,4 +27,4 @@ Je Sitzung einen Meilenstein (16.2). Nach jeder Sitzung diesen Stand aktualisier
 
 ## Letzte Sitzung
 
-2026-10-02: M7 bis M10 abgeschlossen. Unit-Tests, Browser-Tests und pnpm balance grün. Offen: M11 und M12. Nächster Schritt: M11 Politur (16.3).
+2026-10-02: M7 bis M12 abgeschlossen. 241 Unit-Tests, 5 Browser-Tests und pnpm balance grün. Offen: echte Grafik und Töne (OPEN-043), Balance-Vorschläge OPEN-024/025, Docker-Image einmal auf dem Zielserver bauen. Nächster Schritt: Spieltest im Büro, danach Feinschliff nach Rückmeldung.

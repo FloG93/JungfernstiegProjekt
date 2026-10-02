@@ -18,6 +18,8 @@ export const VERSION = '0.1.0';
 const AUTH_WINDOW_MS = 60_000;
 const AUTH_MAX = 20;
 const MS_PER_S = 1000;
+const API_MAX = 120; // OPEN-045
+const API_WINDOW_MS = 10_000;
 
 export interface BuiltApp {
   app: FastifyInstance;
@@ -38,6 +40,8 @@ export async function buildApp(config: Config, o: { logger?: boolean; now?: () =
     input: { max: net.maxInputsPerS, windowMs: MS_PER_S },
     chat: { max: 1, windowMs: MS_PER_S },
     partyCode: { max: 1, windowMs: MS_PER_S },
+    // Allgemeine Grenze für die HTTP-Schnittstelle je Adresse (11.9, 16.3)
+    api: { max: API_MAX, windowMs: API_WINDOW_MS },
   }, now);
   const ctx: AppCtx = {
     config, content, contentFiles: files, db: dbh.db, limiter, version: VERSION, now,

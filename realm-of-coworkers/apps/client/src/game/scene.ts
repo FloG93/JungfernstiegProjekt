@@ -314,6 +314,16 @@ export class RunScene extends Phaser.Scene {
   private drawBars(view: RunView): void {
     const b = this.barsG;
     b.clear();
+    // Wutwechsel (14.4): roter Pfeil über dem Helden, den der Boss angreift
+    for (const e of view.ents.values()) { // OPEN-042
+      if (e.kind !== 'boss' || e.removedAt !== null || e.cur.tgt === undefined) continue;
+      const tg = this.units.get(e.cur.tgt);
+      if (!tg || tg.fadeStart !== null) continue;
+      const ty = BAND_TOP + tg.y - tg.h - 30 + Math.sin(this.lastNow / 140) * 3;
+      b.fillStyle(0xff3b3b, 1);
+      b.fillTriangle(tg.x - 9, ty - 10, tg.x + 9, ty - 10, tg.x, ty + 2);
+      b.fillRect(tg.x - 3, ty - 20, 6, 10);
+    }
     // Fokusziel (14.7): Ring am Boden
     const focus = view.run?.me?.focusId;
     const fg = focus !== null && focus !== undefined ? this.units.get(focus) : undefined;
@@ -341,6 +351,16 @@ export class RunScene extends Phaser.Scene {
       if (e.meta.elite) {
         b.lineStyle(1, 0xffc94a, 1);
         b.strokeRect(x - 1, y - 1, w + 2, 6);
+      }
+      // Bedrohungskrone (14.3): dieser Gegner greift den eigenen Helden an
+      if (e.kind !== 'hero' && e.cur.tgt !== undefined && e.cur.tgt === view.ownId) {
+        const cx = g.x;
+        const cy = y - 8;
+        b.fillStyle(0xffd24a, 1);
+        b.fillTriangle(cx - 7, cy + 4, cx - 5, cy - 4, cx - 2, cy + 4);
+        b.fillTriangle(cx - 3, cy + 4, cx, cy - 6, cx + 3, cy + 4);
+        b.fillTriangle(cx + 2, cy + 4, cx + 5, cy - 4, cx + 7, cy + 4);
+        b.fillRect(cx - 7, cy + 3, 14, 3);
       }
       // Effekte als kleine Punkte (höchstens 8, 14.3)
       const fx = e.cur.fx ?? [];

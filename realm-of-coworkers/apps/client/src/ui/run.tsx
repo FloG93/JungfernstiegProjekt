@@ -10,7 +10,7 @@ import { net } from '../lib/net';
 import { settings } from '../lib/settings';
 import { useStore } from '../lib/store';
 import type { GameHost } from '../game/host';
-import { banners, controls, currentView, drainEvents, hud, party, toast } from '../state';
+import { banners, controls, currentView, drainEvents, edgeFlash, hud, party, toast } from '../state';
 import type { RunHud } from '../state';
 import { Bar, Btn, ClassIcon, El, closeTopModal } from './common';
 import { ChatBox } from './camp';
@@ -176,7 +176,7 @@ function PartyFrames(p: { h: RunHud }): JSX.Element {
   return (
     <div class="frames">
       {p.h.frames.map((f) => (
-        <button type="button" class={`frame ${f.own ? 'own' : ''} ${f.dead ? 'dead' : ''}`}
+        <button type="button" class={`frame ${f.own ? 'own' : ''} ${f.dead ? 'dead' : ''} ${f.targeted ? 'targeted' : ''}`}
           onClick={() => f.dead && !f.own && controls.act({ k: 'revive', targetId: f.id })} aria-label={f.dead ? `${t('hud.revive')}: ${f.name}` : f.name}>
           <ClassIcon cls={f.cls} />
           <span class="fname">{f.name}</span>
@@ -294,6 +294,18 @@ function Banners(): JSX.Element {
       {list.map((b) => <div class={`banner ${b.kind}`}><b>{b.text}</b>{b.sub && <small>{b.sub}</small>}</div>)}
     </div>
   );
+}
+
+/** Warnung am Bildschirmrand bei neuen Telegraphen (14.6, wählbar). */
+function EdgeFlash(): JSX.Element | null {
+  const at = useStore(edgeFlash);
+  const [, tick] = useState(0);
+  useEffect(() => {
+    if (!at) return;
+    const h = setTimeout(() => tick((x) => x + 1), 700);
+    return () => clearTimeout(h);
+  }, [at]);
+  return at && Date.now() - at < 650 ? <div class="edge-flash" aria-hidden="true" /> : null;
 }
 
 function ConnectionOverlay(): JSX.Element | null {
@@ -574,6 +586,7 @@ export function RunScreen(): JSX.Element {
         </div>
       </div>
       <Banners />
+      <EdgeFlash />
       {h && <Countdown h={h} />}
       {h && <GateDialog h={h} />}
       {h?.run.paused && <div class="overlay paused"><div class="panel"><h2>{t('hud.paused')}</h2><Btn onClick={() => net.send({ t: 'run.pause', on: false })}>{t('hud.resume')}</Btn></div></div>}

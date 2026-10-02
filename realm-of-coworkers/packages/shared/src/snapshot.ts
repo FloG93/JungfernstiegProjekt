@@ -21,6 +21,7 @@ function entityOf(w: World, u: Unit, own: boolean, withMeta: boolean): SnapEntit
     e.fx = u.statuses.map((s) => ({ id: s.id, stacks: s.stacks, ms: Math.max(0, Math.round((s.endsAt - w.t) / FX_ROUND_MS) * FX_ROUND_MS) }));
   }
   if (u.kind !== 'hero' || u.element !== 'physisch') e.el = u.element;
+  if (u.foe && u.foe.targetId !== null && !u.dead) e.tgt = u.foe.targetId;
   if (own && u.hero) {
     e.cd = {};
     for (const s of u.hero.skills) if (s.slot !== 'passive') e.cd[s.def.id] = Math.ceil(s.cdLeft);

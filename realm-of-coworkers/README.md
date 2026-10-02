@@ -1,39 +1,115 @@
-# Content-Paket für realm-of-coworkers
+# Aethra – Die Splitterchroniken
 
-Fertige Inhaltsdateien und Prüfwerkzeuge zur Spezifikation „Realm of Coworkers – RPG Web-App“.
-Claude Code übernimmt dieses Paket in Meilenstein M1 (Abschnitt 16.2) und erzeugt die Daten nicht selbst.
+Ein kooperatives Idle-RPG für Kollegen: Stages und Bosse allein oder in einer Party mit bis zu sechs Leuten,
+auf dem Handy (Hoch- und Querformat, als App installierbar) oder am Rechner. Ein Run läuft auch ohne Eingaben weiter
+(Autowalk, Auto-Cast, Auto-Trank, Auto-Ausweichen, Auto-Weiter); wer aktiv spielt, ist schneller und überlebt mehr.
 
-## Einbinden
+Die Spezifikation liegt in `docs/spec/`, getroffene Entscheidungen und offene Punkte in `docs/OPEN.md`,
+der Stand je Meilenstein in `docs/PROGRESS.md`.
 
-1. Ordner `packages/content/` und `tools/` ins Repository kopieren.
-2. `docs/OPEN.md` übernehmen und weiterführen.
-3. Prüfen: `python3 tools/validate_content.py` und `python3 tools/crosscheck_balance.py`.
-4. Beide Prüfungen gehören in `pnpm balance` (Meilenstein M10) und in die CI.
+## Spielen
 
-## Inhalt
+1. Die Adresse des Servers öffnen und mit dem **Einladungscode** ein Konto anlegen.
+2. Einen Helden erstellen: sechs Klassen (Krieger, Magier, Waldläufer, Schurke, Kleriker, Runenweber), je Klasse ein Held.
+3. Im **Lager** liegen die Stationen: Ausrüstung, Schmiede (Element, Waffenstufe, Verzaubern), Juwelier (Gems),
+   Archiv (Artefakte, Chronik), Bosstafel und Tavernentisch (Party, Stage-Wahl).
+4. **Solo starten** oder eine **Party erstellen** und den sechsstelligen Code weitergeben. Mitspieler lassen sich auch
+   direkt aus der Online-Liste einladen. Der Anführer wählt die Stage, alle tippen „Bereit“.
+5. Auf dem Handy: im Browser „Zum Startbildschirm hinzufügen“, dann startet das Spiel wie eine App.
 
-| Datei | Inhalt | Spezifikation |
+**Bedienung:** Stick links unten (Linkshänder: in den Einstellungen umschalten), Fähigkeiten rechts. Langes Drücken auf eine
+Fähigkeit schaltet ihren Auto-Cast. Gegner antippen setzt den Fokus, den Boden antippen läuft dorthin, langes Drücken
+auf die Szene setzt einen Ping. Am Rechner: WASD bewegen, Leertaste rollen, 1–3 und R Fähigkeiten, F Trank, Q Waffe,
+Tab Ziel, T Autowalk, P Pause, Eingabe Chat; die Tasten lassen sich in den Einstellungen ändern.
+
+## Betreiben
+
+### Mit Docker (empfohlen)
+
+```bash
+cp .env.example .env        # INVITE_CODE und SESSION_SECRET (mindestens 16 Zeichen) setzen
+docker compose up -d        # Server auf Port 3000, Daten und Sicherungen in ./data
+```
+
+Für den Zugang von außen gehört ein Reverse Proxy mit TLS davor (WebSocket unter `/ws`), zum Beispiel Caddy:
+
+```
+spiel.example.de {
+  reverse_proxy localhost:3000
+}
+```
+
+Dann in `.env` zusätzlich `COOKIE_SECURE=1` setzen.
+
+### Ohne Docker
+
+Node 24 und pnpm 10 (`corepack enable`):
+
+```bash
+pnpm install
+pnpm build
+cd apps/server && SESSION_SECRET=… INVITE_CODE=… node dist/main.js
+```
+
+### Umgebungsvariablen
+
+| Variable | Standard | Bedeutung |
 | --- | --- | --- |
-| `classes.json` | 6 Klassen | 4, 5.4 |
-| `skills.json` | 36 Fähigkeiten | 4 |
-| `status.json` | 27 Statuseffekte | 6.3, 6.4 |
-| `elements.json` | 7 Elemente | 6.1, 14.8 |
-| `enemies.json` | 9 Gegnertypen und Elite | 9.3, 9.7 |
-| `arenas.json` | 6 Arenen | 10.2 |
-| `levels/palette.json` | Gegneranteile je Kapitel | 9.5 |
-| `levels/stage-01.json` bis `stage-30.json` | 30 Stages | 9 |
-| `bosses.json` | 6 Bosse | 10 |
-| `items/names.json` | Namensbausteine | 8.3, 8.5 |
-| `loot/stage-loot.json`, `loot/boss-drops.json` | Beutetabellen | 12.8, 10.8 |
-| `gems.json`, `artifacts.json` | Gems und 18 Artefakte | 7 |
-| `balance.json` | alle Konstanten | 15.5 |
-| `story/kapitel1.json` bis `kapitel6.json` | 30 Stage-Texte, 12 Bossdialoge, Epilog | 3.2 |
-| `i18n/de.json` | 222 Oberflächentexte | 14.10 |
+| `PORT` | 3000 | HTTP und WebSocket |
+| `DB_PATH` | `./data/aethra.db` | SQLite-Datei |
+| `SESSION_SECRET` | – (Pflicht) | Signatur der Sitzungs-Cookies, mindestens 16 Zeichen |
+| `INVITE_CODE` | – (Pflicht) | Einladungscode für neue Konten |
+| `TICK_RATE` | 20 | Takt der Simulation pro Sekunde (Echtzeit; höhere Werte beschleunigen, nur für Tests) |
+| `BOSS_TIMER_SCALE` | 1.0 | Faktor für alle Boss-Timer (0 zum Testen) |
+| `LOG_LEVEL` | `info` | Protokollstufe |
+| `COOKIE_SECURE` | aus | `1` hinter HTTPS |
+| `BACKUP_DIR` | `<DB-Ordner>/backups` | Ziel der Sicherungen |
+| `BACKUP_KEEP_DAYS` | 14 | Aufbewahrung der Sicherungen in Tagen |
+| `BACKUP_HOUR` | 3 | Stunde der nächtlichen Sicherung |
+| `PUBLIC_DIR`, `CONTENT_DIR` | im Image gesetzt | gebauter Client und Inhaltsdateien |
 
-## Prüfwerkzeuge
+### Sicherung, Verwaltung, Überwachung
 
-- `tools/validate_content.py` prüft jede Datei gegen die Spezifikation: IDs, Schemas, Wertebereiche, Summen von Wahrscheinlichkeiten, Querverweise zwischen den Dateien und die Koeffizienten K je Klasse.
-- `tools/crosscheck_balance.py` rechnet die Daten gegen das Referenzmodell (Anhang A der Spezifikation) nach: RefLeben, Boss-Leben, Kampfdauer je Klasse, XP- und Gold-Kurve, Obergrenzen.
-- `tools/balance/reference/ref_model.py` ist das Referenzmodell selbst, unverändert aus Anhang A.
+- **Sicherung:** beim Start (also vor jedem Update) und jede Nacht um `BACKUP_HOUR`, 14 Tage aufbewahrt, als
+  vollständige SQLite-Dateien in `data/backups/`. Wiederherstellen: Server stoppen, Sicherung als `data/aethra.db`
+  kopieren, Server starten.
+- **Verwaltung** (`docker compose exec aethra node dist/admin.js …` bzw. `pnpm admin …`):
+  `reset-password <benutzer> <passwort>`, für Support und Tests außerdem `gold`, `splinters`, `level`, `gear`, `item`,
+  `gems`, `weapon-level`, `clear`. Ohne Argumente zeigt das Werkzeug alle Befehle.
+- **Überwachung:** `GET /api/health` liefert Version, Inhalts-Hash, laufende Runs und Speicher.
+- Ein Neustart bricht laufende Runs ab; erhaltene Beute und Fortschritt bleiben (gespeichert je Begegnung und sofort beim Drop).
 
-Beide Prüfskripte melden Fehler mit Verweis auf den Abschnitt und enden mit Exit-Code 1.
+## Entwickeln
+
+```bash
+pnpm install
+cp .env.example .env     # für pnpm dev
+pnpm dev                 # Client auf :5173 (leitet /api, /ws, /content an :3000 weiter), Server auf :3000
+```
+
+| Befehl | Zweck |
+| --- | --- |
+| `pnpm lint`, `pnpm typecheck`, `pnpm test` | ESLint, TypeScript, Vitest (Simulation, Server, Protokoll, Client-Logik) |
+| `pnpm balance` | Inhaltsprüfungen und Referenzmodell (13.9) samt gemessenem K |
+| `pnpm e2e` | baut alles und spielt im Browser (Playwright, Handy-Ansicht); lokal mit `PW_CHROMIUM=/pfad/zu/chrome` |
+| `pnpm --filter @aethra/server loadtest` | 10 Runs mit je 6 Helden, misst die Rechenzeit (`RUNS`, `SECONDS`) |
+| `pnpm content:check` | Inhaltsdateien gegen die Spezifikation |
+
+Aufbau:
+
+| Pfad | Inhalt |
+| --- | --- |
+| `packages/shared` | Simulation (deterministisch, 20 Ticks/s), Formeln, Beute, Protokoll, Snapshots |
+| `packages/content` | alle Spieldaten als JSON (keine Spielzahl im Code) |
+| `apps/server` | Fastify, SQLite (Kysely), WebSocket-Gateway, Lobby, Runs, Sicherung, Verwaltung |
+| `apps/client` | Vite, Preact (Menüs, HUD), Phaser 4 (Spielszene), PWA |
+| `tools/balance` | `pnpm balance`, TypeScript-Port des Referenzmodells |
+| `e2e` | Browser-Tests (Abnahme M7, M8, Leistung) |
+
+## Kennzahlen
+
+Gemessen am 2. Oktober 2026 (Details in `docs/PROGRESS.md`):
+
+- Lasttest: 10 Runs mit je 6 Helden über 10 Minuten Spielzeit brauchen 3 % eines CPU-Kerns (Ziel: unter 60 %).
+- Netz: rund 7 KB/s je Client komprimiert (Ziel: unter 30 KB/s), Snapshots höchstens rund 6 KB (Grenze 8 KB).
+- Client: Erstladen 281 KB (Ziel: unter 3 MB), die Spielszene rechnet mit 6 Helden und 40 Gegnern rund 1 ms je Frame.
