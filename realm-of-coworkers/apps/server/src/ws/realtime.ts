@@ -27,12 +27,17 @@ export async function sessionFromCookieHeader(app: FastifyInstance, ctx: AppCtx,
   return sessionFromToken(ctx.db, u.value, ctx.now());
 }
 
-/** Browser schicken Origin mit; er muss zum Host passen (Schutz vor fremden Seiten). */
-export function originAllowed(req: IncomingMessage): boolean {
+/**
+ * Browser schicken Origin mit; er muss zum Host passen (Schutz vor fremden Seiten). Schreibt ein Proxy den Host um
+ * (GitHub Codespaces, nginx ohne Host-Weitergabe), gelten zusätzlich die Origins aus ALLOWED_ORIGINS (OPEN-047).
+ */
+export function originAllowed(req: IncomingMessage, allowed: readonly string[] = []): boolean {
   const origin = req.headers.origin;
   if (!origin) return true;
   try {
-    const host = new URL(origin).host;
+    const url = new URL(origin);
+    if (allowed.includes(url.origin)) return true;
+    const host = url.host;
     const fwd = req.headers['x-forwarded-host'];
     return host === req.headers.host || (typeof fwd === 'string' && fwd.split(',').some((h) => h.trim() === host));
   } catch {
@@ -80,7 +85,7 @@ export function attachRealtime(app: FastifyInstance, ctx: AppCtx, o: RealtimeOpt
       socket.destroy();
       return;
     }
-    if (!originAllowed(req)) {
+    if (!originAllowed(req, ctx.config.allowedOrigins)) {
       reject(socket, 403, 'Forbidden');
       return;
     }

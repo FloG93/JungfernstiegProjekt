@@ -14,11 +14,18 @@ if (config.dbPath !== ':memory:') {
   backups.schedule();
   app.addHook('onClose', async () => backups.stop());
 }
+// Strg+C trifft die ganze Prozessgruppe (z. B. pnpm play und Server): weitere Signale während des Herunterfahrens
+// nicht doppelt behandeln; hängt das Schließen, beendet die Frist den Prozess.
+const SHUTDOWN_TIMEOUT_MS = 10_000;
+let stopping = false;
 const shutdown = (signal: string) => {
+  if (stopping) return;
+  stopping = true;
   app.log.info(`${signal}: Server fährt herunter, laufende Runs werden beendet (2.5)`);
+  setTimeout(() => process.exit(1), SHUTDOWN_TIMEOUT_MS).unref();
   void app.close().then(() => process.exit(0));
 };
-process.once('SIGTERM', () => shutdown('SIGTERM'));
-process.once('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
 await app.listen({ port: config.port, host: '0.0.0.0' });
 app.log.info(`Aethra läuft auf Port ${config.port}, Inhalte ${ctx.contentFiles.hash}`);

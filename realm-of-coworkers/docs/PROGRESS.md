@@ -28,3 +28,5 @@ Je Sitzung einen Meilenstein (16.2). Nach jeder Sitzung diesen Stand aktualisier
 ## Letzte Sitzung
 
 2026-10-02: M7 bis M12 abgeschlossen. 241 Unit-Tests, 5 Browser-Tests und pnpm balance grün. Offen: echte Grafik und Töne (OPEN-043), Balance-Vorschläge OPEN-024/025, Docker-Image einmal auf dem Zielserver bauen. Nächster Schritt: Spieltest im Büro, danach Feinschliff nach Rückmeldung.
+
+Nachtrag 2026-10-02: Spielen ohne eigenen Server per GitHub Codespaces und `pnpm play` (OPEN-047).

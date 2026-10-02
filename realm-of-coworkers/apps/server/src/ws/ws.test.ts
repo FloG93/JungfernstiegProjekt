@@ -1,4 +1,5 @@
 // Abnahme M9 (Gateway): echter WebSocket unter /ws mit Sitzungs-Cookie, Origin-Prüfung, Protokollversion, Ersetzen (15.3, 11.9).
+import type { IncomingMessage } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { PROTOCOL_VERSION } from '@aethra/shared';
 import type { ServerMsg } from '@aethra/shared';
@@ -8,7 +9,7 @@ import { buildApp } from '../app';
 import type { BuiltApp } from '../app';
 import { loadConfig } from '../config';
 import { CLOSE_PROTOCOL, CLOSE_REPLACED } from './client';
-import { attachRealtime } from './realtime';
+import { attachRealtime, originAllowed } from './realtime';
 
 const INVITE = 'kollegen';
 let b: BuiltApp;
@@ -88,6 +89,22 @@ it('Anmeldung über das Cookie, hello und welcome; ohne Cookie 401, fremder Orig
   expect((online.json() as { data: unknown[] }).data.length).toBe(1);
   c.ws.close();
   await c.closed;
+});
+
+it('Origin: gleicher Host, weitergeleiteter Host oder freigegeben (ALLOWED_ORIGINS, OPEN-047)', () => {
+  const req = (headers: Record<string, string>) => ({ headers }) as unknown as IncomingMessage;
+  const codespace = 'https://flink-3000.app.github.dev';
+  // Codespaces und nginx reichen den Host als localhost weiter
+  expect(originAllowed(req({ origin: codespace, host: 'localhost:3000' }))).toBe(false);
+  expect(originAllowed(req({ origin: codespace, host: 'localhost:3000' }), [codespace])).toBe(true);
+  expect(originAllowed(req({ origin: codespace, host: 'localhost:3000', 'x-forwarded-host': 'flink-3000.app.github.dev' }))).toBe(true);
+  expect(originAllowed(req({ origin: 'https://spiel.example.de', host: 'spiel.example.de' }))).toBe(true);
+  expect(originAllowed(req({ origin: 'https://boese.example', host: 'localhost:3000' }), [codespace])).toBe(false);
+  expect(originAllowed(req({ origin: 'kein origin', host: 'localhost:3000' }), [codespace])).toBe(false);
+  expect(originAllowed(req({ host: 'localhost:3000' }))).toBe(true);
+  expect(loadConfig({ SESSION_SECRET: 'test-geheimnis-mit-genug-laenge', INVITE_CODE: INVITE, ALLOWED_ORIGINS: ` ${codespace}/ , http://192.168.1.20:3000` }).allowedOrigins)
+    .toEqual([codespace, 'http://192.168.1.20:3000']);
+  expect(() => loadConfig({ SESSION_SECRET: 'test-geheimnis-mit-genug-laenge', INVITE_CODE: INVITE, ALLOWED_ORIGINS: 'spiel' })).toThrow('ALLOWED_ORIGINS');
 });
 
 it('falsche Protokollversion schließt mit 4001, zweite Verbindung ersetzt die erste mit 4002', async () => {

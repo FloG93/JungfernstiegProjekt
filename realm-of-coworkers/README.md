@@ -22,6 +22,41 @@ Fähigkeit schaltet ihren Auto-Cast. Gegner antippen setzt den Fokus, den Boden 
 auf die Szene setzt einen Ping. Am Rechner: WASD bewegen, Leertaste rollen, 1–3 und R Fähigkeiten, F Trank, Q Waffe,
 Tab Ziel, T Autowalk, P Pause, Eingabe Chat; die Tasten lassen sich in den Einstellungen ändern.
 
+## Spielen ohne eigenen Server: GitHub Codespaces
+
+GitHub allein (etwa GitHub Pages) reicht nicht: Der Server rechnet die Kämpfe, hält die Verbindungen und speichert die
+Spielstände. Ein Codespace ist ein Rechner bei GitHub, auf dem dieser Server läuft, im Rahmen des Freikontingents kostenlos:
+
+1. Diesen Link öffnen:
+   <https://codespaces.new/FloG93/JungfernstiegProjekt?quickstart=1&devcontainer_path=.devcontainer/aethra/devcontainer.json>
+   (oder auf GitHub: **Code → Codespaces → ⋯ → New with options**, Konfiguration „Aethra (Realm of Coworkers)“).
+2. Der erste Aufbau dauert einige Minuten. Danach startet der Server von selbst, und das Terminal zeigt die Adresse
+   (`https://…-3000.app.github.dev`) und den Einladungscode.
+3. Die Adresse auf dem Handy öffnen, mit dem Code ein Konto anlegen und beides an die Kollegen schicken. Port 3000 wird
+   automatisch öffentlich gestellt. Klappt das nicht: im Reiter **PORTS** Rechtsklick auf 3000 → **Port Visibility → Public**.
+
+Gut zu wissen:
+
+- Frei sind für persönliche Konten 120 Kernstunden im Monat, also 60 Stunden auf der kleinsten Maschine mit 2 Kernen.
+- Ein Codespace stoppt nach einer Leerlaufzeit (Standard 30 Minuten, unter github.com/settings/codespaces bis 240 Minuten).
+  Dann den Link erneut öffnen: Er setzt denselben Codespace fort, der Server startet wieder, Adresse und Spielstände bleiben.
+- Nach 30 Tagen ohne Nutzung löscht GitHub den Codespace und damit die Spielstände. Für dauerhaftes Spielen ist ein eigener
+  Server besser (siehe unten).
+- Den Einladungscode legt der erste Start zufällig an (`.env`). Ein eigener Code geht als Codespaces-Secret `INVITE_CODE`.
+
+## Spielen auf dem eigenen Rechner: `pnpm play`
+
+Mit Node 24 und pnpm 10 (`corepack enable`):
+
+```bash
+pnpm install
+pnpm play     # baut bei Bedarf, legt .env mit Einladungscode an, startet den Server
+```
+
+Das Terminal zeigt die Adressen, zum Beispiel `http://192.168.1.20:3000` für Handys im selben WLAN. Manche Firmen-WLANs
+trennen die Geräte voneinander, dann bleibt nur ein Codespace oder ein Server. Ohne HTTPS läuft das Spiel im Browser,
+lässt sich aber nicht als App installieren.
+
 ## Betreiben
 
 ### Mit Docker (empfohlen)
@@ -43,7 +78,7 @@ Dann in `.env` zusätzlich `COOKIE_SECURE=1` setzen.
 
 ### Ohne Docker
 
-Node 24 und pnpm 10 (`corepack enable`):
+Am einfachsten mit `pnpm play` (siehe oben). Von Hand mit Node 24 und pnpm 10 (`corepack enable`):
 
 ```bash
 pnpm install
@@ -63,6 +98,7 @@ cd apps/server && SESSION_SECRET=… INVITE_CODE=… node dist/main.js
 | `BOSS_TIMER_SCALE` | 1.0 | Faktor für alle Boss-Timer (0 zum Testen) |
 | `LOG_LEVEL` | `info` | Protokollstufe |
 | `COOKIE_SECURE` | aus | `1` hinter HTTPS |
+| `ALLOWED_ORIGINS` | – | weitere Adressen, die den WebSocket öffnen dürfen, mit Komma getrennt; nötig, wenn ein Proxy den Host umschreibt (nginx ohne `proxy_set_header Host $host`). Im Codespace setzt `pnpm play` sie selbst |
 | `BACKUP_DIR` | `<DB-Ordner>/backups` | Ziel der Sicherungen |
 | `BACKUP_KEEP_DAYS` | 14 | Aufbewahrung der Sicherungen in Tagen |
 | `BACKUP_HOUR` | 3 | Stunde der nächtlichen Sicherung |
@@ -92,6 +128,7 @@ pnpm dev                 # Client auf :5173 (leitet /api, /ws, /content an :3000
 | `pnpm lint`, `pnpm typecheck`, `pnpm test` | ESLint, TypeScript, Vitest (Simulation, Server, Protokoll, Client-Logik) |
 | `pnpm balance` | Inhaltsprüfungen und Referenzmodell (13.9) samt gemessenem K |
 | `pnpm e2e` | baut alles und spielt im Browser (Playwright, Handy-Ansicht); lokal mit `PW_CHROMIUM=/pfad/zu/chrome` |
+| `pnpm play` | baut bei Bedarf und startet den Server zum Spielen (auch im Codespace) |
 | `pnpm --filter @aethra/server loadtest` | 10 Runs mit je 6 Helden, misst die Rechenzeit (`RUNS`, `SECONDS`) |
 | `pnpm content:check` | Inhaltsdateien gegen die Spezifikation |
 

@@ -1,0 +1,19 @@
+// Aethra im GitHub Codespace spielen (realm-of-coworkers/README.md, Abschnitt „Spielen ohne eigenen Server“).
+// Beim Erstellen: pnpm, Abhängigkeiten und Build. Beim Öffnen: pnpm play startet den Server, stellt Port 3000
+// öffentlich und zeigt Adresse und Einladungscode im Terminal.
+{
+  "name": "Aethra (Realm of Coworkers)",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "Aethra", "onAutoForward": "notify" }
+  },
+  "postCreateCommand": "cd realm-of-coworkers && (npm install -g pnpm@10.28.0 || sudo npm install -g pnpm@10.28.0) && pnpm install --frozen-lockfile && pnpm build",
+  "postAttachCommand": "cd realm-of-coworkers && node tools/play.mjs",
+  "customizations": {
+    "codespaces": { "openFiles": ["realm-of-coworkers/README.md"] }
+  }
+}

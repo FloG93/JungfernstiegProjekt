@@ -18,10 +18,23 @@ export interface Config {
   /** Stunde der nächtlichen Sicherung (Ortszeit des Servers). */
   backupHour: number;
   cookieSecure: boolean;
+  /** Weitere Origins, die den WebSocket öffnen dürfen, wenn ein Proxy den Host umschreibt (OPEN-047). */
+  allowedOrigins: string[];
 }
 
 const here = dirname(fileURLToPath(import.meta.url));
 const MIN_SECRET_LENGTH = 16;
+
+/** ALLOWED_ORIGINS: Liste mit Komma, zum Beispiel https://spiel.example.de (OPEN-047). */
+function parseOrigins(raw: string | undefined): string[] {
+  return (raw ?? '').split(',').map((o) => o.trim()).filter(Boolean).map((o) => {
+    try {
+      return new URL(o).origin;
+    } catch {
+      throw new Error(`ALLOWED_ORIGINS enthält keine gültige Adresse: ${o}`);
+    }
+  });
+}
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   const sessionSecret = env['SESSION_SECRET'] ?? '';
@@ -46,5 +59,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     backupKeepDays: Number(env['BACKUP_KEEP_DAYS'] ?? 14),
     backupHour: Number(env['BACKUP_HOUR'] ?? 3),
     cookieSecure: env['COOKIE_SECURE'] === '1' || env['COOKIE_SECURE'] === 'true',
+    allowedOrigins: parseOrigins(env['ALLOWED_ORIGINS']),
   };
 }
