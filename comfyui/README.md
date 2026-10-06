@@ -1,46 +1,62 @@
-# FaboroHacks Image Upscale V2 — Vergleich + Auflösungs-Presets
+# FaboroHacks Image Upscale V3 — Mehrere Auflösungen pro Lauf + Vergleich
 
-Datei: `FaboroHacks_Image_Upscale_V2_Compare_Presets.json` (ComfyUI-Workflow, per Drag & Drop laden)
+Datei: `FaboroHacks_Image_Upscale_V3_MultiRes_Compare.json` (ComfyUI-Workflow, per Drag & Drop laden)
 
-## Was neu ist gegenüber V1
+## Kernidee
 
-### 1. Vergleich Input vs. Final (am Ende jedes Pfades)
-Beide Upscale-Pfade enden jetzt in einer eigenen Vergleichs-Box:
+Jedes Preset-Kästchen ist eine **vollständige Upscale-Einheit**, kein bloßer Zahlenwert:
 
-- **✅ Vergleich · Input vs. Final (SeedVR2)** — aktiv
-- **✅ Vergleich · Input vs. Final (FlashVSR)** — mit dem FlashVSR-Branch einschalten
+```
+LoadImage ─┬─ (Blur/Alpha-Vorbereitung) ─┬─ Preset 2K  → SeedVR2 → Vergleich + Speichern
+           │                             ├─ Preset QHD → SeedVR2 → Vergleich + Speichern
+           │                             ├─ Preset 3K  → SeedVR2 → Vergleich + Speichern
+           │                             ├─ Preset 4K  → SeedVR2 → Vergleich + Speichern
+           │                             ├─ Preset 6K  → SeedVR2 → Vergleich + Speichern
+           │                             └─ Preset 8K  → SeedVR2 → Vergleich + Speichern
+           └─ Originalbild → je Box auf Zielgröße (nearest) → Vergleich A
+```
 
-Jede Box enthält einen `Image Comparer (rgthree)` (A/B-Slider) plus einen Skalierungs-Node,
-der das **Originalbild aus dem LoadImage** mit `nearest` auf die Zielauflösung bringt.
-Dadurch liegen A und B auf der gleichen Leinwand und der Slider vergleicht echte Pixel —
-ohne Schönfärbung durch Lanczos.
+Es dürfen **beliebig viele Presets gleichzeitig aktiv** sein. ComfyUI arbeitet die
+aktiven Zweige in einem einzigen Queue-Lauf nacheinander ab — Modelle (DiT + VAE)
+werden dabei nur einmal geladen und von allen Zweigen geteilt. Am Ende steht pro
+Auflösung ein A/B-Vergleich im Graph und eine Datei im Output.
 
-Wichtig: Der Vergleich hängt direkt am `LoadImage`, nicht am geblurrten Zwischenbild.
-In V1 zeigte der Comparer das bereits vorbehandelte Bild — das war für eine
-Qualitätsprüfung nicht ehrlich.
+Die Presets: **2K 2048 · QHD 2560 · 3K 3000 (Standard) · 4K 4096 · 6K 6144 · 8K 8192** (lange Kante).
 
-### 2. Sechs Auflösungs-Presets in eigenen Kästchen
-Unten im Graph liegen sechs Gruppen (2K / QHD / 3K / 4K / 6K / 8K), jede mit einem
-Int-Node und einem Hinweis zu VRAM und Einsatzzweck. Genau eines aktivieren —
-am einfachsten über das Panel **Preset-Schalter** (Fast Groups Bypasser, auf "preset" gefiltert,
-`max one`). Standard ist 3K/3000 px, also der Originalwert aus V1.
+## Bedienung
 
-Ein `Any Switch (rgthree)` nimmt das erste aktive Preset und verteilt den Wert an:
+- **Preset-Schalter** (links, rgthree Fast Groups Bypasser, gefiltert auf „preset"):
+  ein Klick pro Auflösung. Alternativ Rechtsklick auf die Gruppe → *Bypass Group Nodes*.
+- Seed ist in allen Boxen **42 / fixed** — nur so sind die Auflösungen fair vergleichbar.
+- Dateinamen tragen die Auflösung: `Upscale/SeedVR2_4096px_<Datum>`.
+- RAM: jede aktive Box hält ihr Ergebnis bis zum Ende des Laufs im Speicher.
+  2–3 Presets gleichzeitig sind unkritisch, alle 6 brauchen viel System-RAM.
 
-- SeedVR2: `resolution` **und** `max_resolution`
-- FlashVSR: finale Skalierung auf die lange Kante
-- beide Vergleichs-Boxen
+## Vergleich Input vs. Final
 
-Ist kein Preset aktiv, bricht der Lauf mit "resolution is missing" ab.
-Ohne rgthree lässt sich der Int-Node auch direkt an `resolution` hängen.
+Jede Box enthält einen `Image Comparer (rgthree)`:
+**A** = Originalbild direkt aus dem `LoadImage`, mit `nearest` auf die Zielauflösung
+gebracht (zeigt echte Pixel, keine Schönfärbung durch Lanczos) · **B** = Ergebnis.
+Der FlashVSR-Zweig hat eine eigene Vergleichsbox.
 
-### 3. Kleinere Korrekturen
-- `SaveImage` im SeedVR2-Pfad war gebypasst — das Ergebnis wurde nie gespeichert. Jetzt aktiv.
-- Dateinamen mit Datum: `Upscale/SeedVR2_%date:yyyy-MM-dd%` bzw. `Upscale/FlashVSR_…`
-- FlashVSR speichert jetzt das auf die Zielauflösung gebrachte Bild, nicht den rohen 4x-Output.
-- Ausführungsreihenfolge (`order`) neu berechnet, Gruppen-Rechtecke überschneidungsfrei.
+## FlashVSR
+
+Bleibt ein einzelner Pfad. Dort bestimmt nicht die Zielauflösung die Qualität,
+sondern Vorskalierung × `scale`; bei `scale = 4`:
+`512→2048 · 640→2560 · 750→3000 · 1024→4096 · 1536→6144 · 2048→8192`.
+Die Mehrfach-Auflösung in einem Lauf gibt es nur im SeedVR2-Pfad.
 
 ## Abhängigkeiten
-Unverändert gegenüber V1 — es kamen keine neuen Custom-Node-Packs dazu:
+
+Unverändert gegenüber V1, es kam kein neues Node-Pack dazu:
 `comfy-core`, `rgthree-comfy`, `comfyui_layerstyle`, `seedvr2_videoupscaler`,
 `ComfyUI-FlashVSR_Ultra_Fast`.
+
+## Änderungen gegenüber V1
+
+- Vergleich Input ↔ Final am Ende jedes Pfades (V1 verglich gegen das bereits
+  vorbehandelte Zwischenbild, nicht gegen den echten Input).
+- Sechs Auflösungs-Presets als eigene, sequenziell abgearbeitete Zweige.
+- `SaveImage` im SeedVR2-Pfad war gebypasst — Ergebnisse wurden nie gespeichert.
+- Dateinamen mit Auflösung und Datum.
+- FlashVSR speichert das auf Zielgröße skalierte Bild statt des rohen 4×-Outputs.
