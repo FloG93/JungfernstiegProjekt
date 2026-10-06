@@ -173,11 +173,20 @@ einem Deploy auf Pages.
 | Große GPX-Tracks und viele Medien bremsen den Browser | Vereinfachung mit Toleranz, Medien-Thumbnails, Lazy Loading, Budget-Tests im CI. |
 | Rate-Limits der Gratis-APIs | Ergebnisse cachen, Anfragen entprellen, Routen im Projekt persistieren, verständliche Fehlermeldungen statt stiller Ausfälle. |
 
-## 7. Zu entscheiden, bevor Code entsteht
+## 7. Getroffene Entscheidungen (2026-10-06)
 
-1. **MVP-Schnitt:** erst die durchgehende Kette M0–M4 (Route → Karte → Animation
-   → MP4) oder breit angelegt mit mehreren Teilfunktionen gleichzeitig?
-2. **API-Keys:** strikt keyless bleiben oder einen kostenlosen
-   HeiGIT/ORS- und MapTiler-Key einplanen (mehr Kontingent, Satellit, Geocoding)?
-3. **Export-Priorität:** vertikales MP4 für Social zuerst, oder die Alpha-Spur
-   für den Schnitt in Resolve?
+1. **MVP-Schnitt: die Kette M0–M4 zuerst.** Route anlegen → Karte → Animation →
+   MP4-Export wird als Erstes durchgehend benutzbar. Stile (M5), Medien (M6),
+   Alpha-Spur (M7) und Einbetten (M8) kommen danach auf dieses Fundament.
+2. **Keyless als Default, Key-Felder optional.** Die App startet ohne jede
+   Einrichtung (OpenFreeMap, AWS-Terrarium-DEM, Open-Meteo, keyless Routing).
+   Im Einstellungsdialog gibt es optionale Felder für HeiGIT/ORS und MapTiler;
+   gesetzt schalten sie mehr Routing-Kontingent, besseres Geocoding und die
+   Satelliten-Stile frei. Kein Key wird jemals ins Repo geschrieben.
+   → Konsequenz für die Umsetzung: jeder Provider muss ohne Key einen
+   funktionierenden Pfad haben, und die Oberfläche graut aus, was fehlt.
+3. **Export-Priorität: vertikales MP4 (9:16) für Social.** M4 liefert
+   9:16 mit Musik über WebCodecs. Die Alpha-Spur für Resolve/Premiere bleibt
+   M7, der iFrame-Viewer M8 – beide in dieser Reihenfolge, nicht vorgezogen.
+
+Damit ist der Weg bis zum ersten Video festgelegt: **M0 → M1 → M2 → M3 → M4.**
