@@ -1,0 +1,70 @@
+name: GitHub Pages
+
+# Baut die Hauptseite und den Travel-Map-Generator zu einer Seite zusammen:
+#   /                           -> site/index.html
+#   /Travel-Map-Generator/      -> Travel-Map-Generator/dist/
+#
+# Voraussetzung (einmalig, von Hand): Settings -> Pages -> Source: GitHub Actions
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "Travel-Map-Generator/**"
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: Travel-Map-Generator/package-lock.json
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+        working-directory: Travel-Map-Generator
+
+      - name: App bauen
+        run: npm run build
+        working-directory: Travel-Map-Generator
+
+      - name: Seite zusammensetzen
+        run: |
+          mkdir -p _site/Travel-Map-Generator
+          cp -r site/. _site/
+          cp -r Travel-Map-Generator/dist/. _site/Travel-Map-Generator/
+          # Ohne .nojekyll ignoriert Pages Dateien und Ordner mit Unterstrich.
+          touch _site/.nojekyll
+
+      - name: Artefakt hochladen
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Auf GitHub Pages veröffentlichen
+        id: deployment
+        uses: actions/deploy-pages@v4

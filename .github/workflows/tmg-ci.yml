@@ -1,0 +1,45 @@
+name: Travel-Map-Generator CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "Travel-Map-Generator/**"
+      - ".github/workflows/tmg-ci.yml"
+  pull_request:
+    paths:
+      - "Travel-Map-Generator/**"
+      - ".github/workflows/tmg-ci.yml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: Travel-Map-Generator
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: Travel-Map-Generator/package-lock.json
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Typen prüfen
+        run: npm run typecheck
+
+      - name: Unit-Tests
+        run: npm run test
+
+      - name: Produktions-Build
+        run: npm run build

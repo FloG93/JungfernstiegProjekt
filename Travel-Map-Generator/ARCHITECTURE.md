@@ -144,6 +144,21 @@ sonst wird die Fahrt an dichten Trackstellen langsam); Geschwindigkeit und
 Kamera werden über Keyframes mit Bézier-Easing interpoliert, Kurswinkel aus der
 Tangente, Kurvenneigung aus der Winkeländerung pro Strecke.
 
+## 6a. Zwei Fallstricke, die schon eingebaut sind
+
+Beides fällt erst spät auf und ist dann teuer, deshalb steht es ab M0 im Code:
+
+- **MapLibre-Worker.** MapLibre sucht seinen Web-Worker über `import.meta.url`
+  als Nachbardatei von `maplibre-gl.mjs`. Nach dem Bündeln liegt dort nur noch
+  der eigene Chunk, der Worker fehlt, und die Karte bleibt leer – sichtbar nur
+  als Konsolenmeldung „Worker failed to load". `src/map/worker.ts` setzt die
+  URL darum ausdrücklich über `setWorkerUrl()` auf das von Vite emittierte
+  Asset.
+- **`preserveDrawingBuffer`.** Ohne dieses Flag liefert das Karten-Canvas beim
+  späteren Frame-Capture ein leeres Bild. In MapLibre 6 sitzt es in
+  `canvasContextAttributes` und lässt sich nach dem Erzeugen der Karte nicht
+  mehr ändern – also von Anfang an gesetzt.
+
 ## 7. Export-Pipeline
 
 ```

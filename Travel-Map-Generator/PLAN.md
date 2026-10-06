@@ -51,15 +51,24 @@ Die App soll auf GitHub Pages laufen. Daraus folgt alles Weitere:
 Jeder Meilenstein ist für sich benutzbar und endet mit Lint + Tests grün und
 einem Deploy auf Pages.
 
-### M0 – Gerüst und Hauptseite
-- Monorepo-Ordner `Travel-Map-Generator/` mit Vite + TypeScript + React.
+### M0 – Gerüst und Hauptseite (erledigt)
+- Monorepo-Ordner `Travel-Map-Generator/` mit Vite + TypeScript + React,
+  Tailwind, ESLint, Vitest.
 - Hauptseite (`site/index.html`): schlichte Übersichtsseite des
-  `JungfernstiegProjekt` mit Kacheln für *Travel-Map-Generator* und *kindle-meta*.
+  `JungfernstiegProjekt` mit Kacheln für *Travel-Map-Generator* und *kindle-meta*,
+  hell und dunkel.
+- MapLibre-Karte mit drei keylosen Stilen (OpenFreeMap), Navigations- und
+  Maßstabsregler.
+- Fähigkeiten-Prüfung des Browsers für den späteren Video-Export, sichtbar in
+  der Seitenleiste statt erst beim Exportversuch.
 - GitHub-Actions-Workflow `pages.yml`: baut die App nach
   `_site/Travel-Map-Generator/`, die Hauptseite nach `_site/` und deployt.
-- Eigener CI-Job (Lint, Typecheck, Unit-Tests) – getrennt von der bestehenden
-  Python-CI, damit sich beide Projekte nicht blockieren.
-- **Abnahme:** Die URL ist erreichbar und zeigt eine leere Karte.
+- Eigener CI-Job `tmg-ci.yml` (Lint, Typecheck, Unit-Tests, Build) – getrennt
+  von der bestehenden Python-CI, damit sich beide Projekte nicht blockieren.
+- **Abnahme erfüllt:** Build grün, 13 Unit-Tests grün, Karte rendert im
+  Browser mit Kacheln und Attribution (im Container mit Chromium geprüft).
+  Offen bleibt nur das Einschalten von Pages im Repository – das geht nur
+  von Hand.
 
 ### M1 – Datenmodell und Karte
 - Projekt-Schema v1 (`core/model`) mit Versionierung und Migrationshaken.

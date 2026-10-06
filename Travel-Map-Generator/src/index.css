@@ -1,0 +1,22 @@
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+/* MapLibre zeichnet die Attribution hell; auf dunklem Grund lesbar halten. */
+.maplibregl-ctrl-attrib {
+  font-size: 11px;
+}

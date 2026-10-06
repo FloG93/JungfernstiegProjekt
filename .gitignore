@@ -14,3 +14,10 @@ venv/
 .idea/
 *.spec.bak
 .kindle-meta/
+
+# Travel-Map-Generator (Node)
+node_modules/
+.vite/
+coverage/
+_site/
+*.tsbuildinfo

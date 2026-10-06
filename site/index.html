@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JungfernstiegProjekt</title>
+    <meta name="description" content="Projekte von FloG93: Travel-Map-Generator und kindle-meta." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <style>
+      :root {
+        --bg: #f6f7f9;
+        --card: #ffffff;
+        --text: #17202a;
+        --muted: #5b6673;
+        --line: #e3e7ec;
+        --accent: #b45309;
+        --accent-soft: #fef3c7;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0b1220;
+          --card: #121a2a;
+          --text: #e8edf5;
+          --muted: #94a3b8;
+          --line: #1f2b3f;
+          --accent: #fbbf24;
+          --accent-soft: #2a2010;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 4rem 1rem 5rem;
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.6 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+      main {
+        max-width: 54rem;
+        margin: 0 auto;
+      }
+      h1 {
+        margin: 0 0 0.25rem;
+        font-size: clamp(1.9rem, 5vw, 2.6rem);
+        letter-spacing: -0.02em;
+      }
+      .lede {
+        margin: 0 0 3rem;
+        color: var(--muted);
+        max-width: 42rem;
+      }
+      .grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        padding: 1.4rem;
+        border: 1px solid var(--line);
+        border-radius: 0.9rem;
+        background: var(--card);
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.15s ease, transform 0.15s ease;
+      }
+      .card:hover,
+      .card:focus-visible {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+      .card h2 {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .tag {
+        align-self: flex-start;
+        padding: 0.1rem 0.5rem;
+        border-radius: 0.3rem;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .meta {
+        margin-top: auto;
+        padding-top: 0.6rem;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      footer {
+        max-width: 54rem;
+        margin: 3rem auto 0;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      footer a {
+        color: inherit;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>JungfernstiegProjekt</h1>
+      <p class="lede">
+        Werkstatt von FloG93. Hier liegen mehrere eigenständige Projekte – eines
+        läuft direkt im Browser, eines auf dem eigenen Rechner.
+      </p>
+
+      <div class="grid">
+        <a class="card" href="Travel-Map-Generator/">
+          <span class="tag">Web-App · im Aufbau</span>
+          <h2>Travel-Map-Generator</h2>
+          <p>
+            Verwandelt Reisedaten in animierte Karten-Videos und interaktive
+            Web-Karten: Routen aus Punkten, Smart Routing oder GPX, Medien an
+            Koordinaten, Kamerafahrt und Export als Video oder Overlay.
+          </p>
+          <span class="meta">Läuft ohne Installation im Browser →</span>
+        </a>
+
+        <a class="card" href="https://github.com/FloG93/JungfernstiegProjekt#readme">
+          <span class="tag">Desktop &amp; CLI</span>
+          <h2>kindle-meta</h2>
+          <p>
+            Reichert E-Book-Metadaten (EPUB, PDF, FB2, CBZ, MOBI/AZW3) aus
+            mehreren Quellen und optional per KI an und schreibt sie
+            eingebettet zurück – damit der Kindle Cover, Autor und Serie
+            richtig anzeigt.
+          </p>
+          <span class="meta">Zur Anleitung auf GitHub →</span>
+        </a>
+      </div>
+    </main>
+
+    <footer>
+      Quellcode:
+      <a href="https://github.com/FloG93/JungfernstiegProjekt">github.com/FloG93/JungfernstiegProjekt</a>
+      · MIT-Lizenz
+    </footer>
+  </body>
+</html>

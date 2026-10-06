@@ -1,3 +1,15 @@
+# JungfernstiegProjekt
+
+Zwei eigenständige Projekte in einem Repository.
+**Hauptseite im Browser:** <https://flog93.github.io/JungfernstiegProjekt/>
+
+| Projekt | Was es macht | Einstieg |
+|---|---|---|
+| [**Travel-Map-Generator**](Travel-Map-Generator/) | Verwandelt Reisedaten in animierte Karten-Videos und interaktive Web-Karten. Läuft ohne Installation im Browser. | [App öffnen](https://flog93.github.io/JungfernstiegProjekt/Travel-Map-Generator/) · [Plan](Travel-Map-Generator/PLAN.md) |
+| **kindle-meta** (siehe unten) | Reichert E-Book-Metadaten an und schreibt sie eingebettet zurück. Desktop-App und CLI für den eigenen Rechner. | [Schnellstart](#einsteiger-schnellstart) |
+
+---
+
 # kindle-meta
 
 Desktop-App (PySide6) + Kommandozeilen-Tool, um E-Book-Metadaten (EPUB, PDF,
