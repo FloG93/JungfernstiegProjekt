@@ -70,8 +70,10 @@ als systemd-Dienst mit Node 24 ein. Von außen erreichbar über Tailscale Funnel
    tar xzf aethra-pi.tar.gz
    ./aethra/proxmox-lxc.sh
    ```
-   Die Frage nach Tailscale Funnel mit „J“ beantworten, den Anmeldelink öffnen, ggf. HTTPS und Funnel freischalten.
-   Am Ende stehen Adresse (`https://aethra.….ts.net`) und Einladungscode da.
+   Die Frage nach Tailscale Funnel mit „J“ beantworten. Danach wartet das Skript zweimal auf eine Bestätigung im
+   Browser: erst der Anmeldelink (`login.tailscale.com/a/…`), dann meist noch das Freischalten von Funnel
+   (`login.tailscale.com/f/funnel?node=…`). Beide Links brechen im Terminal gern um, der Rest der nächsten Zeile
+   gehört dazu. Am Ende stehen Adresse (`https://aethra.….ts.net`) und Einladungscode da.
 3. **Aktualisieren:** neues Paket kopieren, `rm -rf aethra && tar xzf aethra-pi.tar.gz && ./aethra/proxmox-lxc.sh --update ID`.
 4. **Sichern:** den Container im Webinterface in einen Backup-Job aufnehmen (Rechenzentrum → Backup). Zusätzlich sichert
    der Server selbst jede Nacht nach `/var/lib/aethra/backups` im Container.
@@ -98,9 +100,11 @@ wie es auf dem 32-Bit-Raspberry-Pi-2 läuft (für 32-Bit-ARM gibt es kein Node 2
    sudo ./aethra/install.sh
    ```
    Beim ersten Mal dauert das auf dem Pi 2 etwa 15 bis 30 Minuten.
-5. Die Frage nach **Tailscale Funnel** mit „J“ beantworten, den angezeigten Link öffnen und mit einem kostenlosen
-   Tailscale-Konto anmelden. Fragt Tailscale nach dem Freischalten von HTTPS oder Funnel, bestätigen. Am Ende zeigt das
-   Skript die feste Adresse (`https://aethra.….ts.net`) und den Einladungscode. Die Adresse funktioniert im Büro, im
+5. Die Frage nach **Tailscale Funnel** mit „J“ beantworten. Das Skript wartet dann zweimal auf eine Bestätigung im
+   Browser: erst der Anmeldelink (kostenloses Konto genügt), dann meist noch das Freischalten von Funnel für das
+   Tailnet. Beide Links brechen im Terminal gern um, der Rest der nächsten Zeile gehört dazu. Am Ende zeigt das
+   Skript die feste Adresse (`https://aethra.….ts.net`) und den Einladungscode. Klappt Funnel nicht, läuft das Spiel
+   trotzdem im Heimnetz; später erneut mit `sudo ./aethra/install.sh --funnel`. Die Adresse funktioniert im Büro, im
    Heimnetz und über mobile Daten. In der Fritzbox ist keine Portfreigabe nötig, auch nicht bei DS-Lite.
 
 Gut zu wissen:

@@ -119,6 +119,17 @@ wait_healthy() {
   return 1
 }
 
+# Hinweis vor jedem Tailscale-Befehl, der auf eine Bestätigung im Browser wartet. Ohne ihn sieht es aus,
+# als hinge das Skript (im Terminal bricht die Adresse außerdem gern um).
+warte_auf_browser() {
+  printf '\n\033[1;36m    Das Skript wartet jetzt auf dich.\033[0m\n'
+  printf '    %s\n' "$1" \
+    'Den Link im Browser öffnen und bestätigen, danach läuft es von allein weiter.' \
+    'Bricht die Adresse im Terminal um, gehört der Rest der nächsten Zeile noch dazu.'
+  echo
+}
+
+# Richtet Funnel ein. Fehlschläge brechen nicht ab: Im Heimnetz läuft das Spiel auch ohne.
 setup_funnel() {
   local port dns
   port="$(get_env PORT)"
@@ -128,17 +139,25 @@ setup_funnel() {
     curl -fsSL https://tailscale.com/install.sh | sh
   fi
   if ! tailscale status >/dev/null 2>&1; then
-    say "Bei Tailscale anmelden: den folgenden Link im Browser öffnen (kostenloses Konto genügt)"
-    tailscale up
+    say "Bei Tailscale anmelden (kostenloses Konto genügt)"
+    warte_auf_browser 'Gleich erscheint ein Link: https://login.tailscale.com/a/…'
+    tailscale up || { funnel_fehlt 'Die Anmeldung bei Tailscale ist fehlgeschlagen.'; return 1; }
   fi
-  say "Funnel einschalten: Port $port wird unter einer festen HTTPS-Adresse erreichbar"
-  echo "Erscheint ein Link zum Freischalten von Funnel oder HTTPS, ihn öffnen und bestätigen."
-  tailscale funnel --bg "$port"
+  say "Funnel einschalten: Port $port bekommt eine feste HTTPS-Adresse"
+  warte_auf_browser 'Ist Funnel für dein Tailnet noch nicht frei, erscheint ein zweiter Link: https://login.tailscale.com/f/funnel?node=…'
+  tailscale funnel --bg "$port" || { funnel_fehlt 'Funnel konnte nicht eingeschaltet werden.'; return 1; }
   dns="$(tailscale status --json | "$NODE" -e 'let s="";process.stdin.on("data",(d)=>s+=d).on("end",()=>console.log(JSON.parse(s).Self.DNSName.replace(/\.$/,"")))')"
-  [ -n "$dns" ] || die "Tailscale-Adresse nicht gefunden (tailscale status)."
+  [ -n "$dns" ] || { funnel_fehlt 'Die Tailscale-Adresse ließ sich nicht ermitteln (tailscale status).'; return 1; }
   set_env ALLOWED_ORIGINS "https://$dns"
   set_env COOKIE_SECURE 1
   PUBLIC_URL="https://$dns"
+}
+
+funnel_fehlt() {
+  printf '\n\033[1;31m    %s\033[0m\n' "$1"
+  printf '    %s\n' 'Das Spiel läuft trotzdem, aber nur im Heimnetz.' \
+    "Später erneut versuchen: sudo $SRC/install.sh --funnel"
+  echo
 }
 
 PUBLIC_URL=""
@@ -195,10 +214,6 @@ if [ "$FUNNEL" = ask ]; then
     FUNNEL=no
   fi
 fi
-[ "$FUNNEL" = yes ] && setup_funnel
-# Bereits eingerichtetes Funnel (Update ohne Rückfrage): Adresse aus den Einstellungen anzeigen
-[ -n "$PUBLIC_URL" ] || PUBLIC_URL="$(get_env ALLOWED_ORIGINS)"
-
 if has_systemd; then
   say "Dienst einrichten und starten"
   install -m 644 "$SRC/aethra.service" "/etc/systemd/system/$SERVICE.service"
@@ -210,6 +225,14 @@ else
   say "Kein systemd gefunden: Server bitte von Hand starten"
   echo "  sudo -u $RUN_USER env \$(grep -v '^#' $ENV_FILE | xargs) $NODE $APP/dist/main.js"
 fi
+
+# Funnel zuletzt: Der Server läuft schon, ein Abbruch an der Browser-Frage kostet nur die öffentliche Adresse
+if [ "$FUNNEL" = yes ] && setup_funnel && has_systemd; then
+  systemctl restart "$SERVICE"
+  wait_healthy || die "Der Server antwortet nicht. Protokoll ansehen: journalctl -u $SERVICE -n 50"
+fi
+# Bereits eingerichtetes Funnel (Update ohne Rückfrage): Adresse aus den Einstellungen anzeigen
+[ -n "$PUBLIC_URL" ] || PUBLIC_URL="$(get_env ALLOWED_ORIGINS)"
 
 port="$(get_env PORT)"
 lan="$(hostname -I 2>/dev/null | awk '{print $1}')"
