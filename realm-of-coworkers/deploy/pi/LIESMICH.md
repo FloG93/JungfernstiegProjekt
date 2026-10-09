@@ -15,6 +15,11 @@ Das Skript lädt Node.js (mit Prüfsumme), installiert die Laufzeit-Pakete, legt
 Einladungscode an und richtet den Dienst `aethra` ein. Am Ende fragt es, ob das Spiel über **Tailscale Funnel**
 von überall erreichbar sein soll (feste HTTPS-Adresse, keine Portfreigabe in der Fritzbox nötig).
 
+## Proxmox VE
+
+Auf dem Proxmox-Host (als root) legt `./aethra/proxmox-lxc.sh` einen Debian-Container an und richtet darin alles ein.
+Aktualisieren: `./aethra/proxmox-lxc.sh --update ID`. Details im README des Projekts.
+
 ## Aktualisieren
 
 Neues Paket auf den Pi kopieren, den alten entpackten Ordner löschen und neu einrichten:

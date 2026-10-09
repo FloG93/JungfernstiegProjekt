@@ -32,3 +32,4 @@ Je Sitzung einen Meilenstein (16.2). Nach jeder Sitzung diesen Stand aktualisier
 Nachtrag 2026-10-02: Spielen ohne eigenen Server per GitHub Codespaces und `pnpm play` (OPEN-047).
 Nachtrag 2026-10-02: Raspberry-Pi-Paket mit Node 22 und systemd, Erreichbarkeit über Tailscale Funnel (OPEN-048).
 Nachtrag 2026-10-02: Hänger behoben, bei dem ein Nahkämpfer einen Fernkämpfer knapp hinter der Leine nie erreichte (OPEN-049); feste Seeds in den Servertests.
+Nachtrag 2026-10-09: Dauerbetrieb auf Proxmox VE per LXC-Container (OPEN-050).

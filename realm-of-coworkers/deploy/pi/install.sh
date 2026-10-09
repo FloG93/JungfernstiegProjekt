@@ -87,7 +87,7 @@ install_packages() {
     echo "Laufzeit-Pakete sind aktuell."
     return 0
   fi
-  say "Laufzeit-Pakete installieren (auf dem Raspberry Pi 2 beim ersten Mal bis zu 20 Minuten)"
+  say "Laufzeit-Pakete installieren (auf langsamer Hardware wie dem Raspberry Pi 2 beim ersten Mal bis zu 20 Minuten)"
   if ! (cd "$APP" && PATH="$APP/node/bin:$PATH" "$NPM" ci --omit=dev --no-audit --no-fund); then
     say "Kein fertiges Paket für diese Plattform, Werkzeuge zum Kompilieren installieren"
     apt_install build-essential python3
@@ -196,6 +196,8 @@ if [ "$FUNNEL" = ask ]; then
   fi
 fi
 [ "$FUNNEL" = yes ] && setup_funnel
+# Bereits eingerichtetes Funnel (Update ohne Rückfrage): Adresse aus den Einstellungen anzeigen
+[ -n "$PUBLIC_URL" ] || PUBLIC_URL="$(get_env ALLOWED_ORIGINS)"
 
 if has_systemd; then
   say "Dienst einrichten und starten"

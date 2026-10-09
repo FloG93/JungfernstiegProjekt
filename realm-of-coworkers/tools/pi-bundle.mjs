@@ -30,6 +30,9 @@ cpSync(join(root, 'packages/content'), join(stage, 'content'), {
 for (const f of ['install.sh', 'aethra.service', 'aethra-admin', 'LIESMICH.md']) cpSync(join(root, 'deploy/pi', f), join(stage, f));
 chmodSync(join(stage, 'install.sh'), 0o755);
 chmodSync(join(stage, 'aethra-admin'), 0o755);
+// Proxmox VE: legt einen LXC-Container an und richtet darin dasselbe Paket ein (OPEN-050)
+cpSync(join(root, 'deploy/proxmox/proxmox-lxc.sh'), join(stage, 'proxmox-lxc.sh'));
+chmodSync(join(stage, 'proxmox-lxc.sh'), 0o755);
 
 // Laufzeit-Pakete: alles, was apps/server/build.mjs nicht mitbündelt (die Workspace-Pakete sind gebündelt)
 const server = JSON.parse(readFileSync(join(root, 'apps/server/package.json'), 'utf8'));

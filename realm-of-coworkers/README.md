@@ -57,6 +57,29 @@ Das Terminal zeigt die Adressen, zum Beispiel `http://192.168.1.20:3000` für Ha
 trennen die Geräte voneinander, dann bleibt nur ein Codespace oder ein Server. Ohne HTTPS läuft das Spiel im Browser,
 lässt sich aber nicht als App installieren.
 
+## Dauerbetrieb auf Proxmox VE (empfohlen)
+
+Ein Proxmox-Server zu Hause ist der bequemste Dauerbetrieb: Das Skript `proxmox-lxc.sh` aus dem Paket legt einen
+unprivilegierten Debian-Container an (2 Kerne, 1 GB RAM, 8 GB Platte, startet mit dem Host) und richtet darin das Spiel
+als systemd-Dienst mit Node 24 ein. Von außen erreichbar über Tailscale Funnel wie beim Raspberry Pi (OPEN-050).
+
+1. **Paket** auf den Proxmox-Host kopieren (`pnpm pi:bundle` oder Artefakt „aethra-pi“ aus GitHub Actions; das Paket
+   heißt `aethra-pi.tar.gz`, gilt aber für alle Debian-Rechner): `scp aethra-pi.tar.gz root@PROXMOX-IP:`
+2. Auf dem Host (SSH oder im Webinterface: Knoten → **Shell**):
+   ```bash
+   tar xzf aethra-pi.tar.gz
+   ./aethra/proxmox-lxc.sh
+   ```
+   Die Frage nach Tailscale Funnel mit „J“ beantworten, den Anmeldelink öffnen, ggf. HTTPS und Funnel freischalten.
+   Am Ende stehen Adresse (`https://aethra.….ts.net`) und Einladungscode da.
+3. **Aktualisieren:** neues Paket kopieren, `rm -rf aethra && tar xzf aethra-pi.tar.gz && ./aethra/proxmox-lxc.sh --update ID`.
+4. **Sichern:** den Container im Webinterface in einen Backup-Job aufnehmen (Rechenzentrum → Backup). Zusätzlich sichert
+   der Server selbst jede Nacht nach `/var/lib/aethra/backups` im Container.
+
+Anpassen über Umgebungsvariablen vor dem Aufruf: `CTID`, `STORAGE` (z. B. `local-lvm`), `BRIDGE` (Standard `vmbr0`),
+`CORES`, `MEMORY`, `DISK`, `FUNNEL=yes|no`. Im Container: `pct enter ID`, dann `systemctl status aethra`,
+`journalctl -u aethra -f`, `aethra-admin help`.
+
 ## Spielen mit eigenem Raspberry Pi (ohne Docker)
 
 Ein Raspberry Pi im Heimnetz reicht als Server (10 Runs brauchen 3 % eines Kerns). Getestet ist das Paket mit Node 22,
