@@ -5,6 +5,8 @@ import type { ClassId, Content, ElementId, GameEvent } from '@aethra/shared';
 import type { Settings } from '../lib/settings';
 import { CHAPTER_THEME, dangerColor, elementColor, healColor } from './palette';
 import type { EntView, RunView, Vec2 } from './runview';
+import { DIRS, FIGUR_H, FOOT, animKey, createAnims, queueSprites, richtung, spriteKey, stillFrame } from './sprites';
+import type { Dir } from './sprites';
 import {
   HERO_H, bossTexture, dotTexture, enemySize, enemyTexture, groundTexture, heroTexture, hillsTexture, shadowTexture,
 } from './textures';
@@ -19,7 +21,7 @@ const NUMBER_POOL = 48;
 const NUMBER_MS = 900;
 const NUMBER_RISE = 46;
 const TRACER_MS = 140;
-const FLASH_MS = 120;
+const FLASH_MS = 70;  // kurz halten: Sprites werden beim Treffer ganz weiß (OPEN-051)
 const FADE_MS = 400;
 const CAMERA_LERP = 6;
 const TAP_RADIUS = 42;
@@ -36,7 +38,10 @@ export interface SceneDeps {
 }
 
 interface UnitGfx {
-  body: Phaser.GameObjects.Image;
+  body: Phaser.GameObjects.Sprite;
+  /** Figur im Sprite-Atlas (OPEN-051); null = Platzhalter aus textures.ts */
+  figur: string | null;
+  dir: Dir;
   shadow: Phaser.GameObjects.Image;
   name: Phaser.GameObjects.Text | null;
   glow: Phaser.GameObjects.Arc | null;
@@ -88,6 +93,10 @@ export class RunScene extends Phaser.Scene {
   private bossText: { text: Phaser.GameObjects.Text; until: number } | null = null;
   private camX = 0;
   private chapter = 0;
+  /** Geladene Sprite-Figuren mit ihrer Größe. */
+  private figuren = new Map<string, number>();
+  /** Erst nach create() zeichnet die Szene; davor lädt Phaser die Sprites (OPEN-051). */
+  bereit = false;
   private markersFor = '';
   private lastNow = 0;
 
@@ -99,7 +108,12 @@ export class RunScene extends Phaser.Scene {
     this.deps = deps;
   }
 
+  preload(): void {
+    queueSprites(this);
+  }
+
   create(): void {
+    this.figuren = createAnims(this);
     shadowTexture(this);
     dotTexture(this);
     this.sky = this.add.rectangle(0, 0, 10, 10, 0x000000).setOrigin(0, 0).setScrollFactor(0).setDepth(-100);
@@ -110,6 +124,7 @@ export class RunScene extends Phaser.Scene {
     this.cameras.main.setRoundPixels(false);
     this.scale.on('resize', () => this.layout());
     this.layout();
+    this.bereit = true;
   }
 
   // ---------- Kamera und Hintergrund ----------
@@ -234,21 +249,31 @@ export class RunScene extends Phaser.Scene {
   private createUnit(e: EntView, chapter: number): UnitGfx {
     let key: string;
     let h: number;
-    if (e.kind === 'hero') {
-      const cls = (e.meta.cls ?? 'krieger') as ClassId;
+    const cls = (e.meta.cls ?? 'krieger') as ClassId;
+    const type = e.meta.type ?? 'scherge';
+    const wunsch = e.kind === 'hero' ? cls : e.kind === 'boss' ? e.meta.boss ?? '' : type;
+    const figur = this.figuren.has(wunsch) ? wunsch : null;
+    const skala = figur ? this.figuren.get(figur)! : 1;
+    if (figur) {
+      key = spriteKey(figur);
+      h = Math.round(FIGUR_H * skala);
+    } else if (e.kind === 'hero') {
       key = heroTexture(this, cls, e.meta.look?.[0] ?? 0, e.meta.look?.[1] ?? 0);
       h = HERO_H;
     } else if (e.kind === 'boss') {
       key = bossTexture(this, e.meta.boss ?? 'boss', chapter);
       h = 170;
     } else {
-      const type = e.meta.type ?? 'scherge';
       key = enemyTexture(this, type, chapter, !!e.meta.elite);
       h = enemySize(type)[1] + 8;
     }
     const shadow = this.add.image(e.cur.x, BAND_TOP + e.cur.y, 'shadow').setOrigin(0.5, 0.5);
     if (e.kind === 'boss') shadow.setScale(2.4, 2);
-    const body = this.add.image(e.cur.x, BAND_TOP + e.cur.y, key).setOrigin(0.5, 1);
+    const dir: Dir = e.cur.face < 0 ? 'w' : 'e';
+    const body = this.add.sprite(e.cur.x, BAND_TOP + e.cur.y, key).setOrigin(0.5, figur ? FOOT : 1);
+    if (figur) body.setFrame(stillFrame(this, dir)).setScale(skala);
+    // Elite (9.7): goldener Schatten statt des goldenen Rahmens der Platzhalter
+    if (figur && e.meta.elite) shadow.setTint(0xffcc44).setScale(1.3, 1.1);
     let name: Phaser.GameObjects.Text | null = null;
     if (e.kind === 'hero' && e.meta.name) {
       name = this.add.text(0, 0, e.meta.name, {
@@ -257,18 +282,19 @@ export class RunScene extends Phaser.Scene {
     }
     let glow: Phaser.GameObjects.Arc | null = null;
     if (e.kind === 'boss') glow = this.add.circle(0, 0, 90, 0xffffff, 0.12).setStrokeStyle(4, 0xffffff, 0.6);
-    const g: UnitGfx = { body, shadow, name, glow, h, flashUntil: 0, fadeStart: null, x: e.cur.x, y: e.cur.y };
+    const g: UnitGfx = { body, shadow, name, glow, h, figur, dir, flashUntil: 0, fadeStart: null, x: e.cur.x, y: e.cur.y };
     this.units.set(e.id, g);
     return g;
   }
 
   private placeUnit(e: EntView, g: UnitGfx, pos: Vec2, now: number, rt: number, own: boolean): void {
+    if (g.figur) this.animateSprite(e, g, pos);
     g.x = pos.x;
     g.y = pos.y;
     const sy = BAND_TOP + pos.y;
     const dead = e.cur.state === 'dead';
     const depth = sy;
-    g.body.setPosition(pos.x, sy).setDepth(depth).setFlipX(e.cur.face < 0);
+    g.body.setPosition(pos.x, sy).setDepth(depth).setFlipX(!g.figur && e.cur.face < 0);
     g.shadow.setPosition(pos.x, sy).setDepth(depth - 0.5);
     let alpha = 1;
     if (e.removedAt !== null && rt >= e.removedAt) {
@@ -276,7 +302,9 @@ export class RunScene extends Phaser.Scene {
       alpha = Math.max(0, 1 - (now - g.fadeStart) / FADE_MS);
     }
     if (dead) {
-      g.body.setAngle(e.cur.face < 0 ? -80 : 80).setTint(0x777777);
+      // Sprites fallen über die Treffer-Animation um, Platzhalter werden gekippt
+      if (!g.figur) g.body.setAngle(e.cur.face < 0 ? -80 : 80);
+      g.body.setTint(0x777777);
       alpha *= e.kind === 'hero' ? 0.75 : 0.5;
     } else {
       g.body.setAngle(e.cur.state === 'stun' ? Math.sin(now / 60) * 8 : 0);
@@ -284,10 +312,12 @@ export class RunScene extends Phaser.Scene {
       else if (e.cur.state === 'roll') g.body.setTint(0xaaddff).setTintMode(Phaser.TintModes.MULTIPLY);
       else g.body.clearTint();
     }
-    // Lauf- und Angriffshaltung: leichtes Wippen bzw. Strecken
-    const walk = e.cur.state === 'walk' ? Math.abs(Math.sin(now / 90)) * 3 : 0;
-    const act = e.cur.state === 'attack' || e.cur.state === 'cast' ? 1.06 : 1;
-    if (!dead) g.body.setScale(e.cur.face < 0 ? act : act, act).setY(sy - walk);
+    // Platzhalter bekommen Wippen und Strecken aus Code; Sprites haben echte Animationen
+    if (!g.figur) {
+      const walk = e.cur.state === 'walk' ? Math.abs(Math.sin(now / 90)) * 3 : 0;
+      const act = e.cur.state === 'attack' || e.cur.state === 'cast' ? 1.06 : 1;
+      if (!dead) g.body.setScale(act, act).setY(sy - walk);
+    }
     g.body.setAlpha(alpha);
     g.shadow.setAlpha(alpha);
     if (g.name) {
@@ -299,6 +329,30 @@ export class RunScene extends Phaser.Scene {
       const c = elementColor(el, this.deps.settings().colorBlind);
       g.glow.setPosition(pos.x, sy - g.h / 2).setDepth(depth - 1).setFillStyle(c, 0.14).setStrokeStyle(4, c, 0.7).setAlpha(alpha);
     }
+  }
+
+  /** Wählt Animation und Blickrichtung aus Zustand und Bewegung (OPEN-051). */
+  private animateSprite(e: EntView, g: UnitGfx, pos: Vec2): void {
+    const id = g.figur!;
+    const st = e.cur.state;
+    g.dir = richtung(pos.x - g.x, pos.y - g.y, e.cur.face, g.dir);
+    const dir = st === 'dead' ? 's' : g.dir;
+    if (st === 'dead') {
+      if (g.body.anims.getName() !== animKey(id, 'hurt', 's')) g.body.play(animKey(id, 'hurt', 's'));
+      return;
+    }
+    if (st === 'attack' || st === 'cast') {
+      g.body.play({ key: animKey(id, 'attack', dir) }, true);
+      return;
+    }
+    if (st === 'walk' || st === 'roll') {
+      g.body.play({ key: animKey(id, 'walk', dir) }, true);
+      return;
+    }
+    // Ruhe: laufende Einmal-Animation (Angriff) ausspielen lassen, sonst erstes Laufbild
+    if (g.body.anims.isPlaying && !DIRS.some((d) => g.body.anims.getName() === animKey(id, 'walk', d))) return;
+    g.body.stop();
+    g.body.setFrame(stillFrame(this, dir));
   }
 
   private destroyUnit(id: number, g: UnitGfx): void {
@@ -324,6 +378,31 @@ export class RunScene extends Phaser.Scene {
       b.fillTriangle(tg.x - 9, ty - 10, tg.x + 9, ty - 10, tg.x, ty + 2);
       b.fillRect(tg.x - 3, ty - 20, 6, 10);
     }
+    // Bedrohungskrone (14.3, OPEN-042): über dem Helden, den die meisten Gegner gerade angreifen
+    const angreifer = new Map<number, number>();
+    for (const e of view.ents.values()) {
+      if (e.kind === 'hero' || e.removedAt !== null || e.cur.tgt === undefined || e.cur.state === 'dead') continue;
+      angreifer.set(e.cur.tgt, (angreifer.get(e.cur.tgt) ?? 0) + 1);
+    }
+    let kronenId = -1;
+    let meiste = 0;
+    for (const [id, n] of [...angreifer].sort((a, c) => a[0] - c[0])) {
+      if (n > meiste) {
+        meiste = n;
+        kronenId = id;
+      }
+    }
+    const kg = kronenId >= 0 ? this.units.get(kronenId) : undefined;
+    if (kg && kg.fadeStart === null && meiste > 0) {
+      const cx = kg.x;
+      const cy = BAND_TOP + kg.y - kg.h - 26;
+      b.fillStyle(0xffd24a, 1);
+      b.fillTriangle(cx - 7, cy + 4, cx - 5, cy - 4, cx - 2, cy + 4);
+      b.fillTriangle(cx - 3, cy + 4, cx, cy - 6, cx + 3, cy + 4);
+      b.fillTriangle(cx + 2, cy + 4, cx + 5, cy - 4, cx + 7, cy + 4);
+      b.fillRect(cx - 7, cy + 3, 14, 3);
+    }
+
     // Fokusziel (14.7): Ring am Boden
     const focus = view.run?.me?.focusId;
     const fg = focus !== null && focus !== undefined ? this.units.get(focus) : undefined;
@@ -351,16 +430,6 @@ export class RunScene extends Phaser.Scene {
       if (e.meta.elite) {
         b.lineStyle(1, 0xffc94a, 1);
         b.strokeRect(x - 1, y - 1, w + 2, 6);
-      }
-      // Bedrohungskrone (14.3): dieser Gegner greift den eigenen Helden an
-      if (e.kind !== 'hero' && e.cur.tgt !== undefined && e.cur.tgt === view.ownId) {
-        const cx = g.x;
-        const cy = y - 8;
-        b.fillStyle(0xffd24a, 1);
-        b.fillTriangle(cx - 7, cy + 4, cx - 5, cy - 4, cx - 2, cy + 4);
-        b.fillTriangle(cx - 3, cy + 4, cx, cy - 6, cx + 3, cy + 4);
-        b.fillTriangle(cx + 2, cy + 4, cx + 5, cy - 4, cx + 7, cy + 4);
-        b.fillRect(cx - 7, cy + 3, 14, 3);
       }
       // Effekte als kleine Punkte (höchstens 8, 14.3)
       const fx = e.cur.fx ?? [];

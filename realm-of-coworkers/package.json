@@ -16,6 +16,7 @@
     "typecheck": "tsc -b --pretty false",
     "balance": "python3 tools/validate_content.py && python3 tools/crosscheck_balance.py && pnpm --filter @aethra/balance start",
     "content:check": "python3 tools/validate_content.py && python3 tools/crosscheck_balance.py",
+    "sprites": "python3 tools/sprites/build_sprites.py",
     "admin": "pnpm --filter @aethra/server admin",
     "e2e": "pnpm build && playwright test"
   },

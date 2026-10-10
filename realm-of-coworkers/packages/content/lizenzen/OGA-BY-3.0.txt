@@ -1,0 +1,6 @@
+OpenGameArt.org Attribution License (OGA-BY 3.0)
+
+Der vollständige Text steht unter https://static.opengameart.org/OGA-BY-3.0.txt
+
+Kurz: Die Werke dürfen frei verwendet, verändert und weitergegeben werden, solange
+die Urheber genannt werden. Die Nennung je Datei steht in packages/content/ASSETS.md.

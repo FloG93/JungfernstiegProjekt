@@ -1,0 +1,151 @@
+{
+  "kachel": 64,
+  "spalten": 13,
+  "zeilen": [
+    "walk-n",
+    "walk-w",
+    "walk-s",
+    "walk-e",
+    "attack-n",
+    "attack-w",
+    "attack-s",
+    "attack-e",
+    "hurt-s"
+  ],
+  "bilder": {
+    "cast": 7,
+    "thrust": 8,
+    "walk": 9,
+    "slash": 6,
+    "shoot": 13,
+    "hurt": 6
+  },
+  "figuren": {
+    "krieger": {
+      "gruppe": "helden",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1
+    },
+    "magier": {
+      "gruppe": "helden",
+      "angriff": "cast",
+      "angriffBilder": 7,
+      "skalierung": 1
+    },
+    "waldlaeufer": {
+      "gruppe": "helden",
+      "angriff": "shoot",
+      "angriffBilder": 13,
+      "skalierung": 1
+    },
+    "schurke": {
+      "gruppe": "helden",
+      "angriff": "slash",
+      "angriffBilder": 6,
+      "skalierung": 1
+    },
+    "kleriker": {
+      "gruppe": "helden",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1
+    },
+    "runenweber": {
+      "gruppe": "helden",
+      "angriff": "cast",
+      "angriffBilder": 7,
+      "skalierung": 1
+    },
+    "scherge": {
+      "gruppe": "gegner",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1
+    },
+    "hetzer": {
+      "gruppe": "gegner",
+      "angriff": "slash",
+      "angriffBilder": 6,
+      "skalierung": 1
+    },
+    "schuetze": {
+      "gruppe": "gegner",
+      "angriff": "shoot",
+      "angriffBilder": 13,
+      "skalierung": 1
+    },
+    "schwarmling": {
+      "gruppe": "gegner",
+      "angriff": "slash",
+      "angriffBilder": 6,
+      "skalierung": 1
+    },
+    "brecher": {
+      "gruppe": "gegner",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1.25
+    },
+    "priester": {
+      "gruppe": "gegner",
+      "angriff": "cast",
+      "angriffBilder": 7,
+      "skalierung": 1
+    },
+    "kultist": {
+      "gruppe": "gegner",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1
+    },
+    "bomber": {
+      "gruppe": "gegner",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1
+    },
+    "waechter": {
+      "gruppe": "gegner",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1.15
+    },
+    "ignarch": {
+      "gruppe": "bosse",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1.7
+    },
+    "glaciara": {
+      "gruppe": "bosse",
+      "angriff": "cast",
+      "angriffBilder": 7,
+      "skalierung": 1.7
+    },
+    "voltrax": {
+      "gruppe": "bosse",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1.7
+    },
+    "gorthul": {
+      "gruppe": "bosse",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1.8
+    },
+    "solaris": {
+      "gruppe": "bosse",
+      "angriff": "thrust",
+      "angriffBilder": 8,
+      "skalierung": 1.7
+    },
+    "nyxhara": {
+      "gruppe": "bosse",
+      "angriff": "cast",
+      "angriffBilder": 7,
+      "skalierung": 1.7
+    }
+  }
+}

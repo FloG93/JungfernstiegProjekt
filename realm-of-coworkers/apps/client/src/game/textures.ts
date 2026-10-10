@@ -8,6 +8,15 @@ type G = Phaser.GameObjects.Graphics;
 
 const v = (x: number, y: number) => new Phaser.Math.Vector2(x, y);
 
+/** Kleiner, fester Zufall für Hintergründe: gleiche Kapitel sehen immer gleich aus. */
+function lcg(seed: number): () => number {
+  let s = seed >>> 0;
+  return () => {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
+}
+
 export const HERO_W = 44;
 export const HERO_H = 64;
 
@@ -234,37 +243,71 @@ export function hillsTexture(scene: Phaser.Scene, chapter: number, layer: 0 | 1 
   const key = `hills-${chapter}-${layer}`;
   const W = 512;
   const H = 220;
+  const STUFE = 4;
   return make(scene, key, W, H, (g) => {
     const th = CHAPTER_THEME[chapter] ?? CHAPTER_THEME[1]!;
     const color = layer === 0 ? th.far : layer === 1 ? th.near : shade(th.near, -0.25);
-    g.fillStyle(color, 1);
-    const pts: Phaser.Math.Vector2[] = [v(0, H)];
-    const peaks = layer === 0 ? 4 : layer === 1 ? 6 : 9;
-    for (let i = 0; i <= peaks * 2; i++) {
-      const x = (W * i) / (peaks * 2);
-      const high = i % 2 === 1;
-      const seed = Math.sin((i + 1) * (chapter * 3.7 + layer * 1.3)) * 0.5 + 0.5;
-      const base = layer === 0 ? 60 : layer === 1 ? 110 : 160;
-      pts.push(v(x, high ? base - 40 * seed : base + 10 * seed));
+    const rnd = lcg(chapter * 131 + layer * 17 + 5);
+    const basis = layer === 0 ? 70 : layer === 1 ? 120 : 165;
+    const hoehe = layer === 0 ? 46 : layer === 1 ? 38 : 26;
+    const breite = layer === 0 ? 128 : layer === 1 ? 86 : 64;
+    // Kamm als Säulen in 4-Pixel-Stufen: wirkt wie gezeichnete Pixel-Art statt wie eine glatte Kurve
+    const kamm: number[] = [];
+    for (let x = 0; x <= W; x += STUFE) {
+      const t = (x / W) * Math.PI * 2;
+      const welle = Math.sin(t * (W / breite)) * 0.5 + Math.sin(t * (W / breite) * 2.3 + chapter) * 0.3;
+      kamm.push(Math.round((basis - welle * hoehe) / STUFE) * STUFE);
     }
-    pts.push(v(W, H));
-    g.fillPoints(pts, true);
+    g.fillStyle(color, 1);
+    kamm.forEach((y, i) => g.fillRect(i * STUFE, y, STUFE, H - y));
+    // Kante aufhellen, das gibt den Silhouetten Tiefe
+    g.fillStyle(shade(color, 0.16), 1);
+    kamm.forEach((y, i) => g.fillRect(i * STUFE, y, STUFE, STUFE));
     if (layer === 2) {
-      g.fillStyle(shade(color, -0.3), 1);
-      for (let i = 0; i < 6; i++) g.fillTriangle(30 + i * 85, H, 46 + i * 85, H - 50 - (i % 3) * 14, 62 + i * 85, H);
+      // Bäume bzw. Felsnadeln im Vordergrund
+      g.fillStyle(shade(color, -0.35), 1);
+      for (let i = 0; i < 9; i++) {
+        const x = Math.floor(rnd() * (W / STUFE)) * STUFE;
+        const y = kamm[Math.min(kamm.length - 1, Math.round(x / STUFE))]!;
+        const hh = 28 + Math.floor(rnd() * 5) * STUFE;
+        for (let k = 0; k < 4; k++) {
+          const b = 20 - k * 4;
+          g.fillRect(x - b / 2, y - hh + k * (hh / 5), b, hh / 5 + 2);
+        }
+        g.fillRect(x - 2, y - 6, 4, 8);
+      }
     }
   });
 }
 
 export function groundTexture(scene: Phaser.Scene, chapter: number): string {
   const key = `ground-${chapter}`;
-  return make(scene, key, 256, 64, (g) => {
+  const W = 128;
+  const H = 128;
+  return make(scene, key, W, H, (g) => {
     const th = CHAPTER_THEME[chapter] ?? CHAPTER_THEME[1]!;
+    const rnd = lcg(chapter * 977 + 13);
     g.fillStyle(th.ground, 1);
-    g.fillRect(0, 0, 256, 64);
-    g.fillStyle(shade(th.ground, 0.08), 1);
-    for (let i = 0; i < 10; i++) g.fillRect((i * 53) % 256, (i * 17) % 60, 18 + (i % 3) * 6, 3);
-    g.fillStyle(shade(th.ground, -0.2), 1);
-    for (let i = 0; i < 8; i++) g.fillRect((i * 37 + 11) % 256, (i * 29 + 7) % 60, 10, 2);
+    g.fillRect(0, 0, W, H);
+    // Schachbrett-Raster wie in Pixel-Art: nahtlos, weil es sich alle 4 Pixel wiederholt
+    g.fillStyle(shade(th.ground, 0.05), 1);
+    for (let y = 0; y < H; y += 4) for (let x = (y / 4) % 2 ? 0 : 2; x < W; x += 4) g.fillRect(x, y, 2, 2);
+    // Flecken, Steine und Grasbüschel; alles mit Abstand zum Rand, damit die Kachel sauber aneinanderstößt
+    g.fillStyle(shade(th.ground, -0.14), 1);
+    for (let i = 0; i < 14; i++) {
+      const x = 6 + Math.floor(rnd() * (W - 24));
+      const y = 6 + Math.floor(rnd() * (H - 16));
+      g.fillRect(x, y, 6 + Math.floor(rnd() * 8) * 2, 2);
+      g.fillRect(x + 2, y + 2, 4 + Math.floor(rnd() * 4) * 2, 2);
+    }
+    g.fillStyle(shade(th.ground, 0.22), 1);
+    for (let i = 0; i < 10; i++) g.fillRect(6 + Math.floor(rnd() * (W - 14)), 6 + Math.floor(rnd() * (H - 12)), 4, 2);
+    g.fillStyle(shade(th.accent, -0.62), 1);
+    for (let i = 0; i < 5; i++) {
+      const x = 8 + Math.floor(rnd() * (W - 18));
+      const y = 10 + Math.floor(rnd() * (H - 20));
+      g.fillRect(x, y, 2, 4);
+      g.fillRect(x + 3, y + 1, 2, 3);
+    }
   });
 }

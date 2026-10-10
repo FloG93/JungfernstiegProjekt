@@ -80,8 +80,10 @@ export async function runBench(seconds = 6): Promise<void> {
   };
   const snapTimer = setInterval(snap, 100);
   snap();
-  // Rechenzeit der Szene je Frame messen
-  await new Promise((r) => setTimeout(r, 500));
+  // Rechenzeit der Szene je Frame messen: erst messen, wenn Phaser die Sprites geladen und create() gelaufen ist
+  const bisStart = Date.now() + 15_000;
+  while (!host.scene?.bereit && Date.now() < bisStart) await new Promise((r) => setTimeout(r, 50));
+  await new Promise((r) => setTimeout(r, 300));
   // Phaser ruft die beim Start gebundene Funktion sys.sceneUpdate auf
   const scene = host.scene!;
   const sys = scene.sys as unknown as { sceneUpdate: (time: number, delta: number) => void };

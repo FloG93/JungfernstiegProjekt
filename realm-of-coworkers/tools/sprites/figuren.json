@@ -1,0 +1,716 @@
+{
+  "_hinweis": "Figuren aus dem Universal-LPC-Baukasten (OPEN-051). Jede Ebene nennt eine Datei aus sheet_definitions/ und eine Variante. Reihenfolge egal, gezeichnet wird nach zPos. Bauen: pnpm sprites",
+  "helden": [
+    {
+      "id": "krieger",
+      "koerper": "male",
+      "angriff": "thrust",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "light"
+        },
+        {
+          "blatt": "heads_human_male",
+          "variante": "light"
+        },
+        {
+          "blatt": "legs_armour",
+          "variante": "steel"
+        },
+        {
+          "blatt": "feet_boots_plate",
+          "variante": "steel"
+        },
+        {
+          "blatt": "torso_armour_plate",
+          "variante": "steel"
+        },
+        {
+          "blatt": "arms_armour",
+          "variante": "steel"
+        },
+        {
+          "blatt": "hat_helmet_barbuta",
+          "variante": "steel"
+        },
+        {
+          "blatt": "weapon_blunt_mace",
+          "variante": "mace"
+        }
+      ]
+    },
+    {
+      "id": "magier",
+      "koerper": "female",
+      "angriff": "cast",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "light"
+        },
+        {
+          "blatt": "heads_human_female",
+          "variante": "light"
+        },
+        {
+          "blatt": "hair_plain",
+          "variante": "platinum"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "navy"
+        },
+        {
+          "blatt": "feet_shoes",
+          "variante": "black"
+        },
+        {
+          "blatt": "torso_clothes_robe",
+          "variante": "blue"
+        },
+        {
+          "blatt": "hat_magic_wizard",
+          "variante": "blue"
+        },
+        {
+          "blatt": "weapon_magic_simple",
+          "variante": "simple"
+        }
+      ]
+    },
+    {
+      "id": "waldlaeufer",
+      "koerper": "male",
+      "angriff": "shoot",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "amber"
+        },
+        {
+          "blatt": "heads_human_male",
+          "variante": "amber"
+        },
+        {
+          "blatt": "hair_plain",
+          "variante": "chestnut"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "forest"
+        },
+        {
+          "blatt": "feet_boots",
+          "variante": "brown"
+        },
+        {
+          "blatt": "torso_armour_leather",
+          "variante": "brown"
+        },
+        {
+          "blatt": "hat_hood_cloth",
+          "variante": "forest"
+        },
+        {
+          "blatt": "weapon_ranged_bow_recurve",
+          "variante": "medium"
+        }
+      ]
+    },
+    {
+      "id": "schurke",
+      "koerper": "male",
+      "angriff": "slash",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "olive"
+        },
+        {
+          "blatt": "heads_human_male",
+          "variante": "olive"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "charcoal"
+        },
+        {
+          "blatt": "feet_boots",
+          "variante": "black"
+        },
+        {
+          "blatt": "torso_armour_leather",
+          "variante": "black"
+        },
+        {
+          "blatt": "hat_hood_cloth",
+          "variante": "charcoal"
+        },
+        {
+          "blatt": "weapon_sword_dagger",
+          "variante": "dagger"
+        }
+      ]
+    },
+    {
+      "id": "kleriker",
+      "koerper": "female",
+      "angriff": "thrust",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "taupe"
+        },
+        {
+          "blatt": "heads_human_female",
+          "variante": "taupe"
+        },
+        {
+          "blatt": "hair_plain",
+          "variante": "blonde"
+        },
+        {
+          "blatt": "feet_shoes",
+          "variante": "brown"
+        },
+        {
+          "blatt": "weapon_blunt_mace",
+          "variante": "mace"
+        },
+        {
+          "blatt": "torso_clothes_longsleeve",
+          "variante": "white"
+        },
+        {
+          "blatt": "legs_skirts_plain",
+          "variante": "white"
+        }
+      ]
+    },
+    {
+      "id": "runenweber",
+      "koerper": "female",
+      "angriff": "cast",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "lavender"
+        },
+        {
+          "blatt": "heads_human_female",
+          "variante": "lavender"
+        },
+        {
+          "blatt": "hair_plain",
+          "variante": "white"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "purple"
+        },
+        {
+          "blatt": "feet_shoes",
+          "variante": "black"
+        },
+        {
+          "blatt": "torso_clothes_robe",
+          "variante": "purple"
+        },
+        {
+          "blatt": "hat_hood_cloth",
+          "variante": "purple"
+        },
+        {
+          "blatt": "weapon_magic_simple",
+          "variante": "simple"
+        }
+      ]
+    }
+  ],
+  "gegner": [
+    {
+      "id": "scherge",
+      "koerper": "male",
+      "angriff": "thrust",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "olive"
+        },
+        {
+          "blatt": "heads_goblin",
+          "variante": "olive"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "brown"
+        },
+        {
+          "blatt": "feet_boots",
+          "variante": "brown"
+        },
+        {
+          "blatt": "torso_armour_leather",
+          "variante": "brown"
+        },
+        {
+          "blatt": "weapon_blunt_mace",
+          "variante": "mace"
+        }
+      ]
+    },
+    {
+      "id": "hetzer",
+      "koerper": "male",
+      "angriff": "slash",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "taupe"
+        },
+        {
+          "blatt": "heads_wolf_male",
+          "variante": "fur_brown"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "charcoal"
+        },
+        {
+          "blatt": "feet_boots",
+          "variante": "black"
+        },
+        {
+          "blatt": "torso_armour_leather",
+          "variante": "black"
+        },
+        {
+          "blatt": "weapon_sword_dagger",
+          "variante": "dagger"
+        }
+      ]
+    },
+    {
+      "id": "schuetze",
+      "koerper": "male",
+      "angriff": "shoot",
+      "ebenen": [
+        {
+          "blatt": "body_skeleton",
+          "variante": "skeleton"
+        },
+        {
+          "blatt": "heads_skeleton",
+          "variante": "skeleton"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "bluegray"
+        },
+        {
+          "blatt": "weapon_ranged_bow_normal",
+          "variante": "medium"
+        }
+      ]
+    },
+    {
+      "id": "schwarmling",
+      "koerper": "child",
+      "angriff": "slash",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "bright_green"
+        },
+        {
+          "blatt": "heads_goblin_child",
+          "variante": "bright_green"
+        }
+      ]
+    },
+    {
+      "id": "brecher",
+      "koerper": "male",
+      "angriff": "thrust",
+      "skalierung": 1.25,
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "brown"
+        },
+        {
+          "blatt": "heads_minotaur",
+          "variante": "fur_brown"
+        },
+        {
+          "blatt": "legs_armour",
+          "variante": "iron"
+        },
+        {
+          "blatt": "feet_boots_plate",
+          "variante": "iron"
+        },
+        {
+          "blatt": "torso_armour_plate",
+          "variante": "iron"
+        },
+        {
+          "blatt": "weapon_blunt_mace",
+          "variante": "mace"
+        }
+      ]
+    },
+    {
+      "id": "priester",
+      "koerper": "female",
+      "angriff": "cast",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "taupe"
+        },
+        {
+          "blatt": "heads_human_female",
+          "variante": "taupe"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "black"
+        },
+        {
+          "blatt": "feet_shoes",
+          "variante": "black"
+        },
+        {
+          "blatt": "torso_clothes_robe",
+          "variante": "black"
+        },
+        {
+          "blatt": "hat_hood_cloth",
+          "variante": "black"
+        },
+        {
+          "blatt": "weapon_magic_simple",
+          "variante": "simple"
+        }
+      ]
+    },
+    {
+      "id": "kultist",
+      "koerper": "male",
+      "angriff": "thrust",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "amber"
+        },
+        {
+          "blatt": "heads_human_male",
+          "variante": "amber"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "maroon"
+        },
+        {
+          "blatt": "feet_shoes",
+          "variante": "black"
+        },
+        {
+          "blatt": "torso_clothes_longsleeve",
+          "variante": "maroon"
+        },
+        {
+          "blatt": "hat_hood_cloth",
+          "variante": "maroon"
+        },
+        {
+          "blatt": "weapon_sword_dagger",
+          "variante": "dagger"
+        }
+      ]
+    },
+    {
+      "id": "bomber",
+      "koerper": "male",
+      "angriff": "thrust",
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "amber"
+        },
+        {
+          "blatt": "heads_goblin",
+          "variante": "amber"
+        },
+        {
+          "blatt": "hair_plain",
+          "variante": "black"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "gray"
+        },
+        {
+          "blatt": "feet_boots",
+          "variante": "black"
+        },
+        {
+          "blatt": "torso_clothes_shortsleeve",
+          "variante": "orange"
+        },
+        {
+          "blatt": "backpack_squarepack",
+          "variante": "black"
+        }
+      ]
+    },
+    {
+      "id": "waechter",
+      "koerper": "male",
+      "angriff": "thrust",
+      "skalierung": 1.15,
+      "ebenen": [
+        {
+          "blatt": "body_skeleton",
+          "variante": "skeleton"
+        },
+        {
+          "blatt": "heads_skeleton",
+          "variante": "skeleton"
+        },
+        {
+          "blatt": "legs_armour",
+          "variante": "steel"
+        },
+        {
+          "blatt": "torso_armour_legion",
+          "variante": "steel"
+        },
+        {
+          "blatt": "weapon_polearm_spear",
+          "variante": "medium"
+        }
+      ]
+    }
+  ],
+  "bosse": [
+    {
+      "id": "ignarch",
+      "koerper": "male",
+      "angriff": "thrust",
+      "skalierung": 1.7,
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "bronze"
+        },
+        {
+          "blatt": "heads_minotaur",
+          "variante": "fur_copper"
+        },
+        {
+          "blatt": "legs_armour",
+          "variante": "brass"
+        },
+        {
+          "blatt": "feet_boots_plate",
+          "variante": "brass"
+        },
+        {
+          "blatt": "torso_armour_plate",
+          "variante": "brass"
+        },
+        {
+          "blatt": "weapon_blunt_mace",
+          "variante": "mace"
+        }
+      ]
+    },
+    {
+      "id": "glaciara",
+      "koerper": "female",
+      "angriff": "cast",
+      "skalierung": 1.7,
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "light"
+        },
+        {
+          "blatt": "heads_vampire",
+          "variante": "light"
+        },
+        {
+          "blatt": "hair_long",
+          "variante": "white"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "white"
+        },
+        {
+          "blatt": "feet_shoes",
+          "variante": "white"
+        },
+        {
+          "blatt": "torso_clothes_robe",
+          "variante": "white"
+        },
+        {
+          "blatt": "wings_bat",
+          "variante": "white"
+        },
+        {
+          "blatt": "weapon_magic_simple",
+          "variante": "simple"
+        }
+      ]
+    },
+    {
+      "id": "voltrax",
+      "koerper": "male",
+      "angriff": "thrust",
+      "skalierung": 1.7,
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "bronze"
+        },
+        {
+          "blatt": "heads_lizard_male",
+          "variante": "bronze"
+        },
+        {
+          "blatt": "legs_armour",
+          "variante": "silver"
+        },
+        {
+          "blatt": "feet_boots_plate",
+          "variante": "silver"
+        },
+        {
+          "blatt": "torso_armour_legion",
+          "variante": "silver"
+        },
+        {
+          "blatt": "weapon_polearm_spear",
+          "variante": "medium"
+        }
+      ]
+    },
+    {
+      "id": "gorthul",
+      "koerper": "male",
+      "angriff": "thrust",
+      "skalierung": 1.8,
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "olive"
+        },
+        {
+          "blatt": "heads_troll",
+          "variante": "olive"
+        },
+        {
+          "blatt": "legs_armour",
+          "variante": "bronze"
+        },
+        {
+          "blatt": "feet_boots_plate",
+          "variante": "bronze"
+        },
+        {
+          "blatt": "torso_armour_plate",
+          "variante": "bronze"
+        },
+        {
+          "blatt": "weapon_blunt_mace",
+          "variante": "mace"
+        }
+      ]
+    },
+    {
+      "id": "solaris",
+      "koerper": "male",
+      "angriff": "thrust",
+      "skalierung": 1.7,
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "light"
+        },
+        {
+          "blatt": "heads_human_male",
+          "variante": "light"
+        },
+        {
+          "blatt": "hair_plain",
+          "variante": "blonde"
+        },
+        {
+          "blatt": "legs_armour",
+          "variante": "gold"
+        },
+        {
+          "blatt": "feet_boots_plate",
+          "variante": "gold"
+        },
+        {
+          "blatt": "torso_armour_plate",
+          "variante": "gold"
+        },
+        {
+          "blatt": "wings_feathered",
+          "variante": "platinum"
+        },
+        {
+          "blatt": "weapon_polearm_spear",
+          "variante": "medium"
+        }
+      ]
+    },
+    {
+      "id": "nyxhara",
+      "koerper": "female",
+      "angriff": "cast",
+      "skalierung": 1.7,
+      "ebenen": [
+        {
+          "blatt": "body",
+          "variante": "lavender"
+        },
+        {
+          "blatt": "heads_vampire",
+          "variante": "lavender"
+        },
+        {
+          "blatt": "hair_long",
+          "variante": "raven"
+        },
+        {
+          "blatt": "legs_pants",
+          "variante": "black"
+        },
+        {
+          "blatt": "feet_shoes",
+          "variante": "black"
+        },
+        {
+          "blatt": "torso_clothes_robe",
+          "variante": "black"
+        },
+        {
+          "blatt": "wings_bat",
+          "variante": "raven"
+        },
+        {
+          "blatt": "weapon_magic_simple",
+          "variante": "simple"
+        }
+      ]
+    }
+  ]
+}
