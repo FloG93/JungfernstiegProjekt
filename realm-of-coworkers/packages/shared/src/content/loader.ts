@@ -8,12 +8,14 @@ import type { BossId, ClassId, ElementId, EnemyId, GemId, HandlerId, StatusId } 
 import {
   ArenaDefSchema, ArtifactDefSchema, BalanceSchema, BossDefSchema, BossDropsFileSchema, ClassDefSchema,
   ElementDefSchema, EnchantDefSchema, EnemiesFileSchema, EngineFileSchema, GemFileSchema, GendersFileSchema,
-  HazardDefSchema, I18nFileSchema, NamesFileSchema, PaletteFileSchema, SkillDefSchema, StageDefSchema,
+  HazardDefSchema, I18nFileSchema, NamesFileSchema, PaletteFileSchema, RundenFileSchema, SkillDefSchema,
+  StageDefSchema,
   StageLootFileSchema, StatusDefSchema, StoryFileSchema,
 } from './schemas';
 import type {
   ArenaDef, ArtifactDef, Balance, BossDef, BossDropsFile, ClassDef, ElementDef, EliteDef, EnchantDef, EnemyDef,
-  EngineFile, GemFile, GendersFile, HazardDef, I18nFile, NamesFile, PaletteFile, SkillDef, StageDef, StageLootFile,
+  EngineFile, GemFile, GendersFile, HazardDef, I18nFile, NamesFile, PaletteFile, RundenFile, SkillDef, StageDef,
+  StageLootFile,
   StatusDef, StoryFile, StoryLine,
 } from './schemas';
 
@@ -43,6 +45,7 @@ export const CONTENT_FILES = {
   artifacts: 'artifacts.json',
   enchants: 'enchants.json',
   engine: 'engine.json',
+  runden: 'runden.json',
   i18n: 'i18n/de.json',
 } as const;
 
@@ -68,6 +71,8 @@ export class ContentError extends Error {
 export interface Content {
   balance: Balance;
   engine: EngineFile;
+  /** Werte des rundenbasierten Kampfes. */
+  runden: RundenFile;
   classes: ClassDef[];
   classById: Record<ClassId, ClassDef>;
   skills: SkillDef[];
@@ -143,6 +148,7 @@ export function loadContent(raw: RawContent): Content {
 
   const balance = parse(CONTENT_FILES.balance, BalanceSchema);
   const engine = parse(CONTENT_FILES.engine, EngineFileSchema);
+  const runden = parse(CONTENT_FILES.runden, RundenFileSchema);
   const classes = arr(CONTENT_FILES.classes, ClassDefSchema);
   const skills = arr(CONTENT_FILES.skills, SkillDefSchema);
   const statuses = arr(CONTENT_FILES.status, StatusDefSchema);
@@ -172,7 +178,7 @@ export function loadContent(raw: RawContent): Content {
   }
 
   if (
-    problems.length > 0 || !balance || !engine || !classes || !skills || !statuses || !elements || !enemiesFile ||
+    problems.length > 0 || !balance || !engine || !runden || !classes || !skills || !statuses || !elements || !enemiesFile ||
     !arenas || !bosses || !palette || !hazards || !names || !genders || !stageLoot || !bossDrops || !gems ||
     !artifacts || !enchants || !i18n
   ) {
@@ -333,7 +339,7 @@ export function loadContent(raw: RawContent): Content {
   if (problems.length > 0) throw new ContentError(problems);
 
   return {
-    balance, engine, classes, classById: indexBy(classes, (c) => c.id), skills, skillById, statuses,
+    balance, engine, runden, classes, classById: indexBy(classes, (c) => c.id), skills, skillById, statuses,
     statusById: indexBy(statuses, (s) => s.id), elements, elementById, enemies, enemyById, elite, arenas,
     arenaById, bosses, bossById, palette, hazards, hazardById, stages, names, genders, stageLoot, bossDrops,
     gems, gemStat, artifacts, artifactById, enchants, story, i18n,

@@ -490,6 +490,23 @@ export type EnchantId = EnchantDef['id'];
 export const GendersFileSchema = z.record(z.string(), z.enum(['m', 'f', 'n', 'pl']));
 export type GendersFile = z.infer<typeof GendersFileSchema>;
 
+/** Werte des rundenbasierten Kampfes (ENTWURF-rundenkampf.md). */
+export const RundenFileSchema = z.strictObject({
+  _hinweis: z.string().optional(),
+  rundeSekunden: pos,
+  maxRunden: pos,
+  planung: z.strictObject({ standardS: pos, minS: pos, maxS: pos }),
+  reihe: z.strictObject({ plaetze: pos, nahkampfBisPx: pos }),
+  gegnerMax: pos,
+  energie: z.strictObject({
+    max: pos, start: nonneg, startBoss: nonneg, jeAktion: nonneg, jeTreffer: nonneg,
+    jeGefallenerVerbuendeter: nonneg,
+  }),
+  verteidigen: z.strictObject({ schadenMult: pos, bedrohungMult: pos }),
+  zielbild: z.strictObject({ alleGegnerAbRadiusPx: pos }),
+});
+export type RundenFile = z.infer<typeof RundenFileSchema>;
+
 export const EngineFileSchema = z.strictObject({
   elements: z.strictObject({ weakMult: pos, resistMult: pos }),
   world: z.strictObject({

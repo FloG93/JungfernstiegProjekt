@@ -1,0 +1,30 @@
+{
+  "_hinweis": "Werte des rundenbasierten Kampfes (ENTWURF-rundenkampf.md). Alles, was es im Echtzeitkampf nicht gab.",
+  "rundeSekunden": 3,
+  "maxRunden": 200,
+  "planung": {
+    "standardS": 20,
+    "minS": 10,
+    "maxS": 60
+  },
+  "reihe": {
+    "plaetze": 4,
+    "nahkampfBisPx": 120
+  },
+  "gegnerMax": 8,
+  "energie": {
+    "max": 100,
+    "start": 0,
+    "startBoss": 30,
+    "jeAktion": 12,
+    "jeTreffer": 8,
+    "jeGefallenerVerbuendeter": 15
+  },
+  "verteidigen": {
+    "schadenMult": 0.5,
+    "bedrohungMult": 1.3
+  },
+  "zielbild": {
+    "alleGegnerAbRadiusPx": 300
+  }
+}

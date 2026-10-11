@@ -18,8 +18,8 @@ export default defineConfig(
   },
   {
     // CLAUDE.md, Regel 1 und 17.4: keine Spielzahl in der Simulation.
-    files: ['packages/shared/src/sim/**/*.ts'],
-    ignores: ['**/*.test.ts'],
+    files: ['packages/shared/src/sim/**/*.ts', 'packages/shared/src/runden/**/*.ts'],
+    ignores: ['**/*.test.ts', '**/testhilfe.ts'],
     rules: {
       'no-magic-numbers': 'off',
       '@typescript-eslint/no-magic-numbers': [
