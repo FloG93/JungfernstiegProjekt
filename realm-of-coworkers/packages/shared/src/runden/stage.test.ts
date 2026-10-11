@@ -4,7 +4,7 @@ import { enemyDps, introFactor } from '../formulas';
 import { planEncounter } from '../spawn';
 import { Rng } from '../rng';
 import { reserveNachruecken } from './kampf';
-import { begegnungGegner, laufAnlegen, laufAufgeben, laufDurchspielen, laufRunde } from './stage';
+import { begegnungGegner, bossBeginnen, laufAnlegen, laufAufgeben, laufDurchspielen, laufRunde } from './stage';
 import type { Lauf } from './stage';
 import { inhalt as c, testHeld } from './testhilfe';
 import type { LaufEreignis } from './stage';
@@ -171,5 +171,57 @@ describe('Laufereignisse', () => {
     laufDurchspielen(l);
     const starts = laufEv(l.protokoll).filter((e) => e.e === 'begegnungStart');
     expect(starts.length).toBeGreaterThanOrEqual(l.def.encounters.length);
+  });
+});
+
+describe('Bosskampf hinter dem Tor (10.1, R3)', () => {
+  it('startet erst auf Ansage und endet gewonnen', () => {
+    const l = lauf(10);
+    laufDurchspielen(l);
+    expect(l.phase).toBe('tor');
+    bossBeginnen(l);
+    expect(l.phase).toBe('boss');
+    expect(l.kampf.figuren.some((f) => f.art === 'boss')).toBe(true);
+    expect(l.kampf.gegenBoss).toBe(true);
+    expect(l.protokoll.some((e) => 'e' in e && e.e === 'bossStart')).toBe(true);
+    laufDurchspielen(l);
+    expect(l.phase).toBe('gewonnen');
+  });
+
+  it('die Party geht mit ihrem Zustand aus der Stage in den Bosskampf', () => {
+    const l = lauf(10);
+    laufDurchspielen(l);
+    const held = l.helden[0]!;
+    l.anteile.set(held.dbId, 40);
+    bossBeginnen(l);
+    const figur = l.kampf.figuren.find((f) => f.dbId === held.dbId)!;
+    expect(figur.lp).toBeLessThan(figur.maxLp);
+  });
+
+  it('ein Wipe im Bosskampf setzt am Tor neu an, der Lauf bleibt offen', () => {
+    const l = lauf(10, 1);
+    laufDurchspielen(l);
+    bossBeginnen(l);
+    const vorher = l.wipes;
+    const boss = l.kampf.figuren.find((f) => f.art === 'boss')!;
+    boss.schadenJeAktion = 0;
+    for (const f of l.kampf.figuren) {
+      if (f.seite === 'held') {
+        f.lp = 1;
+        f.tot = true;
+      }
+    }
+    laufRunde(l);
+    expect(l.wipes).toBe(vorher + 1);
+    expect(l.phase).toBe('boss');
+    expect(l.kampf.figuren.filter((f) => f.seite === 'held' && !f.tot).length).toBeGreaterThan(0);
+  });
+
+  it('Aufgeben beendet auch den Bosskampf', () => {
+    const l = lauf(10);
+    laufDurchspielen(l);
+    bossBeginnen(l);
+    laufAufgeben(l);
+    expect(l.phase).toBe('verloren');
   });
 });

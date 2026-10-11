@@ -45,7 +45,18 @@ export function statusSetzen(k: Kampf, ziel: Figur, w: StatusWunsch): boolean {
     ziel.status.push(inst);
   }
   melde(k, { e: 'status', an: ziel.id, id: w.id, runden });
+  einfrieren(k, ziel, w.id);
   return true;
+}
+
+/** Frost friert beim vollen Stapel ein (6.4); Bosse werden stattdessen verlangsamt und bleiben handlungsfähig. */
+function einfrieren(k: Kampf, ziel: Figur, id: StatusId): void {
+  const ab = statusParam(k.content, id, 'freezeAtStacks');
+  if (ab <= 0) return;
+  const da = ziel.status.find((s) => s.id === id);
+  if (!da || da.stapel < ab) return;
+  const ms = statusParam(k.content, id, 'freezeMs');
+  if (ms > 0) statusSetzen(k, ziel, { id: 'eingefroren', ms });
 }
 
 export function statusEntfernen(k: Kampf, ziel: Figur, id: StatusId): void {

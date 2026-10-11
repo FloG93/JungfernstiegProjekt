@@ -1,7 +1,7 @@
 // Rundenbasierter Kampf (ENTWURF-rundenkampf.md): Datenmodell.
 // Die Namen folgen der Spezifikation (Runde, Reihe, Bedrohung), weil der Kampf dort auf Deutsch beschrieben ist.
 // Alles hier ist deterministisch: kein Date.now, kein Math.random, Zufall nur über den Run-Zufallsgenerator.
-import type { ClassId, ElementId, StatusId } from '../content/ids';
+import type { BossId, ClassId, ElementId, StatusId } from '../content/ids';
 import type { Content } from '../content/loader';
 import type { Rng } from '../rng';
 import type { StatBlock } from '../stats';
@@ -28,6 +28,43 @@ export interface StatusInst {
 export interface Schild {
   menge: number;
   runden: number;
+}
+
+/** Angekündigter Bossangriff: Er wird in der folgenden Runde ausgeführt (ENTWURF 3.2). */
+export interface BossAnsage {
+  art: 'telegraph' | 'signatur';
+  /** Name des Angriffs für die Anzeige (Handler-ID oder 'telegraph'). */
+  text: string;
+  /** Runde, in der ausgeführt wird. */
+  runde: number;
+}
+
+/** Laufender Zustand eines Bosses (10). Alle Zähler in Runden. */
+export interface BossZustand {
+  bossId: BossId;
+  n: number;
+  kampfstufe: number;
+  phase: number;
+  /** M(n) × Kampfstufe auf den Schaden (10.1). */
+  schadenMult: number;
+  /** Zuschlag der Raserei (10.4). */
+  raserei: number;
+  pulsRest: number;
+  teleRest: number;
+  sigRest: number;
+  wutRest: number;
+  wutZielId: number | null;
+  wutBisRunde: number;
+  addsRest: number;
+  rasereiRest: number;
+  /** Bis einschließlich dieser Runde läuft der Phasenübergang: keine Angriffe (10.5). */
+  uebergangBisRunde: number;
+  ansage: BossAnsage | null;
+  /** Zusatzminderung aus der Passiven (Steinhaut, Schattenhülle). */
+  einMultPhys: number;
+  einMultElem: number;
+  /** Zähler der Passiven in Runden; ihre Bedeutung steht im jeweiligen Handler. */
+  passivRest: number;
 }
 
 export interface Figur {
@@ -80,6 +117,8 @@ export interface Figur {
   elite: boolean;
   /** Angriffsstufe für die Minderung beim Ziel (5.6). */
   angriffsstufe: number;
+  /** Nur Bosse: Phasen, Ansagen und Zähler (10). */
+  boss?: BossZustand;
 }
 
 export type Aktion =
@@ -101,6 +140,11 @@ export type Ereignis =
   | { e: 'nachruecken'; id: number; typ: string; reihe: Reihe }
   | { e: 'verfehlt'; von: number; grund: 'tot' | 'blockiert' | 'keinZiel' | 'nichtBereit' }
   | { e: 'tod'; id: number }
+  | { e: 'bossAnsage'; id: number; art: BossAnsage['art']; text: string; runde: number }
+  | { e: 'bossPhase'; id: number; phase: number; element: ElementId }
+  | { e: 'bossRaserei'; id: number; stufe: number }
+  | { e: 'wutwechsel'; id: number; ziel: number }
+  | { e: 'bossAngriff'; id: number; art: 'standard' | 'puls' | 'telegraph' | 'signatur'; ziele: number[] }
   | { e: 'rundeEnde'; runde: number }
   | { e: 'kampfEnde'; ergebnis: 'sieg' | 'niederlage'; runden: number };
 

@@ -499,6 +499,11 @@ export const RundenFileSchema = z.strictObject({
   reihe: z.strictObject({ plaetze: pos, nahkampfBisPx: pos }),
   gegnerMax: pos,
   begegnung: z.strictObject({ gegnerMult: pos, schadenMult: pos }),
+  boss: z.strictObject({
+    lebenMult: pos,
+    ansageRunden: pos,
+    raserei: z.strictObject({ abRunde: pos, alleRunden: pos }),
+  }),
   energie: z.strictObject({
     max: pos, start: nonneg, startBoss: nonneg, jeAktion: nonneg, jeTreffer: nonneg,
     jeGefallenerVerbuendeter: nonneg,

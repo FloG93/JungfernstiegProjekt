@@ -11,10 +11,10 @@ import type { Aktion, Ereignis, Figur, Kampf } from './typen';
 
 const PROZENT = 100;
 
-export type LaufPhase = 'kampf' | 'tor' | 'gewonnen' | 'verloren';
+export type LaufPhase = 'kampf' | 'tor' | 'boss' | 'gewonnen' | 'verloren';
 
 export interface LaufEreignis {
-  e: 'begegnungStart' | 'begegnungEnde' | 'checkpoint' | 'wipe' | 'stageEnde' | 'tor';
+  e: 'begegnungStart' | 'begegnungEnde' | 'checkpoint' | 'wipe' | 'stageEnde' | 'tor' | 'bossStart';
   index?: number;
   anteil?: number;
   ergebnis?: 'sieg' | 'niederlage';
@@ -27,6 +27,8 @@ export interface LaufOptionen {
   helden: HeldAufstellung[];
   /** Gruppenstärke für Budget und Lebensfaktor; voreingestellt die Zahl der Helden. */
   n?: number;
+  /** Kampfstufe des Bosses (10.1); 0 heißt ohne Zuschlag. */
+  kampfstufe?: number;
 }
 
 export interface Lauf {
@@ -41,6 +43,7 @@ export interface Lauf {
   /** Zuletzt erreichter Checkpoint; −1 bedeutet Stage-Anfang. */
   checkpoint: number;
   wipes: number;
+  kampfstufe: number;
   phase: LaufPhase;
   kampf: Kampf;
   /** Lebensanteil je Held, damit Schaden über die Begegnungen hinweg bleibt. */
@@ -88,6 +91,29 @@ export function begegnungGegner(c: Content, rng: Rng, def: StageDef, index: numb
   return sortiert.slice(0, anzahl).map((g) => ({ ...g, schadenMult: b.schadenMult }));
 }
 
+/** Der Bosskampf hinter dem Tor (10.1). Die Party geht mit dem Zustand des letzten Kampfes hinein. */
+function bossKampf(l: Lauf): Kampf {
+  if (!l.def.boss) throw new Error(`Stage ${l.def.stage} hat keinen Boss`);
+  const helden = l.helden.map((h) => ({ ...h, lebensAnteil: (l.anteile.get(h.dbId) ?? PROZENT) / PROZENT }));
+  const k = kampfAnlegen({
+    content: l.content, seed: l.rng.int(SEED_RANGE), stage: l.def.stage, helden, gegner: [],
+    boss: { bossId: l.def.boss, n: l.n, kampfstufe: l.kampfstufe },
+  });
+  for (const f of k.figuren) {
+    if (f.seite !== 'held' || f.dbId === undefined) continue;
+    f.traenke = Math.max(0, f.traenke - (l.traenke.get(f.dbId) ?? 0));
+  }
+  return k;
+}
+
+/** Hinter dem Tor beginnt der Bosskampf; die Spieler müssen ihn selbst auslösen (10.1, OPEN-063). */
+export function bossBeginnen(l: Lauf): void {
+  if (l.phase !== 'tor') return;
+  l.phase = 'boss';
+  l.kampf = bossKampf(l);
+  l.protokoll.push({ e: 'bossStart' });
+}
+
 function kampfFuer(l: Lauf, index: number): Kampf {
   const helden = l.helden.map((h) => ({
     ...h,
@@ -110,6 +136,7 @@ export function laufAnlegen(o: LaufOptionen): Lauf {
   const l: Lauf = {
     content: o.content, rng: new Rng(o.seed), def, helden: o.helden, n: o.n ?? o.helden.length,
     index: 0, erledigt: new Set(), checkpoint: -1, wipes: 0, phase: 'kampf',
+    kampfstufe: o.kampfstufe ?? 0,
     kampf: null as unknown as Kampf, anteile: new Map(), traenke: new Map(), protokoll: [],
   };
   for (const h of o.helden) {
@@ -167,7 +194,7 @@ function neustartAmCheckpoint(l: Lauf): void {
 function naechsteBegegnung(l: Lauf): void {
   l.index += 1;
   if (l.index >= l.def.encounters.length) {
-    // Boss-Stages enden am Tor; der Bosskampf kommt mit Schritt R3
+    // Boss-Stages enden am Tor; weiter geht es mit bossBeginnen (10.1)
     l.phase = l.def.boss ? 'tor' : 'gewonnen';
     l.protokoll.push(l.def.boss ? { e: 'tor' } : { e: 'stageEnde', ergebnis: 'sieg' });
     return;
@@ -181,10 +208,28 @@ function naechsteBegegnung(l: Lauf): void {
  * Gibt alle Ereignisse dieser Runde zurück, Kampf- wie Laufereignisse.
  */
 export function laufRunde(l: Lauf, wahlen: ReadonlyMap<number, Aktion> = new Map()): (Ereignis | LaufEreignis)[] {
-  if (l.phase !== 'kampf') return [];
+  if (l.phase !== 'kampf' && l.phase !== 'boss') return [];
   const vorher = l.protokoll.length;
   const ereignisse = rundeAusfuehren(l.kampf, wahlen);
   l.protokoll.push(...ereignisse);
+  if (l.phase === 'boss') {
+    if (l.kampf.ergebnis === 'sieg') {
+      zustandSichern(l);
+      l.phase = 'gewonnen';
+      l.protokoll.push({ e: 'stageEnde', ergebnis: 'sieg' });
+    } else if (l.kampf.ergebnis === 'niederlage') {
+      // Das Tor ist der Checkpoint des Bosskampfes: Es geht frisch gegen den Boss weiter (OPEN-063)
+      l.wipes += 1;
+      l.protokoll.push({ e: 'wipe', index: l.def.encounters.length });
+      for (const h of l.helden) {
+        l.anteile.set(h.dbId, PROZENT);
+        l.traenke.set(h.dbId, 0);
+      }
+      l.kampf = bossKampf(l);
+      l.protokoll.push({ e: 'bossStart' });
+    }
+    return l.protokoll.slice(vorher);
+  }
   if (l.kampf.ergebnis === 'sieg') {
     zustandSichern(l);
     l.erledigt.add(l.index);
@@ -203,7 +248,7 @@ export function laufRunde(l: Lauf, wahlen: ReadonlyMap<number, Aktion> = new Map
 /** Spielt die Stage ohne Eingaben durch; für Tests und Messungen. */
 export function laufDurchspielen(l: Lauf, maxRunden = l.content.runden.maxRunden): number {
   let runden = 0;
-  while (l.phase === 'kampf' && runden < maxRunden) {
+  while ((l.phase === 'kampf' || l.phase === 'boss') && runden < maxRunden) {
     laufRunde(l);
     runden++;
   }
@@ -212,7 +257,7 @@ export function laufDurchspielen(l: Lauf, maxRunden = l.content.runden.maxRunden
 
 /** Der Lauf wird abgebrochen, etwa weil alle Spieler aufgeben. */
 export function laufAufgeben(l: Lauf): void {
-  if (l.phase !== 'kampf' && l.phase !== 'tor') return;
+  if (l.phase === 'gewonnen' || l.phase === 'verloren') return;
   l.phase = 'verloren';
   l.protokoll.push({ e: 'stageEnde', ergebnis: 'niederlage' });
 }

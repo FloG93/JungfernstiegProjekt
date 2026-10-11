@@ -30,5 +30,13 @@
   "begegnung": {
     "gegnerMult": 0.2,
     "schadenMult": 5.0
+  },
+  "boss": {
+    "lebenMult": 0.2,
+    "ansageRunden": 1,
+    "raserei": {
+      "abRunde": 20,
+      "alleRunden": 2
+    }
   }
 }

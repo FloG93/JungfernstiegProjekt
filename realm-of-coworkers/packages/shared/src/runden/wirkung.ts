@@ -118,19 +118,23 @@ export function heldTrifft(k: Kampf, von: Figur, an: Figur, coef: number, elemen
     kritFaktor = st.ksd / PROZENT;
   }
   const mit = minderung(k, an, physisch, von.stufe);
-  const mult = schadenAusMult(von) * schadenEinMult(k, an) * (o.bonusMult ?? 1);
+  const mult = schadenAusMult(k, von) * schadenEinMult(k, an, physisch) * (o.bonusMult ?? 1);
   const roh = coef * st.kra * von.soloMult * (1 + st.ele / PROZENT) * elementFaktor(k, element, an) * kritFaktor * (1 - mit) * mult;
   return schadenZufuegen(k, von, an, roh, { element, krit });
 }
 
-/** Treffer eines Gegners: fester Schaden je Handlung, beim Ziel gemindert. */
-export function gegnerTrifft(k: Kampf, von: Figur, an: Figur, menge = von.schadenJeAktion): number {
+/**
+ * Treffer eines Gegners: fester Schaden je Handlung, beim Ziel gemindert. Bosse geben das Element
+ * des Angriffs mit, weil ihr Standardschlag physisch ist, ihre übrigen Angriffe elementar (10.4).
+ */
+export function gegnerTrifft(k: Kampf, von: Figur, an: Figur, menge = von.schadenJeAktion,
+  element: ElementId = von.element): number {
   if (an.tot) return 0;
-  const physisch = von.element === 'physisch';
+  const physisch = element === 'physisch';
   const mit = minderung(k, an, physisch, von.angriffsstufe);
-  const mult = schadenAusMult(von) * schadenEinMult(k, an);
-  const roh = menge * (1 - mit) * mult * elementFaktor(k, von.element, an);
-  const getan = schadenZufuegen(k, von, an, roh, { element: von.element });
+  const mult = schadenAusMult(k, von) * schadenEinMult(k, an, physisch);
+  const roh = menge * (1 - mit) * mult * elementFaktor(k, element, an);
+  const getan = schadenZufuegen(k, von, an, roh, { element });
   if (getan > 0) energieGeben(k, an, k.content.runden.energie.jeTreffer);
   return getan;
 }

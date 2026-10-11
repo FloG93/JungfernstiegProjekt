@@ -52,9 +52,17 @@ export function werte(k: Kampf, f: Figur): StatBlock {
   return st;
 }
 
-/** Initiative einer Figur: Tempo, bei Gleichstand entscheidet die kleinere ID (ENTWURF 1.2). */
+/**
+ * Initiative einer Figur: Tempo, bei Gleichstand entscheidet die kleinere ID (ENTWURF 1.2).
+ * Angriffstempo-Mali (Frost) zählen hier, weil es im Rundenkampf kein Angriffstempo gibt (OPEN-060).
+ */
 export function initiative(k: Kampf, f: Figur): number {
-  return werte(k, f).tmp;
+  let tmp = werte(k, f).tmp;
+  for (const s of f.status) {
+    const pct = statusParam(k.content, s.id, 'attackSpeedMalusPct');
+    if (pct > 0) tmp *= Math.max(0, 1 - pct / PROZENT);
+  }
+  return tmp;
 }
 
 function modSumme(f: Figur, stat: string, start: number): number {
@@ -63,15 +71,35 @@ function modSumme(f: Figur, stat: string, start: number): number {
   return x;
 }
 
-/** Multiplikator auf ausgeteilten Schaden (Buffs wie Adlerauge). */
-export function schadenAusMult(f: Figur): number {
-  return modSumme(f, 'dmgDealt', 1);
+/** Anteil eines Statusparameters über alle Stapel, als Faktor (1 + Prozent/100 je Stapel). */
+function paramFaktor(k: Kampf, f: Figur, name: string, vorzeichen: 1 | -1, jeStapel: boolean): number {
+  let x = 1;
+  for (const s of f.status) {
+    const pct = statusParam(k.content, s.id, name);
+    if (pct <= 0) continue;
+    x *= 1 + (vorzeichen * (pct / PROZENT)) * (jeStapel ? s.stapel : 1);
+  }
+  return Math.max(0, x);
 }
 
-/** Multiplikator auf erlittenen Schaden (Bollwerk, Spott-Schutz, Verteidigen). */
-export function schadenEinMult(k: Kampf, f: Figur): number {
+/** Multiplikator auf ausgeteilten Schaden (Buffs wie Adlerauge, Raserei, Blendung). */
+export function schadenAusMult(k: Kampf, f: Figur): number {
+  return modSumme(f, 'dmgDealt', 1)
+    * paramFaktor(k, f, 'dmgDealtPct', 1, true)
+    * paramFaktor(k, f, 'dmgDealtMalusPct', -1, false);
+}
+
+/**
+ * Multiplikator auf erlittenen Schaden (Bollwerk, Spott-Schutz, Verteidigen). Ist bekannt, ob der
+ * Treffer physisch ist, zählen auch die Boss-Passiven Steinhaut und Schattenhülle mit (10.6).
+ */
+export function schadenEinMult(k: Kampf, f: Figur, physisch?: boolean): number {
   const vert = f.verteidigt ? k.content.runden.verteidigen.schadenMult : 1;
-  return modSumme(f, 'dmgTaken', 1) * vert;
+  const b = f.boss;
+  const passiv = b === undefined || physisch === undefined ? 1 : physisch ? b.einMultPhys : b.einMultElem;
+  return modSumme(f, 'dmgTaken', 1) * vert * passiv
+    * paramFaktor(k, f, 'dmgTakenPct', 1, false)
+    * paramFaktor(k, f, 'dmgTakenPctPerStack', 1, true);
 }
 
 /** Elementfaktor des Angriffs gegen das Element des Ziels (6.2). */

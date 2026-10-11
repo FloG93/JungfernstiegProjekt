@@ -1,5 +1,5 @@
 // Aufbauhilfen für die Tests des Rundenkerns. Kein Testlauf, nur gemeinsame Bausteine.
-import type { ClassId } from '../content/ids';
+import type { BossId, ClassId } from '../content/ids';
 import { referenceHero } from '../reference';
 import { testContent } from '../testing';
 import { kampfAnlegen } from './kampf';
@@ -21,6 +21,25 @@ export function testKampf(o: Partial<KampfOptionen> & { helden: HeldAufstellung[
   return kampfAnlegen({
     content: inhalt, seed: 7, stage: 10, gegner: [{ typ: 'scherge', stufe: 10, n: 2, kapitel: 2 }], ...o,
   });
+}
+
+const BOSS_KLASSEN = ['krieger', 'magier', 'waldlaeufer', 'schurke', 'kleriker', 'runenweber'] as const;
+
+/** Bosskampf mit einer vollen Party auf der empfohlenen Stufe der Boss-Stage. */
+export function testBossKampf(bossId: BossId, n = 6, seed = 3, kampfstufe = 0): Kampf {
+  const stage = inhalt.stages.find((s) => s.boss === bossId);
+  const stufe = stage?.recommendedLevel ?? 10;
+  return kampfAnlegen({
+    content: inhalt, seed, stage: stage?.stage ?? 10, gegner: [],
+    helden: BOSS_KLASSEN.slice(0, n).map((kl, i) => testHeld(kl, stufe, i, true)),
+    boss: { bossId, n, kampfstufe },
+  });
+}
+
+export function bossVon(k: Kampf): Figur {
+  const f = k.figuren.find((x) => x.art === 'boss');
+  if (!f) throw new Error('Kein Boss im Kampf');
+  return f;
 }
 
 export function heldVon(k: Kampf, klasse: ClassId): Figur {
