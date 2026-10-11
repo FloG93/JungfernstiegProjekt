@@ -26,5 +26,9 @@
   },
   "zielbild": {
     "alleGegnerAbRadiusPx": 300
+  },
+  "begegnung": {
+    "gegnerMult": 0.2,
+    "schadenMult": 5.0
   }
 }

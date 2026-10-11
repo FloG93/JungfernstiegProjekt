@@ -98,6 +98,7 @@ export type Ereignis =
   | { e: 'status'; an: number; id: StatusId; runden: number; weg?: boolean }
   | { e: 'energie'; id: number; wert: number }
   | { e: 'reihe'; id: number; reihe: Reihe }
+  | { e: 'nachruecken'; id: number; typ: string; reihe: Reihe }
   | { e: 'verfehlt'; von: number; grund: 'tot' | 'blockiert' | 'keinZiel' | 'nichtBereit' }
   | { e: 'tod'; id: number }
   | { e: 'rundeEnde'; runde: number }
@@ -118,6 +119,8 @@ export interface Kampf {
   gegenBoss: boolean;
   /** Kapitel der Stage; bestimmt das Referenzleben für Schaden über Zeit (13.3). */
   kapitel: number;
+  /** Gegner, die noch warten, weil das Feld voll ist; sie rücken nach, sobald ein Platz frei wird. */
+  reserve: Figur[];
   naechsteId: number;
 }
 

@@ -7,6 +7,9 @@ const SHIFT_C = 14;
 const OR_B = 61;
 const UINT32_RANGE = 4294967296;
 
+/** Wertebereich für abgeleitete Seeds (32 Bit). */
+export const SEED_RANGE = UINT32_RANGE;
+
 export class Rng {
   private s: number;
 

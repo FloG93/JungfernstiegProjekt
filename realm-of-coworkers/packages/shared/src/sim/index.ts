@@ -14,7 +14,7 @@ export * from './training';
 export * from './foes';
 export { getHandler, registeredHandlerIds } from './handlers';
 export * from './enemies';
-export * from './spawn';
+export * from '../spawn';
 export * from './stage';
 export * from './boss';
 export * from './run';

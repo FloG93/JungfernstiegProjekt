@@ -10,7 +10,7 @@ import { killUnit } from './combat';
 import { spawnEnemy } from './enemies';
 import { createRun } from './run';
 import type { Run } from './run';
-import { planEncounter, typeCost } from './spawn';
+import { planEncounter, typeCost } from '../spawn';
 import type { GameEvent } from './types';
 import { stepWorld } from './world';
 

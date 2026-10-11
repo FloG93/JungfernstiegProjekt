@@ -38,6 +38,8 @@ export interface GegnerAufstellung {
   elite?: HandlerId;
   /** Einführungsfaktor der ersten Stages (4.3). */
   introMult?: number;
+  /** Ausgleich, wenn die Begegnung auf weniger Gegner eingedampft wurde (OPEN-056). */
+  schadenMult?: number;
 }
 
 export interface KampfOptionen {
@@ -90,7 +92,7 @@ function gegnerAnlegen(c: Content, id: number, a: GegnerAufstellung, rundeSekund
     grundwerte: { leb: maxLp, kra: 0, rue: 0, res: 0, tmp: def.speed, krt: 0, ksd: 0, ele: 0 },
     element, maxLp, lp: maxLp,
     // Der Schaden je Handlung entspricht dem bisherigen Schaden einer Runde Spielzeit (ENTWURF 2.1)
-    schadenJeAktion: enemyDps(c.balance, a.stufe) * schadenMult * rundeSekunden * intro,
+    schadenJeAktion: enemyDps(c.balance, a.stufe) * schadenMult * rundeSekunden * intro * (a.schadenMult ?? 1),
     rueMit: elite ? ed.armorMit : def.armorMit,
     resMit: elite ? ed.resMit : def.resMit,
     fernkampf: fern, elite, angriffsstufe: a.stufe,
@@ -109,12 +111,15 @@ export function kampfAnlegen(o: KampfOptionen): Kampf {
   const k: Kampf = {
     content: c, rng: new Rng(o.seed), runde: 0, figuren: [], reihenfolge: [], ereignisse: [],
     ergebnis: 'laeuft', gegenBoss: o.gegenBoss ?? false, kapitel: chapterOfStage(o.stage), naechsteId: 1,
+    reserve: [],
   };
   const solo = o.solo ?? o.helden.length === 1;
   for (const h of o.helden) k.figuren.push(heldAnlegen(c, k.naechsteId++, h, solo));
-  for (const g of o.gegner.slice(0, c.runden.gegnerMax)) {
-    k.figuren.push(gegnerAnlegen(c, k.naechsteId++, g, c.runden.rundeSekunden));
-  }
+  o.gegner.forEach((g, i) => {
+    const f = gegnerAnlegen(c, k.naechsteId++, g, c.runden.rundeSekunden);
+    if (i < c.runden.gegnerMax) k.figuren.push(f);
+    else k.reserve.push(f);
+  });
   plaetzeAusgleichen(k);
   for (const f of k.figuren) {
     if (f.seite !== 'held') continue;
@@ -125,6 +130,17 @@ export function kampfAnlegen(o: KampfOptionen): Kampf {
   }
   reihenNachruecken(k);
   return k;
+}
+
+/** Wartende Gegner rücken nach, sobald ein Platz frei ist (ENTWURF 3.1). */
+export function reserveNachruecken(k: Kampf): void {
+  const platz = () => k.content.runden.gegnerMax - k.figuren.filter((f) => f.seite === 'gegner' && !f.tot).length;
+  while (k.reserve.length > 0 && platz() > 0) {
+    const f = k.reserve.shift()!;
+    k.figuren.push(f);
+    melde(k, { e: 'nachruecken', id: f.id, typ: f.typ ?? '', reihe: f.reihe });
+  }
+  plaetzeAusgleichen(k);
 }
 
 /** Höchstens so viele Figuren je Reihe wie Plätze; überzählige rücken in die andere Reihe. */
@@ -176,6 +192,7 @@ export function rundeAusfuehren(k: Kampf, wahlen: ReadonlyMap<number, Aktion> = 
     if (!f || f.tot || !kampfLaeuft(k)) continue;
     const a = f.seite === 'held' ? (wahlen.get(id) ?? autoAktion(k, f)) : gegnerAktion(k, f);
     if (a) aktionAusfuehren(k, f, a);
+    reserveNachruecken(k);
     reihenNachruecken(k);
     ergebnisPruefen(k);
     if (!kampfLaeuft(k)) break;

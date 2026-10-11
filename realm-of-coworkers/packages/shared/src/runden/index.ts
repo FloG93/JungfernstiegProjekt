@@ -8,4 +8,5 @@ export * from './ziele';
 export * from './aktionen';
 export * from './ki';
 export * from './kampf';
+export * from './stage';
 export { OFFEN as OFFENE_HANDLER } from './handler';

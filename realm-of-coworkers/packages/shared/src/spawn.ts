@@ -1,11 +1,13 @@
 // Spawn-Logik (9.5, 9.6, 9.7): Budget aus Wellenpunkten × C(n), Gruppen, Palette, Elite.
-import { ENEMY_IDS } from '../content/ids';
-import type { EnemyId, HandlerId } from '../content/ids';
-import type { Content } from '../content/loader';
-import type { StageDef } from '../content/schemas';
-import { countFactor } from '../formulas';
-import type { Rng } from '../rng';
-import { MS_PER_S } from './util';
+// Rein rechnerisch und ohne Zeitbezug, deshalb teilen sich Echtzeit- und Rundenkampf diese Datei.
+import { ENEMY_IDS } from './content/ids';
+import type { EnemyId, HandlerId } from './content/ids';
+import type { Content } from './content/loader';
+import type { StageDef } from './content/schemas';
+import { countFactor } from './formulas';
+import type { Rng } from './rng';
+
+const MS_PER_S = 1000;
 
 const EPS = 1e-9;
 
