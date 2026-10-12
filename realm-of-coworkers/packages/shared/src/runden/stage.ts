@@ -262,6 +262,41 @@ export function laufAufgeben(l: Lauf): void {
   l.protokoll.push({ e: 'stageEnde', ergebnis: 'niederlage' });
 }
 
+/**
+ * Ein Held steigt wieder ein (11.5). Er zählt ab der nächsten Begegnung mit, nicht mitten im Kampf:
+ * Reihen und Initiative einer laufenden Runde bleiben damit unverändert (OPEN-066).
+ */
+export function heldHinzufuegen(l: Lauf, h: HeldAufstellung): void {
+  if (l.helden.some((x) => x.dbId === h.dbId)) return;
+  l.helden.push(h);
+  l.anteile.set(h.dbId, PROZENT);
+  l.traenke.set(h.dbId, 0);
+}
+
+/** Ein Held verlässt den Lauf (11.5). Seine Figur fällt sofort aus dem laufenden Kampf. */
+export function heldEntfernen(l: Lauf, dbId: number): void {
+  l.helden = l.helden.filter((h) => h.dbId !== dbId);
+  l.anteile.delete(dbId);
+  l.traenke.delete(dbId);
+  l.kampf.figuren = l.kampf.figuren.filter((f) => f.dbId !== dbId);
+  l.kampf.reihenfolge = l.kampf.reihenfolge.filter((id) => l.kampf.figuren.some((f) => f.id === id));
+}
+
+/**
+ * Die laufende Begegnung neu aufstellen, nachdem Helden dazugekommen sind (11.5). Die Gegner werden
+ * neu geplant, damit die Begegnung zur neuen Gruppenstärke passt; der Fortschritt bleibt.
+ */
+export function begegnungNeuStarten(l: Lauf): void {
+  if (l.phase !== 'kampf') return;
+  l.kampf = kampfFuer(l, l.index);
+  l.protokoll.push({ e: 'begegnungStart', index: l.index });
+}
+
+/** Gruppenstärke ändern (11.4): wirkt auf Budget und Lebensfaktor der nächsten Begegnung. */
+export function staerkeSetzen(l: Lauf, n: number): void {
+  l.n = Math.max(1, n);
+}
+
 export function heldenImLauf(l: Lauf): Figur[] {
   return l.kampf.figuren.filter((f) => f.seite === 'held');
 }

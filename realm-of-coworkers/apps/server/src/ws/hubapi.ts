@@ -3,7 +3,7 @@ import type { FastifyBaseLogger } from 'fastify';
 import type { AppCtx } from '../context';
 import type { Client } from './client';
 import type { Party } from './party';
-import type { EndReason, RunInstance } from './run';
+import type { EndReason, LaufendeStage } from './stageapi';
 
 export interface HubApi {
   readonly ctx: AppCtx;
@@ -11,7 +11,7 @@ export interface HubApi {
   now(): number;
   /** Verbundener und angemeldeter Client eines Kontos, sonst undefined. */
   client(accountId: number): Client | undefined;
-  runEnded(run: RunInstance, reason: EndReason, next: number | null): void;
+  runEnded(run: LaufendeStage, reason: EndReason, next: number | null): void;
   partyChanged(party: Party): void;
   /** Werte eines Helden haben sich geändert (Stufe, Beute, Abschluss). */
   heroChanged(heroId: number): void;

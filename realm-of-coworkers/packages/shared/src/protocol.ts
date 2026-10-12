@@ -17,6 +17,18 @@ export const HeroActionSchema = z.discriminatedUnion('k', [
   z.strictObject({ k: z.literal('revive'), targetId: z.number().int() }),
 ]);
 
+/** Handlung einer Runde (ENTWURF-rundenkampf.md 1.3). Der Server prüft Ziel und Bereitschaft selbst. */
+export const AktionSchema = z.discriminatedUnion('k', [
+  z.strictObject({ k: z.literal('angriff'), ziel: z.number().int() }),
+  z.strictObject({
+    k: z.literal('faehigkeit'), id: z.string().max(64), ziel: z.number().int().optional(),
+    reihe: z.enum(['vorn', 'hinten']).optional(),
+  }),
+  z.strictObject({ k: z.literal('trank') }),
+  z.strictObject({ k: z.literal('verteidigen') }),
+  z.strictObject({ k: z.literal('reihe') }),
+]);
+
 export const ClientMsgSchema = z.discriminatedUnion('t', [
   z.strictObject({ t: z.literal('hello'), v: z.number().int(), heroId: z.number().int().positive() }),
   z.strictObject({ t: z.literal('party.create') }),
@@ -46,6 +58,12 @@ export const ClientMsgSchema = z.discriminatedUnion('t', [
   z.strictObject({ t: z.literal('run.rejoin'), on: z.boolean() }),
   /** Nach dem Beute-Bildschirm: nächste Stage (oder eine bestimmte) bzw. zurück ins Lager (9.1). */
   z.strictObject({ t: z.literal('run.next'), stage: z.number().int().min(1).max(30).nullable() }),
+  /** Rundenkampf: Handlung für die genannte Runde wählen; eine spätere Wahl ersetzt die frühere. */
+  z.strictObject({ t: z.literal('runde.wahl'), runde: z.number().int().min(1), a: AktionSchema }),
+  /** Rundenkampf: Planung vorzeitig beenden („Los!"). */
+  z.strictObject({ t: z.literal('runde.fertig') }),
+  /** Rundenkampf: Auto-Kampf; die Runde startet dann ohne eigene Wahl (ENTWURF 4). */
+  z.strictObject({ t: z.literal('runde.auto'), on: z.boolean() }),
 ]);
 export type ClientMsg = z.infer<typeof ClientMsgSchema>;
 
@@ -235,6 +253,107 @@ export interface RunEndMsg {
   autoContinueIn: number | null;
 }
 
+// ---------- Rundenkampf (ENTWURF-rundenkampf.md) ----------
+
+/** Eine Figur im Rundenkampf. Ein Rundenprotokoll trägt immer den vollständigen Zustand (OPEN-064). */
+export interface RundenFigurDTO {
+  id: number;
+  seite: 'held' | 'gegner';
+  art: 'held' | 'gegner' | 'boss';
+  reihe: 'vorn' | 'hinten';
+  name: string;
+  klasse?: ClassId;
+  typ?: string;
+  stufe: number;
+  lp: number;
+  maxLp: number;
+  energie: number;
+  element: ElementId;
+  tot: boolean;
+  verteidigt: boolean;
+  schild: number;
+  status: { id: StatusId | string; runden: number; stapel: number }[];
+  elite?: boolean;
+  /** Nur Helden: Zuordnung zum Spieler. */
+  accountId?: number;
+  heroId?: number;
+  /** Nur Gegner und Bosse: aktuelles Ziel (Bedrohungskrone 14.3). */
+  ziel?: number;
+  /** Nur Bosse: Phase und angekündigter Angriff (10.5, ENTWURF 3.2). */
+  bossPhase?: number;
+  ansage?: { art: 'telegraph' | 'signatur'; text: string; runde: number };
+}
+
+export type RundenPhase = 'planung' | 'tor' | 'gewonnen' | 'verloren';
+
+/** Eigener Held: alles, was nur der Empfänger sieht. */
+export interface RundenMichDTO {
+  figurId: number | null;
+  heroId: number;
+  traenke: number;
+  trankAbkling: number;
+  abkling: Record<string, number>;
+  autocast: Record<string, boolean>;
+  autoTrank: boolean;
+  /** Auto-Kampf: Der Server wählt für diesen Spieler (ENTWURF 4). */
+  auto: boolean;
+  helper: boolean;
+  /** Bereits gewählte Handlung für die laufende Planung. */
+  gewaehlt: boolean;
+  /** Bereitschaft am Boss-Tor (10.1). */
+  bereit: boolean;
+}
+
+export interface RundenZustandDTO {
+  phase: RundenPhase;
+  runde: number;
+  figuren: RundenFigurDTO[];
+  /** Reihenfolge der letzten abgehandelten Runde (Initiativleiste). */
+  reihenfolge: number[];
+  index: number;
+  begegnungen: number;
+  checkpoint: number;
+  wipes: number;
+  kampfstufe: number;
+  gegenBoss: boolean;
+  /** Wartende Gegner, die nachrücken, sobald vorn ein Platz frei wird. */
+  reserve: number;
+  /** Restzeit des Planungsfensters in ms, null außerhalb der Planung. */
+  planungIn: number | null;
+  /** Konten, die ihre Wahl abgegeben haben bzw. am Tor bereit sind. */
+  gewaehlt: number[];
+  bereit: number[];
+  /** Auto-Weiter am Boss-Tor (E-023). */
+  autoBereitIn: number | null;
+  mich?: RundenMichDTO;
+}
+
+export interface RundenStartMsg {
+  t: 'runde.start';
+  runId: string;
+  seed: number;
+  stage: number;
+  roster: RosterEntry[];
+  n: number;
+  config: { rundeSekunden: number; planungS: number; maxRunden: number; bossId: string | null; introId: string };
+  zustand: RundenZustandDTO;
+}
+
+/** Protokoll einer abgehandelten Runde: erst die Ereignisse, dann der neue Zustand. */
+export interface RundenProtokollMsg {
+  t: 'runde.protokoll';
+  runde: number;
+  ereignisse: unknown[];
+  zustand: RundenZustandDTO;
+}
+
+/** Neues Planungsfenster bzw. Änderung daran (jemand hat gewählt, Auto-Kampf an). */
+export interface RundenPlanMsg {
+  t: 'runde.plan';
+  runde: number;
+  zustand: RundenZustandDTO;
+}
+
 export type ServerMsg =
   | { t: 'welcome'; v: number; serverTime: number; contentHash: string; accountId: number; heroId: number; reconnected: boolean }
   | { t: 'presence'; list: OnlineEntry[] }
@@ -243,6 +362,9 @@ export type ServerMsg =
   | { t: 'party.left' }
   | RunStartMsg
   | SnapshotMsg
+  | RundenStartMsg
+  | RundenProtokollMsg
+  | RundenPlanMsg
   | { t: 'run.events'; tick: number; list: GameEvent[] }
   | { t: 'run.ack'; seq: number }
   | RunEndMsg

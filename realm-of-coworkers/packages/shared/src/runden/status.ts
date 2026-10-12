@@ -3,9 +3,9 @@
 // Schaden und Heilung über Zeit stehen in den Daten je Sekunde; eine Runde zählt rundeSekunden davon.
 import type { StatusId } from '../content/ids';
 import { melde } from './typen';
-import type { Figur, Kampf, StatusInst } from './typen';
+import type { Figur, Kampf, RundenStatus } from './typen';
 import { rundenAusMs } from './umrechnung';
-import { statusParam } from './werte';
+import { statusWert } from './werte';
 
 export interface StatusWunsch {
   id: StatusId;
@@ -37,7 +37,7 @@ export function statusSetzen(k: Kampf, ziel: Figur, w: StatusWunsch): boolean {
     if (w.wert !== undefined) vorhanden.wert = w.wert;
     if (w.quelleId !== undefined) vorhanden.quelleId = w.quelleId;
   } else {
-    const inst: StatusInst = { id: w.id, runden, dauerhaft, stapel: Math.min(maxStapel, w.stapel ?? 1) };
+    const inst: RundenStatus = { id: w.id, runden, dauerhaft, stapel: Math.min(maxStapel, w.stapel ?? 1) };
     if (w.wert !== undefined) inst.wert = w.wert;
     if (w.quelleId !== undefined) inst.quelleId = w.quelleId;
     if (w.mods) inst.mods = w.mods;
@@ -51,11 +51,11 @@ export function statusSetzen(k: Kampf, ziel: Figur, w: StatusWunsch): boolean {
 
 /** Frost friert beim vollen Stapel ein (6.4); Bosse werden stattdessen verlangsamt und bleiben handlungsfähig. */
 function einfrieren(k: Kampf, ziel: Figur, id: StatusId): void {
-  const ab = statusParam(k.content, id, 'freezeAtStacks');
+  const ab = statusWert(k.content, id, 'freezeAtStacks');
   if (ab <= 0) return;
   const da = ziel.status.find((s) => s.id === id);
   if (!da || da.stapel < ab) return;
-  const ms = statusParam(k.content, id, 'freezeMs');
+  const ms = statusWert(k.content, id, 'freezeMs');
   if (ms > 0) statusSetzen(k, ziel, { id: 'eingefroren', ms });
 }
 
@@ -96,15 +96,15 @@ export function ueberZeit(k: Kampf, f: Figur): UeberZeit[] {
   for (const s of f.status) {
     const def = k.content.statusById[s.id];
     if (!def) continue;
-    const coefJeS = s.wert ?? statusParam(k.content, s.id, 'heroCoefPerS');
-    const pctJeS = statusParam(k.content, s.id, 'enemyPctRefHpPerS');
+    const coefJeS = s.wert ?? statusWert(k.content, s.id, 'heroCoefPerS');
+    const pctJeS = statusWert(k.content, s.id, 'enemyPctRefHpPerS');
     if (coefJeS <= 0 && pctJeS <= 0) continue;
     liste.push({
       id: s.id,
       quelleId: s.quelleId,
       coef: coefJeS * sek * s.stapel,
       pctRefLeben: pctJeS * sek * s.stapel,
-      physisch: statusParam(k.content, s.id, 'physical') > 0,
+      physisch: statusWert(k.content, s.id, 'physical') > 0,
       heilung: def.kind === 'buff',
     });
   }

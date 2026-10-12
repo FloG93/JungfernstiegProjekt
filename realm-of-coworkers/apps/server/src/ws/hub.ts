@@ -14,7 +14,7 @@ import type { HeroInfo } from './heroinfo';
 import type { HubApi } from './hubapi';
 import { Lobby } from './party';
 import type { Party } from './party';
-import type { EndReason, RunInstance } from './run';
+import type { EndReason, LaufMsg, LaufendeStage } from './stageapi';
 
 const MS_PER_S = 1000;
 /** Seeds der Runs (mulberry32, 32 Bit). */
@@ -22,7 +22,7 @@ const SEED_RANGE = 0x1_0000_0000;
 /** Höchstens so viele nachgeholte Ticks je Durchlauf; größerer Rückstand wird verworfen. */
 const MAX_CATCHUP_TICKS = 4;
 
-type RunMsg = Exclude<Extract<ClientMsg, { t: `run.${string}` }>, { t: 'run.next' }>;
+type RunMsg = LaufMsg;
 
 export interface SessionLike {
   accountId: number;
@@ -37,13 +37,13 @@ export interface HeroSettingsChange {
 }
 
 function isRunMsg(m: ClientMsg): m is RunMsg {
-  return m.t.startsWith('run.') && m.t !== 'run.next';
+  return (m.t.startsWith('run.') || m.t.startsWith('runde.')) && m.t !== 'run.next';
 }
 
 export class Hub implements HubApi {
   private readonly clients = new Map<number, Client>();
   private readonly infos = new Map<number, HeroInfo>();
-  private readonly runs = new Set<RunInstance>();
+  private readonly runs = new Set<LaufendeStage>();
   readonly lobby: Lobby;
   private nextClientId = 1;
   private stopLoop: (() => void) | null = null;
@@ -104,10 +104,10 @@ export class Hub implements HubApi {
     }
   }
 
-  runEnded(run: RunInstance, reason: EndReason, next: number | null): void {
+  runEnded(run: LaufendeStage, reason: EndReason, next: number | null): void {
     this.runs.delete(run);
     this.lobby.runEnded(run, reason, next);
-    this.log.info({ runId: run.id, reason, ms: run.world.t }, 'Run beendet');
+    this.log.info({ runId: run.id, reason, ms: run.zeitMs }, 'Run beendet');
   }
 
   partyChanged(party: Party): void {
@@ -121,7 +121,7 @@ export class Hub implements HubApi {
     });
   }
 
-  addRun(run: RunInstance): void {
+  addRun(run: LaufendeStage): void {
     this.runs.add(run);
   }
 
@@ -283,44 +283,26 @@ export class Hub implements HubApi {
   private runMsg(cl: Client, msg: RunMsg): void {
     const run = this.lobby.partyOf(cl.accountId)?.run ?? null;
     const acc = cl.accountId;
-    if (msg.t === 'run.input') {
+    // Eingaben und Wahlen kommen oft; sie zählen gegen das Eingabe-Limit (2.6)
+    if (msg.t === 'run.input' || msg.t === 'runde.wahl') {
       if (!this.ctx.limiter.allow(`input:${acc}`, 'input')) return;
-      run?.input(acc, msg);
-      return;
+      if (msg.t === 'run.input') {
+        run?.nachricht(acc, msg);
+        return;
+      }
     }
     if (!run) fail('CONFLICT', 'Du bist gerade nicht im Run.');
-    switch (msg.t) {
-      case 'run.autocast':
-        run.autocast(acc, msg.skillId, msg.on);
-        this.persist(cl, { autocast: { [msg.skillId]: msg.on } });
-        break;
-      case 'run.settings': {
-        const s: HeroSettingsChange = {};
-        if (msg.autoPotion !== undefined) s.autoPotion = msg.autoPotion;
-        if (msg.autoDodge !== undefined) s.autoDodge = msg.autoDodge;
-        run.applySettings(acc, s);
-        this.persist(cl, s);
-        break;
-      }
-      case 'run.ping':
-        if (!this.ctx.limiter.allow(`ping:${acc}`, 'chat')) fail('RATE_LIMITED', 'Ein Ping pro Sekunde.');
-        run.ping(acc, msg.kind, msg.x, msg.y);
-        break;
-      case 'run.autowalk':
-        run.autowalk(acc, msg.on);
-        break;
-      case 'run.pause':
-        run.pause(acc, msg.on);
-        break;
-      case 'run.ready':
-        run.ready(acc);
-        break;
-      case 'run.leave':
-        run.leave(acc);
-        break;
-      case 'run.rejoin':
-        run.rejoin(acc, msg.on);
-        break;
+    if (msg.t === 'run.ping' && !this.ctx.limiter.allow(`ping:${acc}`, 'chat')) {
+      fail('RATE_LIMITED', 'Ein Ping pro Sekunde.');
+    }
+    run.nachricht(acc, msg);
+    // Einstellungen bleiben auch nach dem Run erhalten (E-023)
+    if (msg.t === 'run.autocast') this.persist(cl, { autocast: { [msg.skillId]: msg.on } });
+    if (msg.t === 'run.settings') {
+      const s: HeroSettingsChange = {};
+      if (msg.autoPotion !== undefined) s.autoPotion = msg.autoPotion;
+      if (msg.autoDodge !== undefined) s.autoDodge = msg.autoDodge;
+      this.persist(cl, s);
     }
   }
 

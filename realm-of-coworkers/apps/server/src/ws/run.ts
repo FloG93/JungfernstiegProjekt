@@ -2,11 +2,11 @@
 // Belohnungen werden je Spieler nacheinander in Transaktionen gespeichert (2.5). Solo ist ein Run mit einem Spieler.
 import { gzipSync } from 'node:zlib';
 import {
-  Rng, STAGE_COUNT, SnapshotTracker, addHero, bossReward, createRun, deriveSeed, encounterReward, placeInFormation,
+  STAGE_COUNT, addHero, bossReward, createRun, encounterReward, placeInFormation,
   removeHeroUnit, rollBossLoot, rollEliteItem, rollStageChest, stepWorld, unitById, updateHeroSetup,
 } from '@aethra/shared';
 import type {
-  BossId, ClassId, ClientMsg, GameEvent, GemDrop, HeroAction, HeroInput, HeroSetup, ItemDTO, RosterEntry, Run,
+  BossId, ClientMsg, GameEvent, HeroAction, HeroInput, HeroSetup, RosterEntry, Run,
   RunEndMsg, RunExtra, RunStartMsg, StageDef, Unit,
 } from '@aethra/shared';
 import { heroSetup } from '../game/heroes';
@@ -14,7 +14,11 @@ import { grantRewards, recordBossKill, recordStageClear } from '../game/rewards'
 import type { RewardInput, RewardResult } from '../game/rewards';
 import { fail } from '../http/errors';
 import type { HubApi } from './hubapi';
+import type { LaufMsg, LaufendeStage } from './stageapi';
+import type { EndReason } from './stageapi';
 import type { Party } from './party';
+import { RunPlayer } from './spieler';
+import type { RunPlayerInit } from './spieler';
 
 const MS_PER_S = 1000;
 /** Höchstens so viele Eingaben je Spieler und Tick; ältere fallen weg (2.6). */
@@ -23,105 +27,11 @@ const MAX_PENDING_INPUTS = 8;
 const LOG_LIMIT = 200_000;
 const DISPLAY_ROUND = 10;
 
-export type EndReason = 'win' | 'camp' | 'empty' | 'pause' | 'server' | 'left';
+export { RunPlayer };
+export type { RunPlayerInit };
+export type { EndReason };
 type RunInputMsg = Extract<ClientMsg, { t: 'run.input' }>;
 type ProtoAction = NonNullable<RunInputMsg['act']>[number];
-
-export interface RunPlayerInit {
-  accountId: number;
-  setup: HeroSetup;
-  /** Helfer-Modus am Boss (10.9): Timer läuft, keine Boss-Belohnung. */
-  helper: boolean;
-  /** Erster Sieg über den Boss dieser Stage. */
-  first: boolean;
-  /** Eigene Beutestufe K für den Boss (8.2). */
-  kampfstufe: number;
-  /** Stage schon abgeschlossen: Wiederholung mit 40 % XP (12.2). */
-  repeat: boolean;
-  /** Nicht bereit beim Start: Autopilot, bis der Spieler eingreift (11.3). */
-  autopilot: boolean;
-}
-
-interface Totals {
-  xp: number;
-  weaponXp: number;
-  gold: number;
-  items: ItemDTO[];
-  gems: GemDrop[];
-  splinters: number;
-  levelUps: number[];
-  weaponLevelUps: number[];
-  autoSold: { name: string; gold: number }[];
-  artifactUnlocked: string | null;
-}
-
-export class RunPlayer {
-  readonly accountId: number;
-  readonly heroId: number;
-  readonly classId: ClassId;
-  readonly name: string;
-  level: number;
-  setup: HeroSetup;
-  unitId: number | null = null;
-  /** Wiedereinstieg läuft (Werte werden geladen). */
-  joining = false;
-  readonly helper: boolean;
-  readonly first: boolean;
-  readonly kampfstufe: number;
-  readonly repeat: boolean;
-  connected = true;
-  disconnectedAt = 0;
-  autopilot: boolean;
-  /** Möchte am nächsten Checkpoint bzw. Boss-Tor wieder einsteigen (11.5). */
-  wantsRejoin = false;
-  endSent = false;
-  gateReady = false;
-  readonly tracker = new SnapshotTracker();
-  needFull = true;
-  pending: HeroInput[] = [];
-  lastSeq = -1;
-  ackedSeq = -1;
-  potXp = 0;
-  potGold = 0;
-  private: GameEvent[] = [];
-  readonly totals: Totals = {
-    xp: 0, weaponXp: 0, gold: 0, items: [], gems: [], splinters: 0, levelUps: [], weaponLevelUps: [], autoSold: [],
-    artifactUnlocked: null,
-  };
-  /** Datenbankarbeit dieses Spielers läuft nacheinander. */
-  chain: Promise<void> = Promise.resolve();
-  readonly lootRng: Rng;
-
-  constructor(init: RunPlayerInit, seed: number) {
-    this.accountId = init.accountId;
-    this.heroId = init.setup.dbId;
-    this.classId = init.setup.classId;
-    this.name = init.setup.name;
-    this.level = init.setup.level;
-    this.setup = init.setup;
-    this.helper = init.helper;
-    this.first = init.first;
-    this.kampfstufe = init.kampfstufe;
-    this.repeat = init.repeat;
-    this.autopilot = init.autopilot;
-    // Beute würfelt jeder Spieler mit eigenem Zähler, damit die Welt davon unberührt bleibt (10.8, 12)
-    this.lootRng = new Rng(deriveSeed(seed, init.setup.dbId));
-  }
-
-  add(r: RewardResult): void {
-    const t = this.totals;
-    t.xp += r.xpGained;
-    t.weaponXp += r.weaponXp;
-    t.gold += r.gold;
-    t.items.push(...r.items);
-    t.gems.push(...r.gems);
-    t.splinters += r.splinters;
-    t.levelUps.push(...r.levelUps);
-    t.weaponLevelUps.push(...r.weaponLevelUps);
-    t.autoSold.push(...r.autoSold);
-    if (r.artifactUnlocked) t.artifactUnlocked = r.artifactUnlocked;
-  }
-}
 
 export interface RunOptions {
   id: string;
@@ -153,7 +63,7 @@ const PRIVATE_EVENTS = new Set<GameEvent['e']>(['reward', 'eliteLoot', 'loot']);
 
 const round1 = (x: number) => Math.round(x * DISPLAY_ROUND) / DISPLAY_ROUND;
 
-export class RunInstance {
+export class RunInstance implements LaufendeStage {
   readonly id: string;
   readonly stage: number;
   readonly seed: number;
@@ -208,6 +118,49 @@ export class RunInstance {
 
   get inArena(): boolean {
     return this.scenario.kind === 'arena';
+  }
+
+  get zeitMs(): number {
+    return this.world.t;
+  }
+
+  /** Nachrichten des Spielers (15.3). Die Wahlen des Rundenkampfes gehören nicht hierher. */
+  nachricht(accountId: number, m: LaufMsg): void {
+    switch (m.t) {
+      case 'run.input':
+        this.input(accountId, m);
+        break;
+      case 'run.autocast':
+        this.autocast(accountId, m.skillId, m.on);
+        break;
+      case 'run.settings': {
+        const s: { autoPotion?: boolean; autoDodge?: boolean } = {};
+        if (m.autoPotion !== undefined) s.autoPotion = m.autoPotion;
+        if (m.autoDodge !== undefined) s.autoDodge = m.autoDodge;
+        this.applySettings(accountId, s);
+        break;
+      }
+      case 'run.ping':
+        this.ping(accountId, m.kind, m.x, m.y);
+        break;
+      case 'run.autowalk':
+        this.autowalk(accountId, m.on);
+        break;
+      case 'run.pause':
+        this.pause(accountId, m.on);
+        break;
+      case 'run.ready':
+        this.ready(accountId);
+        break;
+      case 'run.leave':
+        this.leave(accountId);
+        break;
+      case 'run.rejoin':
+        this.rejoin(accountId, m.on);
+        break;
+      default:
+        fail('BAD_REQUEST', 'Dieser Run ist kein Rundenkampf.');
+    }
   }
 
   /** Held steckt im Run (Ausrüstung gesperrt, 15.2). */

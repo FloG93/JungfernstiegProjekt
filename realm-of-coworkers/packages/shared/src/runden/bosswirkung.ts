@@ -9,14 +9,14 @@ import { gegnerTrifft } from './wirkung';
 
 const PROZENT = 100;
 
-export function bossDef(k: Kampf, f: Figur): BossDef {
+export function bossDaten(k: Kampf, f: Figur): BossDef {
   return k.content.bossById[f.boss!.bossId];
 }
 
 /** Schaden eines Bossangriffs vor Mitigation: Anteil RefLeben × M(n) × Kampfstufe × Raserei (10.4, 10.1). */
 export function bossSchaden(k: Kampf, f: Figur, pctRefHp: number): number {
   const z = f.boss!;
-  return (pctRefHp / PROZENT) * refLife(k.content.balance, bossDef(k, f).chapter) * z.schadenMult * (1 + z.raserei);
+  return (pctRefHp / PROZENT) * refLife(k.content.balance, bossDaten(k, f).chapter) * z.schadenMult * (1 + z.raserei);
 }
 
 /** Ein Treffer des Bosses; physische Angriffe zählen als physisch, alle anderen mit seinem Element. */

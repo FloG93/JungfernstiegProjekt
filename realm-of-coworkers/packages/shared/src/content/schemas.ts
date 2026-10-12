@@ -495,7 +495,7 @@ export const RundenFileSchema = z.strictObject({
   _hinweis: z.string().optional(),
   rundeSekunden: pos,
   maxRunden: pos,
-  planung: z.strictObject({ standardS: pos, minS: pos, maxS: pos }),
+  planung: z.strictObject({ standardS: pos, minS: pos, maxS: pos, autoS: pos }),
   reihe: z.strictObject({ plaetze: pos, nahkampfBisPx: pos }),
   gegnerMax: pos,
   begegnung: z.strictObject({ gegnerMult: pos, schadenMult: pos }),

@@ -12,7 +12,7 @@ function istStatId(s: string): s is StatId {
   return (STAT_IDS as readonly string[]).includes(s);
 }
 
-export function statusParam(c: Content, id: StatusId, name: string): number {
+export function statusWert(c: Content, id: StatusId, name: string): number {
   return c.statusById[id]?.params?.[name] ?? 0;
 }
 
@@ -41,7 +41,7 @@ export function werte(k: Kampf, f: Figur): StatBlock {
   st.kra *= 1 + kraftSumme;
   const bruch = stapel(f, 'ruestungsbruch');
   if (bruch > 0) {
-    const faktor = Math.max(0, 1 - (bruch * statusParam(k.content, 'ruestungsbruch', 'armorResMalusPctPerStack')) / PROZENT);
+    const faktor = Math.max(0, 1 - (bruch * statusWert(k.content, 'ruestungsbruch', 'armorResMalusPctPerStack')) / PROZENT);
     st.rue *= faktor;
     st.res *= faktor;
   }
@@ -59,7 +59,7 @@ export function werte(k: Kampf, f: Figur): StatBlock {
 export function initiative(k: Kampf, f: Figur): number {
   let tmp = werte(k, f).tmp;
   for (const s of f.status) {
-    const pct = statusParam(k.content, s.id, 'attackSpeedMalusPct');
+    const pct = statusWert(k.content, s.id, 'attackSpeedMalusPct');
     if (pct > 0) tmp *= Math.max(0, 1 - pct / PROZENT);
   }
   return tmp;
@@ -75,7 +75,7 @@ function modSumme(f: Figur, stat: string, start: number): number {
 function paramFaktor(k: Kampf, f: Figur, name: string, vorzeichen: 1 | -1, jeStapel: boolean): number {
   let x = 1;
   for (const s of f.status) {
-    const pct = statusParam(k.content, s.id, name);
+    const pct = statusWert(k.content, s.id, name);
     if (pct <= 0) continue;
     x *= 1 + (vorzeichen * (pct / PROZENT)) * (jeStapel ? s.stapel : 1);
   }
@@ -109,7 +109,7 @@ export function elementFaktor(k: Kampf, angriff: ElementId, ziel: Figur): number
   const e = k.content.engine.elements;
   if (def.weakTo === angriff) return e.weakMult;
   if (angriff === ziel.element) {
-    const ignoriert = hatStatus(ziel, 'runenbruch') && statusParam(k.content, 'runenbruch', 'ignoreElementResist') > 0;
+    const ignoriert = hatStatus(ziel, 'runenbruch') && statusWert(k.content, 'runenbruch', 'ignoreElementResist') > 0;
     return ignoriert ? 1 : e.resistMult;
   }
   return 1;
@@ -124,7 +124,7 @@ export function minderung(k: Kampf, ziel: Figur, physisch: boolean, angriffsstuf
   let m = physisch ? ziel.rueMit : ziel.resMit;
   const bruch = stapel(ziel, 'ruestungsbruch');
   if (bruch > 0) {
-    m *= Math.max(0, 1 - (bruch * statusParam(k.content, 'ruestungsbruch', 'armorResMalusPctPerStack')) / PROZENT);
+    m *= Math.max(0, 1 - (bruch * statusWert(k.content, 'ruestungsbruch', 'armorResMalusPctPerStack')) / PROZENT);
   }
   return m;
 }
@@ -132,5 +132,5 @@ export function minderung(k: Kampf, ziel: Figur, physisch: boolean, angriffsstuf
 /** Kann die Figur in dieser Runde handeln? Betäubung und Einfrieren blockieren (6.3). */
 export function kannHandeln(k: Kampf, f: Figur): boolean {
   if (f.tot) return false;
-  return !f.status.some((s) => statusParam(k.content, s.id, 'blocksActions') > 0);
+  return !f.status.some((s) => statusWert(k.content, s.id, 'blocksActions') > 0);
 }

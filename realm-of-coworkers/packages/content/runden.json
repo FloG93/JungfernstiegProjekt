@@ -5,7 +5,8 @@
   "planung": {
     "standardS": 20,
     "minS": 10,
-    "maxS": 60
+    "maxS": 60,
+    "autoS": 2
   },
   "reihe": {
     "plaetze": 4,

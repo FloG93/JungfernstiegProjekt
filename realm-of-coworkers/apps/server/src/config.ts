@@ -20,6 +20,8 @@ export interface Config {
   cookieSecure: boolean;
   /** Weitere Origins, die den WebSocket öffnen dürfen, wenn ein Proxy den Host umschreibt (OPEN-047). */
   allowedOrigins: string[];
+  /** RUNDENKAMPF=1: Runs laufen rundenbasiert statt in Echtzeit (OPEN-065). */
+  rundenkampf: boolean;
 }
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -60,5 +62,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     backupHour: Number(env['BACKUP_HOUR'] ?? 3),
     cookieSecure: env['COOKIE_SECURE'] === '1' || env['COOKIE_SECURE'] === 'true',
     allowedOrigins: parseOrigins(env['ALLOWED_ORIGINS']),
+    rundenkampf: (env['RUNDENKAMPF'] ?? '') === '1',
   };
 }

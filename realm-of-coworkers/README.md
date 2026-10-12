@@ -160,6 +160,7 @@ cd apps/server && SESSION_SECRET=… INVITE_CODE=… node dist/main.js
 | `LOG_LEVEL` | `info` | Protokollstufe |
 | `COOKIE_SECURE` | aus | `1` hinter HTTPS |
 | `ALLOWED_ORIGINS` | – | weitere Adressen, die den WebSocket öffnen dürfen, mit Komma getrennt; nötig, wenn ein Proxy den Host umschreibt (nginx ohne `proxy_set_header Host $host`). Im Codespace setzt `pnpm play` sie selbst |
+| `RUNDENKAMPF` | – | `1` schaltet die Runs auf den rundenbasierten Kampf um (Planungsfenster, Rundenprotokoll). Standard ist noch der Echtzeitkampf, bis die Oberfläche umgestellt ist (OPEN-065) |
 | `BACKUP_DIR` | `<DB-Ordner>/backups` | Ziel der Sicherungen |
 | `BACKUP_KEEP_DAYS` | 14 | Aufbewahrung der Sicherungen in Tagen |
 | `BACKUP_HOUR` | 3 | Stunde der nächtlichen Sicherung |

@@ -8,7 +8,9 @@ import type { Client } from './client';
 import { bossStatus, stageAllowed } from './heroinfo';
 import type { Hub } from './hub';
 import { RunInstance } from './run';
-import type { EndReason, RunPlayerInit } from './run';
+import { RundenLauf } from './rundenlauf';
+import type { RunPlayerInit } from './spieler';
+import type { EndReason, LaufendeStage } from './stageapi';
 
 const MS_PER_S = 1000;
 
@@ -27,7 +29,7 @@ export class Party {
   stage: number | null = null;
   /** Ende des Start-Countdowns (Serverzeit), null ohne Countdown (11.3). */
   startsAt: number | null = null;
-  run: RunInstance | null = null;
+  run: LaufendeStage | null = null;
   launching = false;
   /** Auto-Weiter: Start der nächsten Stage nach dem Beute-Bildschirm (E-023). */
   autoContinueAt: number | null = null;
@@ -339,7 +341,10 @@ export class Lobby {
         });
       }
       if (inits.length === 0) fail('REQUIREMENT_NOT_MET', 'Niemand in der Party darf diese Stage betreten.');
-      const run = new RunInstance(this.hub, p, { id: randomUUID(), stage, seed: this.hub.newSeed(), players: inits, kampfstufe });
+      const o = { id: randomUUID(), stage, seed: this.hub.newSeed(), players: inits, kampfstufe };
+      // Rundenkampf oder Echtzeitkampf, je nach Einstellung (OPEN-065)
+      const run: LaufendeStage = this.hub.ctx.config.rundenkampf
+        ? new RundenLauf(this.hub, p, o) : new RunInstance(this.hub, p, o);
       await run.open();
       p.run = run;
       this.hub.addRun(run);
@@ -357,7 +362,7 @@ export class Lobby {
     }
   }
 
-  runEnded(run: RunInstance, reason: EndReason, next: number | null): void {
+  runEnded(run: LaufendeStage, reason: EndReason, next: number | null): void {
     const p = run.party;
     if (p.run === run) p.run = null;
     if (!this.parties.has(p.id)) return;

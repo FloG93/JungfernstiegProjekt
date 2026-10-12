@@ -2,7 +2,7 @@
 // Der Boss handelt einmal je Runde. Große Angriffe kündigt er eine Runde vorher an; die Party hat
 // genau diese Runde Zeit zu reagieren. Alle Zähler stehen in Runden, umgerechnet nach 2.1.
 import { countFactor } from '../formulas';
-import { bossDef, bossSchaden, bossTrifft, lebendeHelden } from './bosswirkung';
+import { bossDaten, bossSchaden, bossTrifft, lebendeHelden } from './bosswirkung';
 import { bossHandler } from './handler';
 import { gegnerAnlegen } from './figuren';
 import { statusSetzen, statusEntfernen } from './status';
@@ -15,7 +15,7 @@ import { bedrohungsZiel } from './ziele';
 
 const PROZENT = 100;
 
-export { bossDef, bossSchaden };
+export { bossDaten, bossSchaden };
 
 function params(roh: Record<string, number | string | boolean> | undefined): Record<string, number> {
   const out: Record<string, number> = {};
@@ -24,7 +24,7 @@ function params(roh: Record<string, number | string | boolean> | undefined): Rec
 }
 
 function passive(k: Kampf, boss: Figur) {
-  const def = bossDef(k, boss);
+  const def = bossDaten(k, boss);
   return { h: bossHandler(def.passive.id), p: params(def.passive.params) };
 }
 
@@ -79,7 +79,7 @@ function raserei(k: Kampf, boss: Figur): void {
 /** Adds (10.4): eine Welle Schwarmlinge nach C(n); sie fallen beim Phasenwechsel. */
 function adds(k: Kampf, boss: Figur): void {
   const z = boss.boss!;
-  const def = bossDef(k, boss);
+  const def = bossDaten(k, boss);
   z.addsRest -= 1;
   if (z.addsRest > 0) return;
   z.addsRest = rundenAusSekunden(k.content, def.adds.everyS);
@@ -99,7 +99,7 @@ function adds(k: Kampf, boss: Figur): void {
 /** Phasenwechsel bei den Schwellen aus den Daten (10.5). Keine Phase wird übersprungen. */
 export function phasePruefen(k: Kampf, boss: Figur): void {
   const z = boss.boss!;
-  const def = bossDef(k, boss);
+  const def = bossDaten(k, boss);
   if (boss.tot || z.phase >= def.phases.length) return;
   const naechste = def.phases[z.phase]!;
   const schwelle = (naechste.fromPct / PROZENT) * boss.maxLp;
@@ -110,7 +110,7 @@ export function phasePruefen(k: Kampf, boss: Figur): void {
 
 function phaseBeginnen(k: Kampf, boss: Figur, phase: number, uebergang: boolean): void {
   const z = boss.boss!;
-  const def = bossDef(k, boss);
+  const def = bossDaten(k, boss);
   const b = k.content.balance.boss.phaseTransition;
   z.phase = phase;
   boss.element = def.phases[phase - 1]!.element;
@@ -153,11 +153,11 @@ function standard(k: Kampf, boss: Figur): void {
   }
   boss.zielId = ziel.id;
   melde(k, { e: 'bossAngriff', id: boss.id, art: 'standard', ziele: [ziel.id] });
-  bossTrifft(k, boss, ziel, bossDef(k, boss).attacks.standard);
+  bossTrifft(k, boss, ziel, bossDaten(k, boss).attacks.standard);
 }
 
 function puls(k: Kampf, boss: Figur): void {
-  const atk = bossDef(k, boss).attacks.pulse;
+  const atk = bossDaten(k, boss).attacks.pulse;
   const ziele = lebendeHelden(k);
   melde(k, { e: 'bossAngriff', id: boss.id, art: 'puls', ziele: ziele.map((f) => f.id) });
   for (const h of ziele) bossTrifft(k, boss, h, atk);
@@ -165,7 +165,7 @@ function puls(k: Kampf, boss: Figur): void {
 
 /** Angekündigter Flächenangriff: trifft einen Helden samt seiner Reihe und setzt den Boss-Debuff (10.4). */
 function telegraph(k: Kampf, boss: Figur): void {
-  const def = bossDef(k, boss);
+  const def = bossDaten(k, boss);
   const atk = def.attacks.telegraph;
   const lebend = lebendeHelden(k);
   if (lebend.length === 0) return;
@@ -178,7 +178,7 @@ function telegraph(k: Kampf, boss: Figur): void {
 }
 
 function signatur(k: Kampf, boss: Figur): void {
-  const def = bossDef(k, boss);
+  const def = bossDaten(k, boss);
   const atk = def.attacks.signature;
   const h = atk.handler ? bossHandler(atk.handler) : undefined;
   if (!h?.signatur) {
@@ -195,7 +195,7 @@ function signatur(k: Kampf, boss: Figur): void {
  */
 export function bossHandeln(k: Kampf, boss: Figur): void {
   const z = boss.boss!;
-  const def = bossDef(k, boss);
+  const def = bossDaten(k, boss);
   const { h, p } = passive(k, boss);
   raserei(k, boss);
   if (k.runde <= z.uebergangBisRunde) return;

@@ -4,6 +4,7 @@ import { goldPot, xpToNext } from '@aethra/shared';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { equip } from '../game/heroes';
 import { ApiError } from '../http/errors';
+import type { RunInstance } from './run';
 import { addPlayer, makeEnv } from './testkit';
 import type { TestEnv, TestPlayer } from './testkit';
 
@@ -16,7 +17,8 @@ afterEach(async () => {
   await env.close();
 });
 
-const runOf = (p: TestPlayer) => env.hub.lobby.partyOf(p.accountId)?.run ?? null;
+// Diese Tests prüfen den Echtzeitkampf; der Lauf ist hier immer eine RunInstance.
+const runOf = (p: TestPlayer) => (env.hub.lobby.partyOf(p.accountId)?.run as RunInstance | undefined) ?? null;
 
 async function party(leader: TestPlayer, others: TestPlayer[], stage: number): Promise<void> {
   leader.send({ t: 'party.create' });

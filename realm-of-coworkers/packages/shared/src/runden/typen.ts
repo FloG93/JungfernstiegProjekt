@@ -11,7 +11,7 @@ export type Reihe = 'vorn' | 'hinten';
 export type Art = 'held' | 'gegner' | 'boss';
 
 /** Ein Statuseffekt mit Restdauer in Runden; 0 Runden heißt dauerhaft (Passive). */
-export interface StatusInst {
+export interface RundenStatus {
   id: StatusId;
   runden: number;
   dauerhaft: boolean;
@@ -89,7 +89,7 @@ export interface Figur {
   energie: number;
   /** Gilt bis zur nächsten eigenen Handlung. */
   verteidigt: boolean;
-  status: StatusInst[];
+  status: RundenStatus[];
   schilde: Schild[];
   /** Fähigkeit auf Abklingzeit: Restrunden. */
   abkling: Record<string, number>;
